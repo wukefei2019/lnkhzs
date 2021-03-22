@@ -1,0 +1,697 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-group>
+	<doc>
+		<author></author> 
+		<date></date> 
+		<description>服务质量数据分析信息</description>
+	</doc>
+
+	<sqlquery name="SQL_QUALITY.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM NGCS_WF_CMPLNTS_REQST_DETAIL
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ STATIS_DATE desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<select displayname="标签查找" name="complainText" id="complainText" value="" colspan="2" rowspan="1"/>
+        	<lotselect displayname="请求内容" name="complainName" value="" colspan="2" rowspan="1"/>
+			<hidden name="types" defaultvalue="#types#" />
+            <date displayname="开始时间" name="begintime" class='Wdate' dateFmt='yyyyMMdd' defaultvalue="#begintime#"  />
+            <date displayname="结束时间" name="endtime" class='Wdate' dateFmt='yyyyMMdd' defaultvalue="#endtime#"  />
+            <select displayname='是否投诉' name='ifTs' customStr="0,是;1,否;" defaultvalue="#ifTs#" />
+			<checkbox displayname="地市" name="areaName" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+			<hidden name="a02"/>
+            <hidden name="a03"/>
+            <hidden name="a04"/>
+            <hidden name="a05"/>
+            <hidden name="a06"/>
+            <hidden name="a07"/>
+            <hidden name="a08"/>
+            
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend="and" operator="like" colname="A12"  value="#complainText#" />
+     	    <field prepend='and' operator='like' colname='AREA_NAME'  value='#areaName#' />
+            <field prepend='and' operator='&gt;=' colname='STATIS_DATE'  value='#begintime#' />
+            <field prepend='and' operator='&lt;=' colname='STATIS_DATE'  value='#endtime#' />
+            <field prepend="and" operator="like" colname="A02"  value="#a02#" />
+	        <field prepend="and" operator="like" colname="A03"  value="#a03#" />
+	        <field prepend="and" operator="like" colname="A04"  value="#a04#" />
+	        <field prepend="and" operator="like" colname="A05"  value="#a05#" />
+	        <field prepend="and" operator="like" colname="A06"  value="#a06#" />
+	        <field prepend="and" operator="like" colname="A07"  value="#a07#" />
+           	<field prepend="and" operator="like" colname="A08"  value="#a08#" />
+           	<field prepend='and' operator='like' colname='AREA_NAME'  value='#citys#' /> 
+     		<if prepend="and" exp="'#userid#'>''">
+                <success>
+                    <![CDATA[ DEPTID = ((SELECT pid FROM BS_T_SM_DEP WHERE DEPDNS = (SELECT substr(depdns,0,7) FROM BS_T_SM_DEP WHERE PID = (SELECT DEPID FROM BS_T_SM_USER WHERE LOGINNAME =#userid#))))]]>
+                </success>
+            </if>
+     		<field prepend='and' operator='=' colname='IF_TS'  value='#ifTs#' />
+     		
+     		<bee prepend='and' operator='like' colname='A12'  value='#types#' split="," />
+     		<lotsel prepend='and' operator='like' colname='A02-A03-A04-A05-A06-A07-A08' value='#complainName#' splitcol="-" splitval="," />
+        </customwhere>
+
+	</sqlquery>
+	
+	<sqlquery name="SQL_QUALITY_SJ.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM  NGCS_WF_CMPLNTS_ARC_DETAIL_SJ 
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ STATIS_DATE desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<select displayname="标签查找" name="complainText" id="complainText" value="" colspan="2" rowspan="1"/>
+        	<lotselect displayname="投诉内容" name="complainName" value="" colspan="2" rowspan="1"/>
+			<hidden name="types" defaultvalue="#types#" />
+			<hidden name="a02"/>
+            <hidden name="a03"/>
+            <hidden name="a04"/>
+            <hidden name="a05"/>
+            <hidden name="a06"/>
+            <hidden name="a07"/>
+            <hidden name="a08"/>
+            <date displayname="开始时间" name="begintime" class='Wdate' dateFmt='yyyyMMdd' />
+            <date displayname="结束时间" name="endtime" class='Wdate' dateFmt='yyyyMMdd' />
+            <checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	 <field prepend="and" operator="like" colname="SRV_REQST_TYPE_FULL_NM"  value="#complainText#" />
+        	<field prepend="and" operator="like" colname="A02"  value="#a02#" />
+	        <field prepend="and" operator="like" colname="A03"  value="#a03#" />
+	        <field prepend="and" operator="like" colname="A04"  value="#a04#" />
+	        <field prepend="and" operator="like" colname="A05"  value="#a05#" />
+	        <field prepend="and" operator="like" colname="A06"  value="#a06#" />
+	        <field prepend="and" operator="like" colname="A07"  value="#a07#" />
+           	<field prepend="and" operator="like" colname="A08"  value="#a08#" />
+            <field prepend='and' operator='&gt;=' colname='STATIS_DATE'  value='#begintime#' />
+            <field prepend='and' operator='&lt;=' colname='STATIS_DATE'  value='#endtime#' />
+     		<if prepend="and" exp="'#userid#'>''">
+                <success>
+                    <![CDATA[ DEPTID = ((SELECT pid FROM BS_T_SM_DEP WHERE DEPDNS = (SELECT substr(depdns,0,7) FROM BS_T_SM_DEP WHERE PID = (SELECT DEPID FROM BS_T_SM_USER WHERE LOGINNAME =#userid#))))]]>
+                </success>
+            </if>
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#areaName#' />
+     		<bee prepend='and' operator='like' colname='SRV_REQST_TYPE_FULL_NM'  value='#types#' split="," />
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#citys#' /> 
+        	<lotsel prepend='and' operator='like' colname='A02-A03-A04-A05-A06-A07-A08' value='#complainName#' splitcol="-" splitval="," />
+        </customwhere>
+
+
+	</sqlquery>
+	
+	
+	
+	
+	
+	<sqlquery name="SQL_ASSIST.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM  NGCS_WF_CMPLNTS_ARC_DETAIL_XC
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ STATIS_DATE desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition cols="1" labprecent="11" textprecent="22" >
+			<hidden name="types" defaultvalue="#types#" />
+			<hidden name="b02"/>
+            <hidden name="b03"/>
+            <hidden name="b04"/>
+            <hidden name="b05"/>
+            <hidden name="b06"/>
+            <hidden name="b07"/>
+            <hidden name="b08"/>
+            <!-- <select displayname="标签查找" name="complainText" id="complainText" value="" colspan="2" rowspan="1"/> -->
+            <lotselect displayname="投诉内容" name="complainName" value="" colspan="2" rowspan="1"/>
+            <date displayname="开始时间" name="begintime" class='Wdate' dateFmt='yyyyMMdd' />
+            <date displayname="结束时间" name="endtime" class='Wdate' dateFmt='yyyyMMdd'  />
+            <checkbox displayname="地市" name="areaName" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        <!--  <field prepend="and" operator="like" colname="A12"  value="#complainText#" /> -->
+        	<field prepend="and" operator="like" colname="B02"  value="#b02#" />
+	        <field prepend="and" operator="like" colname="B03"  value="#b03#" />
+	        <field prepend="and" operator="like" colname="B04"  value="#b04#" />
+	        <field prepend="and" operator="like" colname="B05"  value="#b05#" />
+	        <field prepend="and" operator="like" colname="B06"  value="#b06#" />
+	        <field prepend="and" operator="like" colname="B07"  value="#b07#" />
+           	<field prepend="and" operator="like" colname="B08"  value="#b08#" />
+            <field prepend='and' operator='&gt;=' colname='STATIS_DATE'  value='#begintime#' />
+            <field prepend='and' operator='&lt;=' colname='STATIS_DATE'  value='#endtime#' />
+            <field prepend='and' operator='like' colname='AREA_NAME'  value='#citys#' /> 
+     		<if prepend="and" exp="'#userid#'>''">
+                <success>
+                    <![CDATA[ DEPTID = ((SELECT pid FROM BS_T_SM_DEP WHERE DEPDNS = (SELECT substr(depdns,0,7) FROM BS_T_SM_DEP WHERE PID = (SELECT DEPID FROM BS_T_SM_USER WHERE LOGINNAME =#userid#))))]]>
+                </success>
+            </if>
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#areaName#' />
+     		<bee prepend='and' operator='like' colname='A01'  value='#types#' split="," />
+     		<lotsel prepend='and' operator='like' colname='B02-B03-B04-B05-B06-B07-B08' value='#complainName#' splitcol="-" splitval="," />
+        </customwhere>
+
+	</sqlquery>
+	
+	<sqlquery name="SQL_COMPLAINT.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM NGCS_WF_CMPLNTS_ARC_DETAIL
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ STATIS_DATE desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<select displayname="标签查找" name="complainText" id="complainText" value="" colspan="2" rowspan="1"/>
+        	<lotselect displayname="投诉内容" name="complainName" value="" colspan="2" rowspan="1"/>
+			<hidden name="types" defaultvalue="#types#" />
+			<hidden name="a02"/>
+            <hidden name="a03"/>
+            <hidden name="a04"/>
+            <hidden name="a05"/>
+            <hidden name="a06"/>
+            <hidden name="a07"/>
+            <hidden name="a08"/>
+            <date displayname="开始时间" name="begintime" class='Wdate' dateFmt='yyyyMMdd' />
+            <date displayname="结束时间" name="endtime" class='Wdate' dateFmt='yyyyMMdd' />
+            <checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	<field prepend="and" operator="like" colname="SRV_REQST_TYPE_FULL_NM"  value="#complainText#" />
+        	<field prepend="and" operator="like" colname="A02"  value="#a02#" />
+	        <field prepend="and" operator="like" colname="A03"  value="#a03#" />
+	        <field prepend="and" operator="like" colname="A04"  value="#a04#" />
+	        <field prepend="and" operator="like" colname="A05"  value="#a05#" />
+	        <field prepend="and" operator="like" colname="A06"  value="#a06#" />
+	        <field prepend="and" operator="like" colname="A07"  value="#a07#" />
+           	<field prepend="and" operator="like" colname="A08"  value="#a08#" />
+            <field prepend='and' operator='&gt;=' colname='STATIS_DATE'  value='#begintime#' />
+            <field prepend='and' operator='&lt;=' colname='STATIS_DATE'  value='#endtime#' />
+     		<if prepend="and" exp="'#userid#'>''">
+                <success>
+                    <![CDATA[ DEPTID = ((SELECT pid FROM BS_T_SM_DEP WHERE DEPDNS = (SELECT substr(depdns,0,7) FROM BS_T_SM_DEP WHERE PID = (SELECT DEPID FROM BS_T_SM_USER WHERE LOGINNAME =#userid#))))]]>
+                </success>
+            </if>
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#areaName#' />
+     		<bee prepend='and' operator='like' colname='SRV_REQST_TYPE_FULL_NM'  value='#types#' split="," />
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#citys#' /> 
+     		<lotsel prepend='and' operator='like' colname='A02-A03-A04-A05-A06-A07-A08' value='#complainName#' splitcol="-" splitval="," />
+		
+        </customwhere>
+
+	</sqlquery>
+	
+	<sqlquery name="SQL_NO_COMPLAINT.query">
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM NGCS_WF_CMPLNTS_ARC_DETAIL_NO
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ STATIS_DATE desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<select displayname="标签查找" name="complainText" id="complainText" value="" colspan="2" rowspan="1"/>
+        	<lotselect displayname="投诉内容" name="complainName" value="" colspan="2" rowspan="1"/>
+            <hidden name="a02"/>
+            <hidden name="a03"/>
+            <hidden name="a04"/>
+            <hidden name="a05"/>
+            <hidden name="a06"/>
+            <hidden name="a07"/>
+            <hidden name="a08"/> 
+			<hidden name="types" defaultvalue="#types#" />
+            <date displayname="开始时间" name="begintime" class='Wdate' dateFmt='yyyyMMdd' />
+            <date displayname="结束时间" name="endtime" class='Wdate' dateFmt='yyyyMMdd' />
+            <checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	<field prepend="and" operator="like" colname="SRV_REQST_TYPE_FULL_NM"  value="#complainText#" />
+	        <field prepend="and" operator="like" colname="A02"  value="#a02#" />
+	        <field prepend="and" operator="like" colname="A03"  value="#a03#" />
+	        <field prepend="and" operator="like" colname="A04"  value="#a04#" />
+	        <field prepend="and" operator="like" colname="A05"  value="#a05#" />
+	        <field prepend="and" operator="like" colname="A06"  value="#a06#" />
+	        <field prepend="and" operator="like" colname="A07"  value="#a07#" />
+           	<field prepend="and" operator="like" colname="A08"  value="#a08#" /> 
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#areaName#' />
+            <field prepend='and' operator='&gt;=' colname='STATIS_DATE'  value='#begintime#' />
+            <field prepend='and' operator='&lt;=' colname='STATIS_DATE'  value='#endtime#' />
+     		<if prepend="and" exp="'#userid#'>''">
+                <success>
+                    <![CDATA[ DEPTID = ((SELECT pid FROM BS_T_SM_DEP WHERE DEPDNS = (SELECT substr(depdns,0,7) FROM BS_T_SM_DEP WHERE PID = (SELECT DEPID FROM BS_T_SM_USER WHERE LOGINNAME =#userid#))))]]>
+                </success>
+            </if>
+     		<bee prepend='and' operator='like' colname='SRV_REQST_TYPE_FULL_NM'  value='#types#' split="," />
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#citys#' /> 
+        	<lotsel prepend='and' operator='like' colname='A02-A03-A04-A05-A06-A07-A08' value='#complainName#' splitcol="-" splitval="," />
+		</customwhere>
+
+	</sqlquery>
+	
+	<sqlquery name="SQL_COMPLAINED.query">
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM NGCS_WF_CMPLNTS_REQST_DETAIL
+                     where 1 = 1
+					   AND IF_TS = 0
+					   AND (A02 = '移动业务' OR A02 = '增值业务' OR A02 = '家庭业务' OR A02 = '集团业务' OR (A02 = '服务类' AND A03 = '客户投诉'))
+					   $customwhere$ 
+                    order by /*ORDERBY*/ STATIS_DATE desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<select displayname="标签查找" name="complainText" id="complainText" value="" colspan="2" rowspan="1"/>
+        	<lotselect displayname="投诉内容" name="complainName" value="" colspan="2" rowspan="1"/>
+			<hidden name="types" defaultvalue="#types#" />
+            <hidden name="a04"/>
+            <hidden name="a05"/>
+            <hidden name="a06"/>
+            <hidden name="a07"/>
+            <hidden name="a08"/>
+            <date displayname="开始时间" name="begintime" class='Wdate' dateFmt='yyyyMMdd' />
+            <date displayname="结束时间" name="endtime" class='Wdate' dateFmt='yyyyMMdd' />
+            <checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	<field prepend="and" operator="like" colname="A12"  value="#complainText#" />
+	        <field prepend="and" operator="like" colname="A04"  value="#a04#" />
+	        <field prepend="and" operator="like" colname="A05"  value="#a05#" />
+	        <field prepend="and" operator="like" colname="A06"  value="#a06#" />
+	        <field prepend="and" operator="like" colname="A07"  value="#a07#" />
+           	<field prepend="and" operator="like" colname="A08"  value="#a08#" />
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#areaName#' />
+     		<field prepend='and' operator='&gt;=' colname='STATIS_DATE'  value='#begintime#' />
+            <field prepend='and' operator='&lt;=' colname='STATIS_DATE'  value='#endtime#' />
+     		<bee prepend='and' operator='like' colname='A12'  value='#types#' split="," />
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#citys#' /> 
+     		<lotsel prepend='and' operator='like' colname='A04-A05-A06-A07-A08' value='#complainName#' splitcol="-" splitval="," />
+        </customwhere>
+	</sqlquery>
+	
+	
+	<sqlquery name="SQL_SERVICE_REQUEST_NODE.query">
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_SERVICE_REQUEST_NODE
+                     where 1 = 1
+					   $customwhere$ 
+                    order by /*ORDERBY*/ code01 /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="4" labprecent="0" textprecent="22" >
+			<hidden name="types" defaultvalue="#types#" />
+			<!-- <text displayname='问题分类5级' name='name05' /> -->
+			<text displayname='问题分类' name='A12' />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	<field prepend="and" operator="like" colname="A12"  value="#A12#" />
+        	<field prepend="and" operator="like" colname="name05"  value="#name05#" />
+     		<bee prepend='and' operator='like' colname='A12'  value='#types#' split="," /> 
+        </customwhere>
+	</sqlquery>
+	
+	
+	<sqlquery name="SQL_REPEAT.query">
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM NGCS_WF_CMPLNTS_ARC_DETAIL_CF
+                     where 1 = 1
+					  $customwhere$ 
+                    order by /*ORDERBY*/ STATIS_DATE desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<select displayname="标签查找" name="complainText" id="complainText" value="" colspan="2" rowspan="1"/>
+			<hidden name="types" defaultvalue="#types#" />
+            <date displayname="开始时间" name="begintime" class='Wdate' dateFmt='yyyyMMdd' />
+            <date displayname="结束时间" name="endtime" class='Wdate' dateFmt='yyyyMMdd' />
+            <checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	<field prepend="and" operator="like" colname="SRV_REQST_TYPE_FULL_NM"  value="#complainText#" />
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#areaName#' />
+            <field prepend='and' operator='&gt;=' colname='STATIS_DATE'  value='#begintime#' />
+            <field prepend='and' operator='&lt;=' colname='STATIS_DATE'  value='#endtime#' />
+     		<if prepend="and" exp="'#userid#'>''">
+                <success>
+                    <![CDATA[ DEPTID = ((SELECT pid FROM BS_T_SM_DEP WHERE DEPDNS = (SELECT substr(depdns,0,7) FROM BS_T_SM_DEP WHERE PID = (SELECT DEPID FROM BS_T_SM_USER WHERE LOGINNAME =#userid#))))]]>
+                </success>
+            </if>
+     		<bee prepend='and' operator='like' colname='SRV_REQST_TYPE_FULL_NM'  value='#types#' split="," />
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#citys#' /> 
+		</customwhere>
+	</sqlquery>
+	
+	
+	<sqlquery name="SQL_REPEAT_STATISTICS.query">
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM NGCS_WF_CMPLNTS_ARC_CF
+                     where 1 = 1
+					  $customwhere$ 
+                    order by /*ORDERBY*/ CUM_REPEAT_TIMES desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+			<hidden name="types" defaultvalue="#types#" />
+            <checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#areaName#' />
+     		<if prepend="and" exp="'#userid#'>''">
+                <success>
+                    <![CDATA[ DEPTID = ((SELECT pid FROM BS_T_SM_DEP WHERE DEPDNS = (SELECT substr(depdns,0,7) FROM BS_T_SM_DEP WHERE PID = (SELECT DEPID FROM BS_T_SM_USER WHERE LOGINNAME =#userid#))))]]>
+                </success>
+            </if>
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#citys#' /> 
+		</customwhere>
+	</sqlquery>
+	
+	
+	
+	<sqlquery name="SQL_CheckSheet.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM NGCS_WF_CMPLNTS_CHECKSHEET
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ SYSTIME desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<date displayname="时间" name="checkdate" class='Wdate' dateFmt='yyyyMMdd' colspan="2"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend='and' operator='=' colname='CHECKDATE'  value='#checkdate#' />
+     	</customwhere>
+
+	</sqlquery>
+	
+	
+	
+	<!--标签申告  -->
+	<sqlquery name="SQL_SERVICE_REQUEST_Red.query">
+
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_BQSG_T_INFO
+                    where 1=1 $customwhere$ 
+                    order by /*ORDERBY*/ REPORTTIME desc /*ORDERBY*/
+              ]]>
+		</select>
+		 <condition cols="4" labprecent="11" textprecent="22">
+			<text displayname='工单号' name='worknumber' />
+			<select displayname='申报状态' name='reportstatus' customStr="已提交,已提交;待提交,待提交;" />
+		</condition>
+		<customwhere name="customwhere" prepend="and" >
+	        <field prepend="and" operator="like" colname="WORKNUMBER"  value="#worknumber#" />
+	        <field prepend="and" operator="like" colname="REPORTSTATUS"  value="#reportstatus#" />
+	        <field prepend="and" operator="=" colname="QUESTIONNAIREID"
+				value="#QUESTIONNAIREID#" />
+        </customwhere>
+	</sqlquery>
+	
+	
+	<sqlquery name="SQL_SERVICE_REQUEST_NODE_BAK.query">
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_SERVICE_REQUEST_NODE_BAK
+                     where 1 = 1
+					   $customwhere$ 
+                    order by /*ORDERBY*/ code01 /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="4" labprecent="0" textprecent="22" >
+			<hidden name="types" defaultvalue="#types#" />
+			<hidden name="flowStatus" defaultvalue="草稿"/>
+			<text displayname='问题分类' name='A12' />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<!-- <bee prepend='and' operator='like' colname='A12'  value='#types#' split="," /> -->
+     		<field prepend="and" operator="like" colname="A12"  value="#A12#" />
+     		<field prepend="and" operator="like" colname="FLOWSTATUS"  value="#flowStatus#" />
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_APPROVAL.query">
+        <select>
+            <![CDATA[
+				select /*COUNT*/ b.* /*COUNT*/
+				  from ZL_SERVICE_REQUEST_NODE_BAK b
+				 where 1 = 1
+				   and b.FLOWSTATUS = '审批中'
+				   and b.is_delete = '0' $customwhere$
+				 order by /*ORDERBY*/ code01 /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition cols="4" labprecent="0" textprecent="22">
+			<!-- <hidden name='userid' defaultvalue='#userid#'/>
+			<hidden name="types" defaultvalue="#types#" />-->
+			<text displayname='问题分类' name='A12' /> 
+			<!-- <text displayname='业务分类一级' name='NAME01' /> -->
+			<!-- <text displayname='业务分类一级' name='name01' /> -->
+        </condition>
+    
+        <customwhere name="customwhere" prepend="and" >
+        
+           	<field prepend="and" operator="like" colname="A12"  value="#A12#" />
+        	<!--<field prepend="and" operator="like" colname="name05"  value="#name05#" /> -->
+        	<!-- <field prepend='and' operator='like' colname='NAME01'  value='#name01#' />  -->
+     		<!-- <bee prepend='and' operator='like' colname='A12'  value='#types#' split="," /> 
+           <if prepend="and" exp="'#userid#' >''">
+           		<success>
+                    <![CDATA[ (select CHANGEPEOPLE from ZL_BQSG_T_ADMIN t) = #userid# ]]>
+                </success>
+           </if> -->
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_APPROVAL2.query">
+        <select>
+            <![CDATA[
+				select /*COUNT*/ b.* /*COUNT*/
+				  from ZL_SERVICE_REQUEST_NODE_BAK b
+				 where 1 = 1 and b.FLOWSTATUS = '已完成' $customwhere$
+				 order by /*ORDERBY*/ code01 /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition cols="4" labprecent="11" textprecent="22">
+			<text displayname='问题分类' name='A12' />
+			<!-- <text displayname='业务分类一级' name='NAME01' /> -->
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+           	<field prepend="and" operator="like" colname="A12"  value="#A12#" /> 
+       		<!-- <field prepend="and" operator="like" colname="name05"  value="#name05#" /> -->
+       		<field prepend='and' operator='like' colname='name01'  value='#name01#' /> 
+    		<!-- <bee prepend='and' operator='like' colname='A12'  value='#types#' split="," />  -->
+        </customwhere>
+	</sqlquery>
+	
+	<!-- 标签 -->
+	<sqlquery name="SQL_TAGMAIN_LIST.query">
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_BQSG_T_INFO
+                    where 1=1 and REPORTSTATUS = '已提交' $customwhere$ 
+                    order by /*ORDERBY*/ REPORTTIME desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition cols="4" labprecent="11" textprecent="22">
+			<text displayname='工单号' name='worknumber' />
+			<select displayname='审批状态' name='approvalstatus' customStr="待审批,待审批;通过,通过;拒绝,拒绝;" />
+		</condition>
+        <customwhere name="customwhere" prepend="and" >
+	        <field prepend="and" operator="like" colname="WORKNUMBER"  value="#worknumber#" />
+	        <field prepend="and" operator="like" colname="APPROVALSTATUS"  value="#approvalstatus#" />
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_TAGADMIN_LIST.query">
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_BQSG_T_ADMIN
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ ID desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition cols="4" labprecent="11" textprecent="22">
+			<text displayname='修改人' name='changepeoplename' />
+		</condition>
+        <customwhere name="customwhere" prepend="and" >
+	        <field prepend="and" operator="like" colname="CHANGEPEOPLENAME"  value="#changepeoplename#" />
+        </customwhere>
+
+	</sqlquery>
+	
+	
+	<!-- <sqlquery name="SQL_TAGADMIN_LIST.query">
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_SERVICE_REQUEST_NODE
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ ID desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition cols="4" labprecent="11" textprecent="22">
+			<text displayname='修改人' name='changepeoplename' />
+		</condition>
+        <customwhere name="customwhere" prepend="and" >
+	        <field prepend="and" operator="like" colname="CHANGEPEOPLENAME"  value="#changepeoplename#" />
+        </customwhere>
+
+	</sqlquery> -->
+	
+	
+	
+	
+	<sqlquery name="SQL_TAG_STATISTICS.query">
+        <select>
+            <![CDATA[
+				select /*COUNT*/ * /*COUNT*/ from (select /*COUNT*/
+				 z.a12, count(t.srv_reqst_type_full_nm) cnt 
+				  from NGCS_WF_CMPLNTS_ARC_DETAIL t, ZL_SERVICE_REQUEST_NODE z
+				 where t.srv_reqst_type_full_nm(+) = z.a12
+					
+				 group by z.a12)
+				 where 1=1 $customwhere$ 
+				 order by /*ORDERBY*/ cnt Desc /*ORDERBY*/
+              ]]> 
+        </select>
+         <condition cols="4" labprecent="11" textprecent="22">
+			<text displayname='问题分类' name='A12' />
+		</condition>
+        <customwhere name="customwhere" prepend="and" >
+     		
+     		<field prepend='and' operator='like' colname='A12'  value='#A12#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	
+	
+	<sqlquery name="SQL_TAG_STATISTICS_LIST.query">
+        <select>
+            <![CDATA[
+				select /*COUNT*/ t.*/*COUNT*/ from NGCS_WF_CMPLNTS_ARC_DETAIL t , ZL_SERVICE_REQUEST_NODE z 
+				where t.srv_reqst_type_full_nm = z.a12 
+				$customwhere$ 
+				order by /*ORDERBY*/ t.acpt_staff_num /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<hidden displayname="时间" name="begintime" class='Wdate' dateFmt='yyyyMM' />
+			<hidden name="types" defaultvalue="#types#" />
+			<hidden name="citys" defaultvalue="#citys#" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<bee prepend='and' operator='like' colname='z.A12'  value='#types#' split="," />
+     		<field prepend='and' operator='like' colname='t.statis_date'  value='#begintime#' />
+     		<field prepend='and' operator='like' colname='t.area_name'  value='#citys#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	
+		<sqlquery name="SQL_COM_OTHER.query">
+        <select>
+            <![CDATA[
+				 
+				SELECT /*COUNT*/ * /*COUNT*/ FROM (
+				select NAME, substr(name,0,instr(NAME,'→',1,1)-1) NAME2, ACPT_TIME ,count(1) AS value from NGCS_WF_CMPLNTS_COLLECT t  WHERE NAME LIKE '%其他%' 
+				GROUP BY ACPT_TIME,NAME
+				) where 1 = 1 $customwhere$
+				order by /*ORDERBY*/  value Desc /*ORDERBY*/
+				 
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<!-- <lotselect displayname="标签名称" name="customwhere" value="" colspan="2" rowspan="1"/> -->
+        	<text displayname='标签名称' name='name' />
+        	<text displayname='工单量 >' name='count' />
+        	<date displayname="时间" name="ntime" class='Wdate' dateFmt='yyyy-MM' />
+        </condition>
+         <customwhere name="customwhere" prepend="and" >
+        	<field prepend='and' operator='like' colname='NAME'  value='#name#' />
+        	<field prepend='and' operator='>' colname='VALUE'  value='#count#' />
+        	<field prepend='and' operator='like' colname='ACPT_TIME'  value='#ntime#' />
+        	<!-- <field prepend='and' operator='like' colname='ACPT_TIME'  value='#begintime#' /> -->
+        	<field prepend='and' operator='like' colname='NAME2'  value='#category_s#' />
+        </customwhere>
+        
+	</sqlquery>
+	
+	
+	
+	<sqlquery name="SQL_COM_FOUR.query">
+        <select>
+            <![CDATA[
+		select /*COUNT*/ * /*COUNT*/ from (
+select  ACPT_TIME,NAME3,val1,VALUE,round(VALUE/val1*100,2) as than  from (
+select  *  from(
+        select  ACPT_TIME,NAME3,sum(num1) val1,sum(num2) as VALUE
+        from (
+        select NAME,substr(name,0,instr(NAME,'→',1,4)-1) name1,substr(name,0,instr(NAME,'→',1,3)-1) name3, ACPT_TIME ,
+      count(1) as num1,
+    sum(case when  substr(name,0,instr(NAME,'→',1,4)-1) like '%全局流转' then 1 else 0 end )  num2
+    from NGCS_WF_CMPLNTS_COLLECT 
+            GROUP BY ACPT_TIME,NAME
+        ) GROUP BY ACPT_TIME,NAME3
+      ) where 1 = 1  and VALUE >0 $customwhere$
+      )
+			)ORDER BY /*ORDERBY*/ than desc /*ORDERBY*/
+				 
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<text displayname='标签名称' name='name' />
+        	<text displayname='工单量 >' name='count' />
+        	<date displayname="时间" name="ntime" class='Wdate' dateFmt='yyyy-MM' />
+        </condition>
+         <customwhere name="customwhere" prepend="and" >
+        	<field prepend='and' operator='like' colname='NAME3'  value='#name#' />
+        	<field prepend='and' operator='>' colname='VAL1'  value='#count#' />
+        	<field prepend='and' operator='like' colname='ACPT_TIME'  value='#ntime#' />
+        	<!-- <field prepend='and' operator='like' colname='ACPT_TIME'  value='#begintime#' /> -->
+        	<field prepend='and' operator='like' colname='NAME3'  value='#category_s#' />
+        	
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_COM_SEVEN.query">
+        <select>
+            <![CDATA[
+				 
+				 		
+				select /*COUNT*/ * /*COUNT*/ from (
+				 select  ACPT_TIME,NAME3,val1,VALUE,round(VALUE/val1*100,2) as than  from (
+				 select * from(
+				  select ACPT_TIME,NAME3,sum(num1) val1,sum(num2) as VALUE from (
+				   select substr(name,0,instr(NAME,'→',1,6)-1) name3,ACPT_TIME ,count(1) AS num1 ,
+						sum(case when  NAME like '%全局流转' then 1 else 0 end )	num2  from NGCS_WF_CMPLNTS_COLLECT 
+								 GROUP BY ACPT_TIME,NAME
+								 ) GROUP BY ACPT_TIME,NAME3
+							 )    where 1 = 1  and VALUE >0 $customwhere$ 
+					 )
+				 ) ORDER BY /*ORDERBY*/ than desc /*ORDERBY*/
+				 
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<text displayname='标签名称' name='name' />
+        	<text displayname='工单量 >' name='count' />
+        	<date displayname="时间" name="ntime" class='Wdate' dateFmt='yyyy-MM' />
+        </condition>
+         <customwhere name="customwhere" prepend="and" >
+        	<field prepend='and' operator='like' colname='NAME3'  value='#name#' />
+        	<field prepend='and' operator='>' colname='VAL1'  value='#count#' />
+        	<field prepend='and' operator='like' colname='ACPT_TIME'  value='#ntime#' />
+        	<field prepend='and' operator='like' colname='NAME3'  value='#category_s#' />
+        </customwhere>
+	</sqlquery>
+	
+</sql-group>

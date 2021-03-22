@@ -1,0 +1,5155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-group>
+	<doc>
+		<author></author>
+		<date></date>
+		<description>普通投诉 A折线图——B饼图</description>
+	</doc>
+
+	<!-- 客户投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_1_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ acpt_time AS mon, count(1) AS value /*COUNT*/ 
+				FROM NGCS_WF_CMPLNTS_COLLECT
+					WHERE 1 = 1  $customwhere$
+				GROUP BY acpt_time order by /*ORDERBY*/ acpt_time ,value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+	</sqlquery>
+	
+
+	<!-- 客户投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_1_CLD_B.query">
+		<!-- 明细 --> 
+		<select>
+            <![CDATA[
+				select /*COUNT*/ * /*COUNT*/ from (
+					SELECT substr(name,instr(name,'→',-1,2)+1) name,count(1) AS value
+						FROM NGCS_WF_CMPLNTS_COLLECT
+							WHERE 1 = 1   $customwhere$
+						GROUP BY name order by value Desc  
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+	</sqlquery>
+	
+	<!-- 客户投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_1_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				select /*COUNT*/ * /*COUNT*/ from (
+					SELECT area_name,count(1) AS value
+						FROM NGCS_WF_CMPLNTS_COLLECT
+							WHERE 1 = 1   $customwhere$
+						GROUP BY area_name order by value Desc  
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+	</sqlquery>
+
+	<!-- 重复投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_3_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+			SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT acpt_time AS mon ,count(1) AS value 
+					FROM (SELECT CALLING_NUM AS phone,a12 AS name, area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+						FROM NGCS_WF_CMPLNTS_REQST_DETAIL  WHERE (IF_TS='0'AND A02 IN ('移动业务','增值业务','家庭业务','集团业务') OR (A02 = '服务类' AND A03 ='客户投诉'))
+						
+						UNION ALL 
+						SELECT acpt_num AS phone ,SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+						FROM NGCS_WF_CMPLNTS_ARC_DETAIL)
+				GROUP BY acpt_time)
+				WHERE value >1 order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>PHONE</name>
+			<namestr>手机号</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 重复投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_3_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+			select /*COUNT*/ * /*COUNT*/ from (
+        SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value
+					FROM (SELECT CALLING_NUM AS phone,a12 AS name, area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+						FROM NGCS_WF_CMPLNTS_REQST_DETAIL  WHERE (IF_TS='0'AND A02 IN ('移动业务','增值业务','家庭业务','集团业务') OR (A02 = '服务类' AND A03 ='客户投诉'))
+						
+						UNION ALL 
+						SELECT acpt_num AS phone ,SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+						FROM NGCS_WF_CMPLNTS_ARC_DETAIL)
+				GROUP BY name)
+				WHERE value >1 order by  value Desc 
+				) where  rownum<11
+				order by/*ORDERBY*/  value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>PHONE</name>
+			<namestr>手机号</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 重复投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_3_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+								select /*COUNT*/ * /*COUNT*/ from (
+        SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value
+					FROM (SELECT  area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+						FROM NGCS_WF_CMPLNTS_REQST_DETAIL  WHERE (IF_TS='0'AND A02 IN ('移动业务','增值业务','家庭业务','集团业务') OR (A02 = '服务类' AND A03 ='客户投诉'))
+						
+						UNION ALL 
+						SELECT  area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+						FROM NGCS_WF_CMPLNTS_ARC_DETAIL) where 1=1 $customwhere$
+				GROUP BY area_name)
+				WHERE value >1 order by  value Desc 
+				)
+				order by/*ORDERBY*/  value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>PHONE</name>
+			<namestr>手机号</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 批量普通投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_6_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+					
+					SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT acpt_time AS mon ,count(1) AS value 
+					FROM NGCS_WF_CMPLNTS_COLLECT where 1=1 $customwhere$
+					GROUP BY acpt_time,name)
+					WHERE value > 500  order by /*ORDERBY*/  value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	<!-- 批量普通投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_6_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[								 
+        select /*COUNT*/ * /*COUNT*/ from (
+             SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value,acpt_time
+					FROM NGCS_WF_CMPLNTS_COLLECT where 1=1 $customwhere$
+					GROUP BY name,acpt_time)
+					WHERE value > 500  order by  value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!-- 批量普通投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_6_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[								 
+        select /*COUNT*/ * /*COUNT*/ from (
+             SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT count(1) AS value,AREA_NAME
+					FROM NGCS_WF_CMPLNTS_COLLECT where 1=1 $customwhere$
+					GROUP BY AREA_NAME)
+					WHERE value > 500  order by  value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!-- 互联网渠道客户投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_8_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+					SELECT/*COUNT*/ acpt_time AS mon, count(1) AS value /*COUNT*/
+					FROM (SELECT ACPT_CHNL_ID_NAME AS name , area_name, to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+					FROM NGCS_WF_CMPLNTS_REQST_DETAIL  WHERE (IF_TS='0'AND A02 IN ('移动业务','增值业务','家庭业务','集团业务') OR (A02 = '服务类' AND A03 ='客户投诉'))
+					
+					UNION ALL 
+					SELECT ACPT_CHNL_NM AS name, area_name, to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time    
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL)
+					WHERE 1=1  $customwhere$
+					GROUP BY acpt_time  order by /*ORDERBY*/ acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 互联网渠道客户投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_8_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value
+					FROM (SELECT ACPT_CHNL_ID_NAME AS name , area_name, to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+					FROM NGCS_WF_CMPLNTS_REQST_DETAIL  WHERE (IF_TS='0'AND A02 IN ('移动业务','增值业务','家庭业务','集团业务') OR (A02 = '服务类' AND A03 ='客户投诉'))
+					
+					UNION ALL 
+					SELECT ACPT_CHNL_NM AS name, area_name, to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time    
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL)
+					WHERE 1=1  $customwhere$
+					GROUP BY name  order by   value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 互联网渠道客户投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_8_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value
+					FROM (SELECT ACPT_CHNL_ID_NAME AS name , area_name, to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+					FROM NGCS_WF_CMPLNTS_REQST_DETAIL  WHERE (IF_TS='0'AND A02 IN ('移动业务','增值业务','家庭业务','集团业务') OR (A02 = '服务类' AND A03 ='客户投诉'))
+					
+					UNION ALL 
+					SELECT ACPT_CHNL_NM AS name, area_name, to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time    
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL)
+					WHERE 1=1  $customwhere$
+					GROUP BY area_name  order by   value Desc 
+				)
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 移动业务投诉量_明细_A -->
+	<sqlquery name="SQL_IND_9_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+					
+					SELECT /*COUNT*/ acpt_time AS mon, count(1) AS value /*COUNT*/ 
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					  WHERE name LIKE '移动业务%'  $customwhere$ 
+            GROUP BY acpt_time  order by /*ORDERBY*/ acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 移动业务投诉量_明细_B -->
+	<sqlquery name="SQL_IND_9_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+					SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					  WHERE name LIKE '移动业务%'  $customwhere$ 
+                     GROUP BY name  order by  value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 移动业务投诉量_明细_C -->
+	<sqlquery name="SQL_IND_9_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+					SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					  WHERE name LIKE '移动业务%'  $customwhere$ 
+                     GROUP BY area_name  order by  value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 4G网络质量投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_11_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+					SELECT /*COUNT*/ acpt_time AS mon,count(1) AS value/*COUNT*/
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '%移动业务→网络质量→手机上网（4G）%'
+					OR name LIKE '移动业务→网络质量→语音通话（4G）%'
+					OR name LIKE '移动业务→网络质量→VOLTE功能%'
+					OR name LIKE '移动业务→网络质量→多方通话（4G）%'
+					OR name LIKE '移动业务→网络质量→国内漫游（4G）%'
+					OR name LIKE '移动业务→网络质量→CPE%'
+					OR name LIKE '移动业务→网络质量→MIFI%')$customwhere$
+          GROUP BY  acpt_time order by  /*ORDERBY*/acpt_time, value Desc  /*ORDERBY*/
+					
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 4G网络质量投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_11_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '%移动业务→网络质量→手机上网（4G）%'
+					OR name LIKE '移动业务→网络质量→语音通话（4G）%'
+					OR name LIKE '移动业务→网络质量→VOLTE功能%'
+					OR name LIKE '移动业务→网络质量→多方通话（4G）%'
+					OR name LIKE '移动业务→网络质量→国内漫游（4G）%'
+					OR name LIKE '移动业务→网络质量→CPE%'
+					OR name LIKE '移动业务→网络质量→MIFI%')$customwhere$
+                    GROUP BY  name order by   value Desc  
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+					
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 4G网络质量投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_11_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '%移动业务→网络质量→手机上网（4G）%'
+					OR name LIKE '移动业务→网络质量→语音通话（4G）%'
+					OR name LIKE '移动业务→网络质量→VOLTE功能%'
+					OR name LIKE '移动业务→网络质量→多方通话（4G）%'
+					OR name LIKE '移动业务→网络质量→国内漫游（4G）%'
+					OR name LIKE '移动业务→网络质量→CPE%'
+					OR name LIKE '移动业务→网络质量→MIFI%') $customwhere$
+                    GROUP BY  area_name order by   value Desc  
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+					
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 4G语音通话投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_13_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+					SELECT /*COUNT*/acpt_time AS mon,count(1) AS value /*COUNT*/
+					FROM 
+						NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→网络质量→语音通话（4G）%'
+					OR name LIKE '移动业务→网络质量→多方通话（4G）%'
+					OR name LIKE '移动业务→网络质量→VOLTE功能→功能使用→VOLTE通话质量问题%'
+					OR name LIKE '移动业务→网络质量→国内漫游（4G）→功能使用→区域无信号%'
+					OR name LIKE '移动业务→网络质量→国内漫游（4G）→功能使用→区域信号弱%')$customwhere$	
+					GROUP BY acpt_time  order by /*ORDERBY*/ acpt_time,value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 4G语音通话投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_13_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+					SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+					FROM 
+						NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→网络质量→语音通话（4G）%'
+					OR name LIKE '移动业务→网络质量→多方通话（4G）%'
+					OR name LIKE '移动业务→网络质量→VOLTE功能→功能使用→VOLTE通话质量问题%'
+					OR name LIKE '移动业务→网络质量→国内漫游（4G）→功能使用→区域无信号%'
+					OR name LIKE '移动业务→网络质量→国内漫游（4G）→功能使用→区域信号弱%')$customwhere$	
+					GROUP BY name  order by   value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 4G语音通话投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_13_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+					SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+					FROM 
+						NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→网络质量→语音通话（4G）%'
+					OR name LIKE '移动业务→网络质量→多方通话（4G）%'
+					OR name LIKE '移动业务→网络质量→VOLTE功能→功能使用→VOLTE通话质量问题%'
+					OR name LIKE '移动业务→网络质量→国内漫游（4G）→功能使用→区域无信号%'
+					OR name LIKE '移动业务→网络质量→国内漫游（4G）→功能使用→区域信号弱%')$customwhere$	
+					GROUP BY area_name  order by   value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 4G手机上网投诉量—明细—图A -->
+	<sqlquery name="SQL_IND_15_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+					SELECT/*COUNT*/ acpt_time AS mon, count(1) AS value/*COUNT*/
+					FROM 
+						NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→网络质量→手机上网（4G）%'
+					OR name LIKE '移动业务→网络质量→国内漫游（4G）→功能使用→网速慢或网页无法打开%') $customwhere$	
+                     GROUP BY acpt_time  order by /*ORDERBY*/acpt_time, value Desc/*ORDERBY*/ 
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 4G手机上网投诉量—明细—图B -->
+	<sqlquery name="SQL_IND_15_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+					 SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+					FROM 
+						NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→网络质量→手机上网（4G）%'
+					OR name LIKE '移动业务→网络质量→国内漫游（4G）→功能使用→网速慢或网页无法打开%') $customwhere$	
+           GROUP BY name  order by  value Desc
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 4G手机上网投诉量—明细—图C -->
+	<sqlquery name="SQL_IND_15_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+					 SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+					FROM 
+						NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→网络质量→手机上网（4G）%'
+					OR name LIKE '移动业务→网络质量→国内漫游（4G）→功能使用→网速慢或网页无法打开%') $customwhere$	
+           GROUP BY area_name  order by  value Desc
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 移动业务营销投诉量-明细-图A -->
+	<sqlquery name="SQL_IND_17_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+            
+					SELECT /*COUNT*/ acpt_time AS mon,count(1) AS value /*COUNT*/
+					FROM 
+						NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→业务营销→%营销宣传%'
+					OR name LIKE '移动业务→业务营销→%办理规范%'
+					OR name LIKE '移动业务→业务营销→%售后服务%') $customwhere$
+                     GROUP BY acpt_time  order by /*ORDERBY*/ acpt_time, value Desc /*ORDERBY*/
+
+
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 移动业务营销投诉量-明细-图B -->
+	<sqlquery name="SQL_IND_17_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+            
+         					SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+					FROM 
+						NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→业务营销→%营销宣传%'
+					OR name LIKE '移动业务→业务营销→%办理规范%'
+					OR name LIKE '移动业务→业务营销→%售后服务%') $customwhere$
+                   GROUP BY name  order by  value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+
+
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 移动业务营销投诉量-明细-图C -->
+	<sqlquery name="SQL_IND_17_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+            
+         					SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+					FROM 
+						NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→业务营销→%营销宣传%'
+					OR name LIKE '移动业务→业务营销→%办理规范%'
+					OR name LIKE '移动业务→业务营销→%售后服务%') $customwhere$
+                   GROUP BY area_name  order by  value Desc 
+				)
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+
+
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 移动业务资费投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_19_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+					SELECT /*COUNT*/ acpt_time AS mon, count(1) AS value /*COUNT*/
+					FROM 
+						NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→基础服务→基础套餐→%费用质疑%'
+					OR name LIKE '移动业务→基础服务→基础套餐→%业务规则%'
+					OR name LIKE '移动业务→基础服务→流量套餐→%费用质疑%'
+					OR name LIKE '移动业务→基础服务→流量套餐→%业务规则%'
+					OR name LIKE '移动业务→业务营销→基础套餐→%费用质疑%'
+					OR name LIKE '移动业务→业务营销→基础套餐→%业务规则%'
+					OR name LIKE '移动业务→业务营销→流量套餐→%费用质疑%'
+					OR name LIKE '移动业务→业务营销→流量套餐→%业务规则%') $customwhere$ 
+                    GROUP BY acpt_time  order by /*ORDERBY*/ acpt_time ,  value Desc /*ORDERBY*/ 
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 移动业务资费投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_19_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+					  SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+					FROM 
+						NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→基础服务→基础套餐→%费用质疑%'
+					OR name LIKE '移动业务→基础服务→基础套餐→%业务规则%'
+					OR name LIKE '移动业务→基础服务→流量套餐→%费用质疑%'
+					OR name LIKE '移动业务→基础服务→流量套餐→%业务规则%'
+					OR name LIKE '移动业务→业务营销→基础套餐→%费用质疑%'
+					OR name LIKE '移动业务→业务营销→基础套餐→%业务规则%'
+					OR name LIKE '移动业务→业务营销→流量套餐→%费用质疑%'
+					OR name LIKE '移动业务→业务营销→流量套餐→%业务规则%') $customwhere$ 
+          GROUP BY name  order by   value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 移动业务资费投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_19_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+					  SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+					FROM 
+						NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→基础服务→基础套餐→%费用质疑%'
+					OR name LIKE '移动业务→基础服务→基础套餐→%业务规则%'
+					OR name LIKE '移动业务→基础服务→流量套餐→%费用质疑%'
+					OR name LIKE '移动业务→基础服务→流量套餐→%业务规则%'
+					OR name LIKE '移动业务→业务营销→基础套餐→%费用质疑%'
+					OR name LIKE '移动业务→业务营销→基础套餐→%业务规则%'
+					OR name LIKE '移动业务→业务营销→流量套餐→%费用质疑%'
+					OR name LIKE '移动业务→业务营销→流量套餐→%业务规则%') $customwhere$ 
+          GROUP BY area_name  order by   value Desc 
+				)
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 家庭业务投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_21_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ acpt_time AS mon,count(1) AS value /*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				   WHERE name LIKE '家庭业务%' $customwhere$ 
+                  GROUP BY acpt_time  order by /*ORDERBY*/acpt_time,  value Desc /*ORDERBY*/ 
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 家庭业务投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_21_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+                SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				   WHERE name LIKE '家庭业务%' $customwhere$ 
+                  GROUP BY name  order by   value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 家庭业务投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_21_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+                 SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				   WHERE name LIKE '家庭业务%' $customwhere$ 
+                  GROUP BY area_name  order by   value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 家庭宽带投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_23_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				SELECT  /*COUNT*/acpt_time AS mon,count(1) AS value /*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT	
+				WHERE (name LIKE '家庭业务→产品质量→家庭宽带%'
+				OR name LIKE '家庭业务→产品质量→智能组网%'
+				OR name LIKE '家庭业务→基础服务→家庭宽带%'
+				OR name LIKE '家庭业务→基础服务→智能组网%'
+				OR name LIKE '家庭业务→网络质量→家庭宽带%'
+				OR name LIKE '家庭业务→网络质量→智能组网%'
+				OR name LIKE '家庭业务→业务营销→家庭宽带%'
+				OR name LIKE '家庭业务→业务营销→智能组网%'
+				OR name LIKE '家庭业务→服务触点→装维人员%') $customwhere$ 
+	            GROUP BY acpt_time  order by /*ORDERBY*/acpt_time, value Desc /*ORDERBY*/
+            
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 家庭宽带投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_23_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				  SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT	
+				WHERE (name LIKE '家庭业务→产品质量→家庭宽带%'
+				OR name LIKE '家庭业务→产品质量→智能组网%'
+				OR name LIKE '家庭业务→基础服务→家庭宽带%'
+				OR name LIKE '家庭业务→基础服务→智能组网%'
+				OR name LIKE '家庭业务→网络质量→家庭宽带%'
+				OR name LIKE '家庭业务→网络质量→智能组网%'
+				OR name LIKE '家庭业务→业务营销→家庭宽带%'
+				OR name LIKE '家庭业务→业务营销→智能组网%'
+				OR name LIKE '家庭业务→服务触点→装维人员%') $customwhere$ 
+	            GROUP BY name  order by  value Desc 
+            
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 家庭宽带投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_23_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				  SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT	
+				WHERE (name LIKE '家庭业务→产品质量→家庭宽带%'
+				OR name LIKE '家庭业务→产品质量→智能组网%'
+				OR name LIKE '家庭业务→基础服务→家庭宽带%'
+				OR name LIKE '家庭业务→基础服务→智能组网%'
+				OR name LIKE '家庭业务→网络质量→家庭宽带%'
+				OR name LIKE '家庭业务→网络质量→智能组网%'
+				OR name LIKE '家庭业务→业务营销→家庭宽带%'
+				OR name LIKE '家庭业务→业务营销→智能组网%'
+				OR name LIKE '家庭业务→服务触点→装维人员%') $customwhere$ 
+	            GROUP BY area_name  order by  value Desc 
+            
+				)
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 家庭宽带网络质量投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_25_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ acpt_time AS mon, count(1) AS value/*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				WHERE (name LIKE '家庭业务→网络质量→家庭宽带%'
+				OR name LIKE '家庭业务→网络质量→智能组网%') $customwhere$ 
+               GROUP BY acpt_time order by /*ORDERBY*/acpt_time, value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 家庭宽带网络质量投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_25_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+				    FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				WHERE (name LIKE '家庭业务→网络质量→家庭宽带%'
+				OR name LIKE '家庭业务→网络质量→智能组网%') $customwhere$ 
+               GROUP BY name order by  value Desc 
+            
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 家庭宽带网络质量投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_25_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+				    FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				WHERE (name LIKE '家庭业务→网络质量→家庭宽带%'
+				OR name LIKE '家庭业务→网络质量→智能组网%') $customwhere$ 
+               GROUP BY area_name order by  value Desc 
+            
+				)
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 家庭宽带装维投诉量 _明细_图A-->
+	<sqlquery name="SQL_IND_27_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ acpt_time AS mon,count(1) AS value/*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				  WHERE name LIKE '家庭业务→服务触点→装维人员%' $customwhere$ 
+                  GROUP BY acpt_time order by /*ORDERBY*/ acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 家庭宽带装维投诉量 _明细_图B-->
+	<sqlquery name="SQL_IND_27_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+        SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				  WHERE name LIKE '家庭业务→服务触点→装维人员%' $customwhere$ 
+                  GROUP BY name order by  value Desc 
+            
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 家庭宽带装维投诉量 _明细_图C-->
+	<sqlquery name="SQL_IND_27_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+        SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				  WHERE name LIKE '家庭业务→服务触点→装维人员%' $customwhere$ 
+                  GROUP BY area_name order by  value Desc 
+            
+				)
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 家庭宽带营销投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_29_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT  /*COUNT*/acpt_time AS mon,count(1) AS value/*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				    WHERE name LIKE '家庭业务→业务营销→家庭宽带%' $customwhere$  
+	                GROUP BY acpt_time order by  /*ORDERBY*/ acpt_time , value Desc  /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	<!-- 家庭宽带营销投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_29_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				        SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				    WHERE name LIKE '家庭业务→业务营销→家庭宽带%' $customwhere$  
+	                GROUP BY name order by   value Desc  
+            
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+
+	
+	
+	<!-- 家庭宽带营销投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_29_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				        SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				    WHERE name LIKE '家庭业务→业务营销→家庭宽带%' $customwhere$  
+	                GROUP BY area_name order by   value Desc  
+            
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!-- 魔百和投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_31_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ acpt_time AS mon,count(1) AS value/*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT	
+				WHERE (name LIKE '家庭业务→产品质量→互联网电视%'
+				OR name LIKE '家庭业务→基础服务→互联网电视%'
+				OR name LIKE '家庭业务→网络质量→互联网电视%'
+				OR name LIKE '家庭业务→业务营销→互联网电视%'
+				OR name LIKE '家庭业务→基础服务→魔百和%'
+				OR name LIKE '家庭业务→业务营销→魔百和%') $customwhere$
+                GROUP BY acpt_time  order by /*ORDERBY*/ acpt_time , value Desc/*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 魔百和投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_31_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT	
+				WHERE (name LIKE '家庭业务→产品质量→互联网电视%'
+				OR name LIKE '家庭业务→基础服务→互联网电视%'
+				OR name LIKE '家庭业务→网络质量→互联网电视%'
+				OR name LIKE '家庭业务→业务营销→互联网电视%'
+				OR name LIKE '家庭业务→基础服务→魔百和%'
+				OR name LIKE '家庭业务→业务营销→魔百和%') $customwhere$
+                GROUP BY name  order by   value Desc
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 魔百和投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_31_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT	
+				WHERE (name LIKE '家庭业务→产品质量→互联网电视%'
+				OR name LIKE '家庭业务→基础服务→互联网电视%'
+				OR name LIKE '家庭业务→网络质量→互联网电视%'
+				OR name LIKE '家庭业务→业务营销→互联网电视%'
+				OR name LIKE '家庭业务→基础服务→魔百和%'
+				OR name LIKE '家庭业务→业务营销→魔百和%') $customwhere$
+                GROUP BY area_name  order by   value Desc
+				)
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	<!-- 增值业务投诉量 _明细_图A-->
+	<sqlquery name="SQL_IND_33_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				SELECT  /*COUNT*/acpt_time AS mon,count(1) AS value/*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				      WHERE name LIKE '增值业务%'  $customwhere$
+	              GROUP BY acpt_time order by /*ORDERBY*/ acpt_time , value Desc /*ORDERBY*/
+            
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 增值业务投诉量 _明细_图B-->
+	<sqlquery name="SQL_IND_33_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				      WHERE name LIKE '增值业务%'  $customwhere$
+	              GROUP BY name order by  value Desc 
+            
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+            
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 增值业务投诉量 _明细_图C-->
+	<sqlquery name="SQL_IND_33_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				      WHERE name LIKE '增值业务%'  $customwhere$
+	              GROUP BY area_name order by  value Desc 
+            
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+            
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 移动增值业务投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_35_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT  /*COUNT*/  acpt_time AS mon,count(1) AS value /*COUNT*/ 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				  WHERE name NOT LIKE '增值业务→魔百和%'
+				  AND name LIKE '增值业务%' $customwhere$ 
+                  GROUP BY acpt_time order by /*ORDERBY*/ acpt_time , value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 移动增值业务投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_35_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				   SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value  
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				  WHERE name NOT LIKE '增值业务→魔百和%'
+				  AND name LIKE '增值业务%' $customwhere$ 
+                  GROUP BY name order by  value Desc 
+            
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 移动增值业务投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_35_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				   SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value  
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				  WHERE name NOT LIKE '增值业务→魔百和%'
+				  AND name LIKE '增值业务%' $customwhere$ 
+                  GROUP BY area_name order by  value Desc 
+            
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	
+	<!-- 家庭增值业务投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_37_CLD_A.query">
+		<!--明细 -->
+		<select>
+            <![CDATA[
+				
+				SELECT /*COUNT*/  acpt_time AS mon,count(1) AS value/*COUNT*/ 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				    WHERE (name LIKE '增值业务→基础服务→魔百和%'
+				    OR name LIKE '增值业务→业务营销→魔百和%') $customwhere$ 
+                   GROUP BY acpt_time order by /*ORDERBY*/ acpt_time , value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 家庭增值业务投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_37_CLD_B.query">
+		<!--明细 -->
+		<select>
+            <![CDATA[
+				    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value  
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				    WHERE (name LIKE '增值业务→基础服务→魔百和%'
+				    OR name LIKE '增值业务→业务营销→魔百和%') $customwhere$ 
+                   GROUP BY name order by value Desc 
+            
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 家庭增值业务投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_37_CLD_C.query">
+		<!--明细 -->
+		<select>
+            <![CDATA[
+				    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value  
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				    WHERE (name LIKE '增值业务→基础服务→魔百和%'
+				    OR name LIKE '增值业务→业务营销→魔百和%') $customwhere$ 
+                   GROUP BY area_name order by value Desc 
+            
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 集团业务投诉量 _明细_A-->
+	<sqlquery name="SQL_IND_39_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+					SELECT /*COUNT*/ acpt_time AS mon,count(1) AS value/*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				     WHERE name LIKE '集团业务%'  $customwhere$  
+                    GROUP BY acpt_time order by /*ORDERBY*/ acpt_time , value Desc/*ORDERBY*/ 
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 集团业务投诉量 _明细_B-->
+	<sqlquery name="SQL_IND_39_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value  
+				    FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				     WHERE name LIKE '集团业务%'  $customwhere$  
+                    GROUP BY name order by  value Desc 
+            
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	<!-- 集团业务投诉量 _明细_C-->
+	<sqlquery name="SQL_IND_39_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value  
+				    FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				     WHERE name LIKE '集团业务%'  $customwhere$  
+                    GROUP BY area_name order by  value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 服务触点投诉量 _明细_图A-->
+	<sqlquery name="SQL_IND_41_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/  acpt_time AS mon,count(1) AS value/*COUNT*/ 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				WHERE (name LIKE '移动业务→服务触点%'
+				OR name LIKE '家庭业务→服务触点%'
+				OR name LIKE '增值业务→服务触点%'
+				OR name LIKE '集团业务→服务触点%') $customwhere$ 
+                GROUP BY acpt_time order by/*ORDERBY*/ acpt_time , value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 服务触点投诉量 _明细_图B-->
+	<sqlquery name="SQL_IND_41_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				WHERE (name LIKE '移动业务→服务触点%'
+				OR name LIKE '家庭业务→服务触点%'
+				OR name LIKE '增值业务→服务触点%'
+				OR name LIKE '集团业务→服务触点%') $customwhere$ 
+                GROUP BY name order by value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	<!-- 服务触点投诉量 _明细_图C-->
+	<sqlquery name="SQL_IND_41_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				WHERE (name LIKE '移动业务→服务触点%'
+				OR name LIKE '家庭业务→服务触点%'
+				OR name LIKE '增值业务→服务触点%'
+				OR name LIKE '集团业务→服务触点%') $customwhere$ 
+                GROUP BY area_name order by value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	
+	<!-- 不知情定制投诉量 _明细_图A-->
+	<sqlquery name="SQL_IND_43_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+					SELECT /*COUNT*/ acpt_time AS mon,count(1) AS value/*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+					
+				WHERE (name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%') $customwhere$ 
+                GROUP BY acpt_time order by/*ORDERBY*/ acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 不知情定制投诉量 _明细_图B-->
+	<sqlquery name="SQL_IND_43_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+			    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+					
+				WHERE (name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%') $customwhere$ 
+                GROUP BY name order by value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	<!-- 不知情定制投诉量 _明细_图C-->
+	<sqlquery name="SQL_IND_43_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+			    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT area_name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+					
+				WHERE (name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%') $customwhere$ 
+                GROUP BY area_name order by value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	<!-- 移动业务不知情定制投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_45_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT  /*COUNT*/ acpt_time AS mon,count(1) AS value /*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				    WHERE name LIKE '移动业务%'
+				and ( name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%') $customwhere$ 
+                    GROUP BY acpt_time order by /*ORDERBY*/acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 移动业务不知情定制投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_45_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				    WHERE name LIKE '移动业务%'
+				and ( name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%') $customwhere$ 
+                    GROUP BY name order by  value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 移动业务不知情定制投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_45_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT area_name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				    WHERE name LIKE '移动业务%'
+				and ( name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%') $customwhere$ 
+                    GROUP BY area_name order by  value Desc 
+				)
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	
+	<!-- 家庭业务不知情定制投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_47_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+			
+				SELECT  acpt_time AS mon,count(1) AS value
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				WHERE name LIKE '家庭业务%'
+				and ( name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%') $customwhere$ 
+				GROUP BY acpt_time order by /*ORDERBY*/acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 家庭业务不知情定制投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_47_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+			
+				  SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				WHERE name LIKE '家庭业务%'
+				and ( name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%') $customwhere$ 
+				GROUP BY name order by  value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 家庭业务不知情定制投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_47_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+			
+				  SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT area_name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				WHERE name LIKE '家庭业务%'
+				and ( name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%') $customwhere$ 
+				GROUP BY area_name order by  value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 增值业务不知情定制投诉量 _明细_图A-->
+	<sqlquery name="SQL_IND_49_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT  /*COUNT*/acpt_time AS mon,count(1) AS value/*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+			        WHERE name LIKE '增值业务%'
+				and ( name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%')  $customwhere$ 
+                    GROUP BY acpt_time order by  /*ORDERBY*/acpt_time,  value Desc  /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 增值业务不知情定制投诉量 _明细_图B-->
+	<sqlquery name="SQL_IND_49_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				        SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+			        WHERE name LIKE '增值业务%'
+				and ( name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%')  $customwhere$ 
+                    GROUP BY name order by    value Desc  
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 增值业务不知情定制投诉量 _明细_图C-->
+	<sqlquery name="SQL_IND_49_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				        SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT area_name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+			        WHERE name LIKE '增值业务%'
+				and ( name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%')  $customwhere$ 
+                    GROUP BY area_name order by    value Desc  
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	<!-- 集团业务不知情定制投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_51_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ acpt_time AS mon,count(1) AS value/*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				  WHERE name LIKE '集团业务%'
+				and ( name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%') $customwhere$ 
+          GROUP BY acpt_time order by /*ORDERBY*/acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 集团业务不知情定制投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_51_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				  SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				  WHERE name LIKE '集团业务%'
+				and ( name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%') $customwhere$ 
+          GROUP BY name order by value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 集团业务不知情定制投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_51_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				  SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT area_name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				  WHERE name LIKE '集团业务%'
+				and ( name LIKE '%不知情办理%'
+				OR name LIKE '%不知情定制%'
+				OR name LIKE '%不知情办理、取消或变更%'
+				OR name LIKE '%不知情办理/退订%'
+				OR name LIKE '%不知情开通或取消%'
+				OR name LIKE '%不知情入网%'
+				OR name LIKE '%对查询到的业务订购关系不认同%'
+				OR name LIKE '%未订购业务，但被扣费%'
+				OR name LIKE '%没有订购关系，但被扣费%') $customwhere$ 
+          GROUP BY area_name order by value Desc 
+				)
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 限制客户更改套餐投诉量_明细_图A -->
+	<sqlquery name="SQL_IND_53_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+					SELECT /*COUNT*/ acpt_time AS mon,count(1) AS value/*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+					
+				WHERE (name LIKE '移动业务→业务营销→定制终端→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→全球通品牌重塑→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→终端业务→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→基础套餐→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→基础套餐→%业务规则→仅限目标客户办理%'
+				OR name LIKE '移动业务→业务营销→基础套餐→%业务规则→仅限新入网客户办理%'
+				OR name LIKE '移动业务→业务营销→流量套餐→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→流量套餐→%业务规则→仅限目标客户办理%'
+				OR name LIKE '移动业务→业务营销→流量套餐→%业务规则→仅限新入网客户办理%') $customwhere$ 
+                GROUP BY acpt_time order by /*ORDERBY*/acpt_time,value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 限制客户更改套餐投诉量_明细_图B -->
+	<sqlquery name="SQL_IND_53_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[	
+                SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+					
+				WHERE (name LIKE '移动业务→业务营销→定制终端→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→全球通品牌重塑→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→终端业务→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→基础套餐→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→基础套餐→%业务规则→仅限目标客户办理%'
+				OR name LIKE '移动业务→业务营销→基础套餐→%业务规则→仅限新入网客户办理%'
+				OR name LIKE '移动业务→业务营销→流量套餐→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→流量套餐→%业务规则→仅限目标客户办理%'
+				OR name LIKE '移动业务→业务营销→流量套餐→%业务规则→仅限新入网客户办理%') $customwhere$ 
+                GROUP BY name order by  value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 限制客户更改套餐投诉量_明细_图C -->
+	<sqlquery name="SQL_IND_53_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[	
+                SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT area_name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+					
+				WHERE (name LIKE '移动业务→业务营销→定制终端→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→全球通品牌重塑→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→终端业务→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→基础套餐→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→基础套餐→%业务规则→仅限目标客户办理%'
+				OR name LIKE '移动业务→业务营销→基础套餐→%业务规则→仅限新入网客户办理%'
+				OR name LIKE '移动业务→业务营销→流量套餐→%业务规则→活动期内限制变更套餐%'
+				OR name LIKE '移动业务→业务营销→流量套餐→%业务规则→仅限目标客户办理%'
+				OR name LIKE '移动业务→业务营销→流量套餐→%业务规则→仅限新入网客户办理%') $customwhere$ 
+                GROUP BY area_name order by  value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 无法停机销户投诉量 _明细_图A-->
+	<sqlquery name="SQL_IND_55_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/  acpt_time AS mon,count(1) AS value/*COUNT*/ 
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+					
+				WHERE (name LIKE '移动业务→基础服务→跨区销号→%办理规范%'
+				OR name LIKE '移动业务→基础服务→停/复机→%办理规范%'
+				OR name LIKE '移动业务→基础服务→销户→%办理规范%'
+				OR name LIKE '移动业务→基础服务→跨区销号→%功能使用%'
+				OR name LIKE '移动业务→基础服务→跨区销号→%业务规则%'
+				OR name LIKE '移动业务→基础服务→停/复机→%功能使用%'
+				OR name LIKE '移动业务→基础服务→停/复机→%业务规则%'
+				OR name LIKE '移动业务→基础服务→销户→%功能使用%'
+				OR name LIKE '移动业务→基础服务→销户→%业务规则%')  and name not like '%缴费后未及时开机%' $customwhere$ 
+                 GROUP BY acpt_time order by /*ORDERBY*/acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 无法停机销户投诉量 _明细_图B-->
+	<sqlquery name="SQL_IND_55_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+					
+				WHERE (name LIKE '移动业务→基础服务→跨区销号→%办理规范%'
+				OR name LIKE '移动业务→基础服务→停/复机→%办理规范%'
+				OR name LIKE '移动业务→基础服务→销户→%办理规范%'
+				OR name LIKE '移动业务→基础服务→跨区销号→%功能使用%'
+				OR name LIKE '移动业务→基础服务→跨区销号→%业务规则%'
+				OR name LIKE '移动业务→基础服务→停/复机→%功能使用%'
+				OR name LIKE '移动业务→基础服务→停/复机→%业务规则%'
+				OR name LIKE '移动业务→基础服务→销户→%功能使用%'
+				OR name LIKE '移动业务→基础服务→销户→%业务规则%')  and name not like '%缴费后未及时开机%' $customwhere$ 
+                 GROUP BY name order by  value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	
+	<!-- 无法停机销户投诉量 _明细_图C-->
+	<sqlquery name="SQL_IND_55_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT area_name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+					
+				WHERE (name LIKE '移动业务→基础服务→跨区销号→%办理规范%'
+				OR name LIKE '移动业务→基础服务→停/复机→%办理规范%'
+				OR name LIKE '移动业务→基础服务→销户→%办理规范%'
+				OR name LIKE '移动业务→基础服务→跨区销号→%功能使用%'
+				OR name LIKE '移动业务→基础服务→跨区销号→%业务规则%'
+				OR name LIKE '移动业务→基础服务→停/复机→%功能使用%'
+				OR name LIKE '移动业务→基础服务→停/复机→%业务规则%'
+				OR name LIKE '移动业务→基础服务→销户→%功能使用%'
+				OR name LIKE '移动业务→基础服务→销户→%业务规则%')  and name not like '%缴费后未及时开机%' $customwhere$ 
+                 GROUP BY area_name order by  value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 携号转网投诉量_明细_A -->
+	<sqlquery name="SQL_IND_57_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ acpt_time AS mon,count(1) AS value/*COUNT*/
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				   WHERE (name LIKE '移动业务→基础服务→携号转网成功%'
+				  OR name LIKE '移动业务→基础服务→携号转网失败%') $customwhere$
+                  GROUP BY acpt_time  order by /*ORDERBY*/acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	<!-- 携号转网投诉量_明细_B -->
+	<sqlquery name="SQL_IND_57_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				   WHERE (name LIKE '移动业务→基础服务→携号转网成功%'
+				  OR name LIKE '移动业务→基础服务→携号转网失败%') $customwhere$
+                  GROUP BY name  order by  value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 携号转网投诉量_明细_C -->
+	<sqlquery name="SQL_IND_57_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM(
+				SELECT area_name,count(1) AS value   
+				FROM 
+					NGCS_WF_CMPLNTS_COLLECT
+				   WHERE (name LIKE '移动业务→基础服务→携号转网成功%'
+				  OR name LIKE '移动业务→基础服务→携号转网失败%') $customwhere$
+                  GROUP BY area_name  order by  value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 跨省投诉量_A -->
+	<sqlquery name="SQL_IND_7_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+					SELECT /*COUNT*/ acpt_time AS mon, count(1) AS value /*COUNT*/ 	FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+						FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE ACPT_CHNL_NM = '省际交互')
+						 WHERE 1 = 1 $customwhere$
+            GROUP BY acpt_time  order by /*ORDERBY*/ acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	
+	<!-- 跨省投诉量_图B -->
+	<sqlquery name="SQL_IND_7_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value
+					FROM (SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+						FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE ACPT_CHNL_NM = '省际交互')
+					WHERE 1=1  $customwhere$
+					GROUP BY name  order by   value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 跨省投诉量_图C -->
+	<sqlquery name="SQL_IND_7_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value
+					FROM (SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+						FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE ACPT_CHNL_NM = '省际交互')
+					WHERE 1=1  $customwhere$
+					GROUP BY area_name  order by   value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+		<!-- 总体投诉处理解决率_A -->
+	<sqlquery name="SQL_IND_59_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+					SELECT /*COUNT*/ acpt_time AS mon, count(1) AS value /*COUNT*/ 	FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE RSLV_EXTENT IN ('已解决','部分解决')
+					UNION ALL 
+					SELECT a12 AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+					FROM NGCS_WF_CMPLNTS_REQST_DETAIL  WHERE (IF_TS='0'AND A02 IN ('移动业务','增值业务','家庭业务','集团业务') OR (A02 = '服务类' AND A03 ='客户投诉')))
+						 WHERE 1 = 1 $customwhere$
+            GROUP BY acpt_time  order by /*ORDERBY*/ acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!-- 总体投诉处理解决率_图B -->
+	<sqlquery name="SQL_IND_59_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value
+					FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE RSLV_EXTENT IN ('已解决','部分解决')
+					UNION ALL 
+					SELECT a12 AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+					FROM NGCS_WF_CMPLNTS_REQST_DETAIL  WHERE (IF_TS='0'AND A02 IN ('移动业务','增值业务','家庭业务','集团业务') OR (A02 = '服务类' AND A03 ='客户投诉'))
+							)
+					WHERE 1=1  $customwhere$
+					GROUP BY name  order by   value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	<!-- 总体投诉处理解决率_图C -->
+	<sqlquery name="SQL_IND_59_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value
+					FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE RSLV_EXTENT IN ('已解决','部分解决')
+					UNION ALL 
+					SELECT a12 AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+					FROM NGCS_WF_CMPLNTS_REQST_DETAIL  WHERE (IF_TS='0'AND A02 IN ('移动业务','增值业务','家庭业务','集团业务') OR (A02 = '服务类' AND A03 ='客户投诉'))
+							)
+					WHERE 1=1  $customwhere$
+					GROUP BY area_name  order by   value Desc 
+				)
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	
+	
+	<!-- 总体投诉处理满意率_A -->
+	<sqlquery name="SQL_IND_60_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+					SELECT /*COUNT*/ acpt_time AS mon, count(1) AS value /*COUNT*/ 	FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE SMS_FDBK_SATIS_DGR IN ('非常满意','满意'))
+						 WHERE 1 = 1 $customwhere$
+            GROUP BY acpt_time  order by /*ORDERBY*/ acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	
+	
+	
+	
+	<!-- 总体投诉处理满意率_图B -->
+	<sqlquery name="SQL_IND_60_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value
+					FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE SMS_FDBK_SATIS_DGR IN ('非常满意','满意')
+							)
+					WHERE 1=1  $customwhere$
+					GROUP BY name  order by   value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	<!-- 总体投诉处理满意率_图C -->
+	<sqlquery name="SQL_IND_60_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value
+					FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE SMS_FDBK_SATIS_DGR IN ('非常满意','满意')
+							)
+					WHERE 1=1  $customwhere$
+					GROUP BY area_name  order by   value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+		<!-- 总体投诉处理及时率_A -->
+	<sqlquery name="SQL_IND_61_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+					SELECT /*COUNT*/ acpt_time AS mon, count(1) AS value /*COUNT*/ 	FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE ARC_TIME <= EXPR_TIME)
+						 WHERE 1 = 1 $customwhere$
+            GROUP BY acpt_time  order by /*ORDERBY*/ acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	
+	<!-- 总体投诉处理及时率_图B -->
+	<sqlquery name="SQL_IND_61_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value
+					FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE ARC_TIME <= EXPR_TIME
+							)
+					WHERE 1=1  $customwhere$
+					GROUP BY name  order by   value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 总体投诉处理及时率_图C -->
+	<sqlquery name="SQL_IND_61_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value
+					FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE ARC_TIME <= EXPR_TIME
+							)
+					WHERE 1=1  $customwhere$
+					GROUP BY area_name  order by   value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	
+	
+		<!-- 投诉处理平均时长_A -->
+	<sqlquery name="SQL_IND_62_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+            
+            SELECT /*COUNT*/ acpt_time AS mon, count(1) AS value /*COUNT*/ 	FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name  ,area_name,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+				FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE TOTAL_TIME3 IS NOT NULL)
+						 WHERE 1 = 1 $customwhere$
+            GROUP BY acpt_time  order by /*ORDERBY*/ acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	
+	
+		<!-- 投诉处理平均时长_图B -->
+	<sqlquery name="SQL_IND_62_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT  name,count(1) AS value
+					FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name  ,area_name,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+				FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE TOTAL_TIME3 IS NOT NULL
+							)
+					WHERE 1=1  $customwhere$
+					GROUP BY name  order by   value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 投诉处理平均时长_图C -->
+	<sqlquery name="SQL_IND_62_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT  area_name,count(1) AS value
+					FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name  ,area_name,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time 
+				FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE TOTAL_TIME3 IS NOT NULL
+							)
+					WHERE 1=1  $customwhere$
+					GROUP BY area_name  order by   value Desc 
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 家庭宽带投诉处理及时率_A -->
+	<sqlquery name="SQL_IND_63_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+            
+            SELECT /*COUNT*/ acpt_time AS mon, count(1) AS value /*COUNT*/ 	FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE ARC_TIME <= EXPR_TIME)
+						 WHERE ( name LIKE '家庭业务→产品质量→家庭宽带%'
+			OR name LIKE '家庭业务→产品质量→智能组网%'
+			OR name LIKE '家庭业务→基础服务→家庭宽带%'
+			OR name LIKE '家庭业务→基础服务→智能组网%'
+			OR name LIKE '家庭业务→网络质量→家庭宽带%'
+			OR name LIKE '家庭业务→网络质量→智能组网%'
+			OR name LIKE '家庭业务→业务营销→家庭宽带%'
+			OR name LIKE '家庭业务→业务营销→智能组网%'
+			OR name LIKE '家庭业务→服务触点→装维人员%') $customwhere$
+            GROUP BY acpt_time  order by /*ORDERBY*/ acpt_time, value Desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+			<!-- 家庭宽带投诉处理及时率_图B -->
+	<sqlquery name="SQL_IND_63_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+                    SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT  name,count(1) AS value
+					FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE ARC_TIME <= EXPR_TIME
+							)
+					WHERE ( name LIKE '家庭业务→产品质量→家庭宽带%'
+			OR name LIKE '家庭业务→产品质量→智能组网%'
+			OR name LIKE '家庭业务→基础服务→家庭宽带%'
+			OR name LIKE '家庭业务→基础服务→智能组网%'
+			OR name LIKE '家庭业务→网络质量→家庭宽带%'
+			OR name LIKE '家庭业务→网络质量→智能组网%'
+			OR name LIKE '家庭业务→业务营销→家庭宽带%'
+			OR name LIKE '家庭业务→业务营销→智能组网%'
+			OR name LIKE '家庭业务→服务触点→装维人员%')  $customwhere$
+					GROUP BY name  order by   value Desc 
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 家庭宽带投诉处理及时率_图C -->
+	<sqlquery name="SQL_IND_63_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT  area_name,count(1) AS value
+					FROM (
+					SELECT SRV_REQST_TYPE_FULL_NM AS name , area_name ,to_char(to_date(statis_date,'yyyyMMdd'),'yyyy-mm') AS acpt_time  
+					FROM NGCS_WF_CMPLNTS_ARC_DETAIL WHERE ARC_TIME <= EXPR_TIME
+							)
+					WHERE ( name LIKE '家庭业务→产品质量→家庭宽带%'
+			OR name LIKE '家庭业务→产品质量→智能组网%'
+			OR name LIKE '家庭业务→基础服务→家庭宽带%'
+			OR name LIKE '家庭业务→基础服务→智能组网%'
+			OR name LIKE '家庭业务→网络质量→家庭宽带%'
+			OR name LIKE '家庭业务→网络质量→智能组网%'
+			OR name LIKE '家庭业务→业务营销→家庭宽带%'
+			OR name LIKE '家庭业务→业务营销→智能组网%'
+			OR name LIKE '家庭业务→服务触点→装维人员%')  $customwhere$
+					GROUP BY area_name  order by   value Desc ) order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	<!-- 5G投诉量_图A -->
+	<sqlquery name="SQL_IND_64_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				SELECT /*COUNT*/ acpt_time AS mon, count(1) AS value /*COUNT*/
+					FROM 
+						NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '%（5G通信）%') $customwhere$
+                    GROUP BY acpt_time  order by /*ORDERBY*/ acpt_time ,  value Desc /*ORDERBY*/
+				
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 5G投诉量_图B -->
+	<sqlquery name="SQL_IND_64_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '%（5G通信）%') $customwhere$
+                    GROUP BY  name order by   value Desc  
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 5G投诉量_图C -->
+	<sqlquery name="SQL_IND_64_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '%（5G通信）%') $customwhere$
+                    GROUP BY  area_name order by   value Desc  
+				) 
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 5G网络质量投诉量_图A -->
+	<sqlquery name="SQL_IND_65_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				SELECT /*COUNT*/ acpt_time AS mon,count(1) AS value/*COUNT*/
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→网络质量→手机上网（5G通信）%'
+					OR name LIKE '移动业务→网络质量→语音通话（5G通信）%'
+					OR name LIKE '移动业务→网络质量→VOLTE功能（5G通信）%'
+					OR name LIKE '移动业务→网络质量→多方通话（5G通信）%'
+					OR name LIKE '移动业务→网络质量→国内漫游（5G通信）%'
+					OR name LIKE '移动业务→网络质量→国际及港澳台漫游（5G通信）%'
+		      ) $customwhere$
+          GROUP BY  acpt_time order by  /*ORDERBY*/acpt_time, value Desc  /*ORDERBY*/
+				
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+
+	
+	<!-- 5G网络质量投诉量_图B -->
+	<sqlquery name="SQL_IND_65_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				 SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→网络质量→手机上网（5G通信）%'
+					OR name LIKE '移动业务→网络质量→语音通话（5G通信）%'
+					OR name LIKE '移动业务→网络质量→VOLTE功能（5G通信）%'
+					OR name LIKE '移动业务→网络质量→多方通话（5G通信）%'
+					OR name LIKE '移动业务→网络质量→国内漫游（5G通信）%'
+					OR name LIKE '移动业务→网络质量→国际及港澳台漫游（5G通信）%'
+		      ) $customwhere$
+                    GROUP BY  name order by   value Desc  
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 5G网络质量投诉量_图C -->
+	<sqlquery name="SQL_IND_65_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				 SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					WHERE (name LIKE '移动业务→网络质量→手机上网（5G通信）%'
+					OR name LIKE '移动业务→网络质量→语音通话（5G通信）%'
+					OR name LIKE '移动业务→网络质量→VOLTE功能（5G通信）%'
+					OR name LIKE '移动业务→网络质量→多方通话（5G通信）%'
+					OR name LIKE '移动业务→网络质量→国内漫游（5G通信）%'
+					OR name LIKE '移动业务→网络质量→国际及港澳台漫游（5G通信）%'
+		      ) $customwhere$
+                    GROUP BY  area_name order by   value Desc  
+				)
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 5G套餐（基础、流量）_图A -->
+	<sqlquery name="SQL_IND_66_CLD_A.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				SELECT /*COUNT*/ acpt_time AS mon,count(1) AS value/*COUNT*/
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					WHERE (
+					name LIKE '移动业务→基础服务→基础套餐（5G通信）→%费用质疑%'
+					OR name LIKE '移动业务→基础服务→基础套餐（5G通信）→%办理规范%'
+					OR name LIKE '移动业务→基础服务→基础套餐（5G通信）→%业务规则%'
+					OR name LIKE '移动业务→基础服务→基础套餐（5G通信）→%营销宣传%'
+					OR name LIKE '移动业务→基础服务→流量套餐（5G通信）→%费用质疑%'
+					OR name LIKE '移动业务→基础服务→流量套餐（5G通信）→%办理规范%'
+					OR name LIKE '移动业务→基础服务→流量套餐（5G通信）→%业务规则%'
+					OR name LIKE '移动业务→基础服务→流量套餐（5G通信）→%营销宣传%'
+					
+					OR name LIKE '移动业务→业务营销→基础套餐（5G通信）→%费用质疑%'
+					OR name LIKE '移动业务→业务营销→基础套餐（5G通信）→%办理规范%'
+					OR name LIKE '移动业务→业务营销→基础套餐（5G通信）→%业务规则%'
+					OR name LIKE '移动业务→业务营销→基础套餐（5G通信）→%营销宣传%'
+					OR name LIKE '移动业务→业务营销→流量套餐（5G通信）→%费用质疑%'
+					OR name LIKE '移动业务→业务营销→流量套餐（5G通信）→%办理规范%'
+					OR name LIKE '移动业务→业务营销→流量套餐（5G通信）→%业务规则%'
+					OR name LIKE '移动业务→业务营销→流量套餐（5G通信）→%营销宣传%'
+					)$customwhere$
+          GROUP BY  acpt_time order by  /*ORDERBY*/acpt_time, value Desc  /*ORDERBY*/
+				
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<!-- <field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" /> -->
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	<!-- 5G套餐（基础、流量）_图B -->
+	<sqlquery name="SQL_IND_66_CLD_B.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				 SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT name,count(1) AS value 
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					WHERE (
+					name LIKE '移动业务→基础服务→基础套餐（5G通信）→%费用质疑%'
+					OR name LIKE '移动业务→基础服务→基础套餐（5G通信）→%办理规范%'
+					OR name LIKE '移动业务→基础服务→基础套餐（5G通信）→%业务规则%'
+					OR name LIKE '移动业务→基础服务→基础套餐（5G通信）→%营销宣传%'
+					OR name LIKE '移动业务→基础服务→流量套餐（5G通信）→%费用质疑%'
+					OR name LIKE '移动业务→基础服务→流量套餐（5G通信）→%办理规范%'
+					OR name LIKE '移动业务→基础服务→流量套餐（5G通信）→%业务规则%'
+					OR name LIKE '移动业务→基础服务→流量套餐（5G通信）→%营销宣传%'
+					
+					OR name LIKE '移动业务→业务营销→基础套餐（5G通信）→%费用质疑%'
+					OR name LIKE '移动业务→业务营销→基础套餐（5G通信）→%办理规范%'
+					OR name LIKE '移动业务→业务营销→基础套餐（5G通信）→%业务规则%'
+					OR name LIKE '移动业务→业务营销→基础套餐（5G通信）→%营销宣传%'
+					OR name LIKE '移动业务→业务营销→流量套餐（5G通信）→%费用质疑%'
+					OR name LIKE '移动业务→业务营销→流量套餐（5G通信）→%办理规范%'
+					OR name LIKE '移动业务→业务营销→流量套餐（5G通信）→%业务规则%'
+					OR name LIKE '移动业务→业务营销→流量套餐（5G通信）→%营销宣传%'
+		      ) $customwhere$
+                    GROUP BY  name order by   value Desc  
+				) where  rownum<11
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 5G套餐（基础、流量）_图C -->
+	<sqlquery name="SQL_IND_66_CLD_C.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				
+				 SELECT /*COUNT*/ * /*COUNT*/ FROM(
+					SELECT area_name,count(1) AS value 
+					FROM NGCS_WF_CMPLNTS_COLLECT
+					WHERE (
+					name LIKE '移动业务→基础服务→基础套餐（5G通信）→%费用质疑%'
+					OR name LIKE '移动业务→基础服务→基础套餐（5G通信）→%办理规范%'
+					OR name LIKE '移动业务→基础服务→基础套餐（5G通信）→%业务规则%'
+					OR name LIKE '移动业务→基础服务→基础套餐（5G通信）→%营销宣传%'
+					OR name LIKE '移动业务→基础服务→流量套餐（5G通信）→%费用质疑%'
+					OR name LIKE '移动业务→基础服务→流量套餐（5G通信）→%办理规范%'
+					OR name LIKE '移动业务→基础服务→流量套餐（5G通信）→%业务规则%'
+					OR name LIKE '移动业务→基础服务→流量套餐（5G通信）→%营销宣传%'
+					
+					OR name LIKE '移动业务→业务营销→基础套餐（5G通信）→%费用质疑%'
+					OR name LIKE '移动业务→业务营销→基础套餐（5G通信）→%办理规范%'
+					OR name LIKE '移动业务→业务营销→基础套餐（5G通信）→%业务规则%'
+					OR name LIKE '移动业务→业务营销→基础套餐（5G通信）→%营销宣传%'
+					OR name LIKE '移动业务→业务营销→流量套餐（5G通信）→%费用质疑%'
+					OR name LIKE '移动业务→业务营销→流量套餐（5G通信）→%办理规范%'
+					OR name LIKE '移动业务→业务营销→流量套餐（5G通信）→%业务规则%'
+					OR name LIKE '移动业务→业务营销→流量套餐（5G通信）→%营销宣传%'
+		      ) $customwhere$
+                    GROUP BY  area_name order by   value Desc  
+				)
+				order by /*ORDERBY*/ value Desc /*ORDERBY*/
+				
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	
+	
+</sql-group>
+
+

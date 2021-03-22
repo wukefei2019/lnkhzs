@@ -1,0 +1,168 @@
+
+.oneDivclass{
+	background: rgb(246, 246, 246);
+	width: 94%; 
+	height: 90%;
+	color: #fff;
+	background-color:rgba(0,0,0,0); 
+	background-size:100% 100%; 
+	margin: 0 auto;
+}
+
+.dediv1{
+	width: 100%;
+	height: 300px; /* 258px; */
+	border: 0.5px solid rgb(229, 229, 229);
+	margin: 15px 0 15px 0;
+}
+
+.dediv2{
+	width: 100%;
+	height: 600px;
+	/* height: calc(100% - 258px); */
+	/* border: 0.5px solid rgb(229, 229, 229); */
+	margin: 15px 0 15px 0;
+}
+
+.divleft{
+	width: 20%;
+	height: 100%;
+    display: inline-block;
+    float: left;
+}
+
+.divright{
+	width: 80%;
+	height: 100%;
+    display: inline-block;
+    float: left;
+    background-color: #fff;
+}
+
+.divleftS1{
+	width: 100%;
+	height: 20%;
+	border-bottom: 0.5px solid rgb(229, 229, 229);
+    border-right: 0.5px solid rgb(229, 229, 229);
+	font-size: 16px;
+	font-family: Microsoft YaHei;
+	color: #333;
+    background: #fbfbfb;
+    display: inline-table;
+}
+.divleftS2{
+	border-bottom: 0.5px solid rgb(229, 229, 229);
+    border-right: 0;
+	font-size: 16px;
+	font-family: Microsoft YaHei;
+	color: #128cd9;
+    background: #fff;
+}
+.fontStyle{
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    vertical-align: middle;
+    display: table-cell;
+}
+
+.divMidd{
+	width: 49.5%;
+    height: 49%;
+    /* text-align: center; */
+    float: left;
+    border: 0.5px solid rgb(229, 229, 229);
+    margin-bottom: 1%;
+    background: #fff;
+}
+
+.divMidSpace{
+	width: 1%;
+	height: 49%;
+	float: left;
+}
+
+.divMidSpan{
+	width: 100%;
+	border-bottom: 0.5px solid rgb(221, 221, 221);
+	font-size: 16px;
+	font-family: Microsoft YaHei;
+	font-weight: 500;
+	color: #207bbb;
+    height: 40px;
+    padding-left: 45px;
+    padding-top: 9px;
+    /* margin-left: 10px; */
+    display: inline-block;
+}
+
+.span1{
+    background: url(../image/phone.png) no-repeat 1.5% center;
+}
+
+.span2{
+    background: url(../image/family.png) no-repeat 1.5% center;
+}
+
+.span3{
+    background: url(../image/addvalue.png) no-repeat 1.5% center;
+}
+
+.span4{
+    background: url(../image/group.png) no-repeat 1.5% center;
+}
+
+
+
+.sediv1{
+	width: 100%;
+	height: 100%;
+	/* border: 0.5px solid rgb(229, 229, 229); */
+	margin: 15px 0 15px 0;
+}
+
+.sedivMidd{
+	width: 49%;
+    height: 49%;
+    float: left;
+    border: 0.5px solid rgb(229, 229, 229);
+    margin: 0.5%;
+    background: #fff;
+}
+
+.sedivMidSpan{
+	width: 100%;
+	border-bottom: 0.5px solid rgb(221, 221, 221);
+	font-size: 16px;
+	font-family: Microsoft YaHei;
+	font-weight: 500;
+	color: #207bbb;
+    height: 40px;
+    padding-left: 45px;
+    padding-top: 9px;
+    display: inline-block;
+}
+
+.sespan0{
+    background: url(../image/ydsold.png) no-repeat 1.5% center;
+}
+
+.sespan1{
+    background: url(../image/ydmoney.png) no-repeat 1.5% center;
+}
+
+.sespan2{
+    background: url(../image/4Gxh.png) no-repeat 1.5% center;
+}
+
+.sespan3{
+    background: url(../image/4Gspeck.png) no-repeat 1.5% center;
+}
+
+.sespan4{
+    background: url(../image/4Gwifi.png) no-repeat left center;
+}
+
+.sespan5{
+    background: url(../image/ydmoney.png) no-repeat left center;
+}

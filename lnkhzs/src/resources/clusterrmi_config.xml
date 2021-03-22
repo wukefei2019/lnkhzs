@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<services port="56565"> 
+	<service name="com.ultrapower.distribfx.basesn.server.WfTypeEntryCountServer">com.ultrapower.distribfx.basesn.server.WfTypeEntryCountImpl</service>
+</services>

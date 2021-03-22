@@ -1,0 +1,52 @@
+<table border="0" cellpadding="0" cellspacing="0" style="width:@!{W-2}px; height:@!{H-1}px;">
+<tr>
+    <td valign="top" class="bpp_Field_Label">
+	<div style="height:@!{H-1}px;">
+	    <div>
+		<span class="@!{REQ}">@!{TXT}：</span>
+	    </div>
+	</div>
+    </td>
+    <td valign="top">
+	<input id="@!{ID}" name="@!{ID}" @!{RO} style="width:@!{W-117}px; height:@!{H-10}px;" value="@!{VAL}" />
+	<div id="@!{ID}_extend" class="bpp_Field_Extend"></div>
+    </td>
+</tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" style="width:@!{W-2}px; height:@!{H-1}px;">
+<tr>
+    <td valign="top" class="bpp_Field_Label">
+	<div style="height:@!{H-1}px;">
+	    <div>
+		<span class="@!{REQ}">@!{TXT}：</span>
+	    </div>
+	</div>
+    </td>
+    <td valign="top">
+		@!{ITEM}
+    </td>
+</tr>
+</table>
+<ul style="width:@!{W}px; height:@!{H}px; list-style:none; margin:0px; padding:0px;">
+    <li style="width:120px; height:@!{H}px; float:left;">
+        <span style="display:block; margin-top:15px; margin-left:5px; margin-right:0px; text-align:right;">@!{TXT}：</span>
+    </li>
+    <li style="width:@!{W-335}px; height:@!{H}px; float:left;">
+        <input id="TestChar1" name="TestChar1" style="width:@!{W-360}px; height:30px; margin-top:7px; float:left;" value="@!{VAL}" />
+        <div id="TestChar1_extend" class="bpp_Field_Extend" style="margin-top:7px;"></div>
+    </li>
+    <li style="width:215px; height:@!{H}px; float:left;">
+        <span style="display:block; margin-top:15px; margin-left:10px; color:#333333;">@!{DESC}</span>
+    </li>
+</ul>
+
+H:容器高度
+W:容器宽度
+ID:字段ID
+TXT:字段中文名
+VAL:字段值
+DESC:备注
+REQ:必填，class+="bpp_Require"
+RO:只读，readonly="true" 或 disabled="disabled"
+ITEM:collect字段的元素项，radio或collect
+

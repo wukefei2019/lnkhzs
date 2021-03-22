@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-group>
+	<doc>
+		<author></author> 
+		<date></date> 
+		<description>基础数据管理</description> 		
+	</doc>
+ 
+    <![CDATA[ 地市关联区县查询 code ]]>
+    <sqlquery name="SQL_BASEINFO_CITY_COUNTY_CODE.QUERY" >
+        <select>
+            <![CDATA[  
+                  select int_id,zh_label from rms_county t
+                   where 1 = 1
+                    $customwhere$
+                   order by countyorder
+              ]]> 
+        </select>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend="and" operator="="  colname="city_id"  value="#pcityvalue#"/>
+            <if prepend="and" exp="'#pcityname#'>''">
+                <success>
+                    <![CDATA[ exists (select 1 from rms_city a where a.int_id = t.city_id and a.zh_label = #pcityname#)  ]]>
+                </success>
+            </if>  
+            <field prepend="and" operator="="  colname="city_name"  value="##"/>
+        </customwhere>
+    </sqlquery>
+    
+    <![CDATA[ 流程关联子流程 ]]>
+    <sqlquery name="SQL_BASEINFO_FLOW_SUBFLOW.QUERY" >
+        <select>
+            <![CDATA[  
+SELECT DINAME
+    , divalue
+FROM BS_T_SM_DICITEM
+WHERE DTCODE = 'flowtype' AND parentid = (SELECT pid
+                                          FROM BS_T_SM_DICITEM
+                                          WHERE DTCODE = 'flowtype' $customwhere$)
+              ]]> 
+        </select>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend="and" operator="="  colname="DINAME"  value="#flow#"/>
+        </customwhere>
+    </sqlquery>
+    
+    <sqlquery name="SQL_DOC_DOWNLOAD.QUERY">
+		<select>
+			<![CDATA[
+				select /*COUNT*/
+						 *
+						/*COUNT*/
+						 from IA_EXPORT_FILE where 1=1 $customwhere$
+				ORDER BY /*ORDERBY*/ EXPORTTIME desc /*ORDERBY*/ 
+						
+			]]>
+		</select>
+		<condition cols="2" labprecent="11" textprecent="22">
+			<hidden name="loginName"/>
+		</condition> 
+		<customwhere name="customwhere" prepend="and">
+			<field  prepend="and" operator="="  colname="loginName" value="#loginName#" />		
+		</customwhere>
+	</sqlquery>
+
+</sql-group>

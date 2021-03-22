@@ -1,0 +1,36 @@
+@CHARSET "UTF-8";
+.bpp_AssignTreeField
+{
+	//background:url(../images/field-border.png) right bottom;
+}
+.bpp_AssignTreeField table td .bpp_AssignTreeBtn
+{
+	border:solid #dddddd 1px;
+	border-right:0px;
+	margin-top:3px;
+	width:35px;
+	float:left;
+	cursor:pointer;
+}
+.bpp_AssignTreeField table td .bpp_AssignTreeBtn:hover
+{
+	background-color:white;
+}
+.bpp_AssignTreeField table td .bpp_AssignTreeBtn_single
+{
+	background:url(../images/tree_single1.png) center center no-repeat;
+	background-color:#f6f6f6;
+}
+.bpp_AssignTreeField table td .bpp_AssignTreeBtn_multi
+{
+	background:url(../images/tree_single1.png) center center no-repeat;
+	background-color:#f6f6f6;
+}
+.bpp_AssignTreeField table td .bpp_AssignTreeText
+{
+	margin-top:3px;
+	border:solid #dddddd 1px;
+	line-height:150%;
+	height:20px;
+	font-family:宋体;
+}

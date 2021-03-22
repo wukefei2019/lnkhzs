@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" 
+	   default-autowire="byName" default-lazy-init="true">
+	   
+	 <bean id="wFresendDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.tsgd.model.WFresend</value>
+		</property>
+	</bean>
+	
+	
+	<bean id="sWorkAction" class="com.ultrapower.lnkhzs.tsgd.web.SWorkAction"/>
+	
+	<bean id="sWorkService" class="com.ultrapower.lnkhzs.tsgd.manager.SWorkMgrImpl" />
+	
+	<bean id="sWorkDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.tsgd.model.SWork</value>
+		</property>
+	</bean>
+	
+	
+	<bean id="wFresendService" class="com.ultrapower.lnkhzs.tsgd.manager.WFresendImpl" />
+	
+	<bean id="wFresendAction" class="com.ultrapower.lnkhzs.tsgd.web.WFresendAction"/>
+	
+	<bean id="dbManagerService" class="com.ultrapower.lnkhzs.tsgd.manager.DbManagerMgrImpl" />
+	
+	<bean id="dbManagerAction" class="com.ultrapower.lnkhzs.tsgd.web.DbManagerAction"/>
+	
+	<bean id="dbmanagerDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.tsgd.model.DbManager</value>
+		</property>
+	</bean>
+	   
+
+    <bean id="IDaoAOP" class="com.ultrapower.omcs.common.core.dao.IDaoAOP" />
+
+	<bean id="tsgdService" class="com.ultrapower.lnkhzs.tsgd.manager.TsgdMgrImpl" />
+	
+	<bean id="tsgdAction" class="com.ultrapower.lnkhzs.tsgd.web.TsgdAction"/>  
+	
+   	<bean id="zlTsfxIndicatorDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.tsgd.model.ZlTsfxIndicator</value>
+		</property>
+	</bean>
+	
+   	<bean id="zlTsfxIndicatorTreeDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.tsgd.model.ZlTsfxIndicatorTree</value>
+		</property>
+	</bean>
+</beans>

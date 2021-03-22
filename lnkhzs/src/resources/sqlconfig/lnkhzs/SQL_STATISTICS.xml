@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-group>
+	<doc>
+		<author></author> 
+		<date></date> 
+		<description>服务质量数据分析信息</description>
+	</doc>
+
+	<sqlquery name="SQL_QUALITY_STATISTICS.query">
+        <select>
+            <![CDATA[
+         			SELECT /*COUNT*/ * /*COUNT*/ FROM (
+					 		SELECT a02,a03,a04,a05,a06,a07,a08,count(0) total
+							,sum(CASE area_name when '沈阳市' THEN 1 ELSE 0 END ) AS 沈阳市
+							,sum(CASE area_name when '大连市' THEN 1 ELSE 0 END ) AS 大连市
+							,sum(CASE area_name when '鞍山市' THEN 1 ELSE 0 END ) AS 鞍山市
+							,sum(CASE area_name when '抚顺市' THEN 1 ELSE 0 END ) AS 抚顺市
+							,sum(CASE area_name when '本溪市' THEN 1 ELSE 0 END ) AS 本溪市
+							,sum(CASE area_name when '丹东市' THEN 1 ELSE 0 END ) AS 丹东市
+							,sum(CASE area_name when '锦州市' THEN 1 ELSE 0 END ) AS 锦州市
+							,sum(CASE area_name when '营口市' THEN 1 ELSE 0 END ) AS 营口市
+							,sum(CASE area_name when '阜新市' THEN 1 ELSE 0 END ) AS 阜新市
+							,sum(CASE area_name when '辽阳市' THEN 1 ELSE 0 END ) AS 辽阳市
+							,sum(CASE area_name when '铁岭市' THEN 1 ELSE 0 END ) AS 铁岭市
+							,sum(CASE area_name when '朝阳市' THEN 1 ELSE 0 END ) AS 朝阳市
+							,sum(CASE area_name when '盘锦市' THEN 1 ELSE 0 END ) AS 盘锦市
+							,sum(CASE area_name when '葫芦岛市' THEN 1 ELSE 0 END ) AS 葫芦岛市
+							,sum(CASE area_name when '异地' THEN 1 ELSE 0 END ) AS 异地
+	 					    FROM NGCS_WF_CMPLNTS_REQST_DETAIL 
+	                    	where 1=1  $customwhere$ group by a02,a03,a04,a05,a06,a07,a08 
+                    )
+                    order by /*ORDERBY*/ a02,a03,a04,a05,a06,a07,a08 /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<lotselect displayname="投诉内容" name="complainName" value="" colspan="2" rowspan="1"/>
+			<hidden name="types" defaultvalue="#types#" />
+			<select displayname='是否投诉' name='ifTs' customStr="0,是;1,否;" defaultvalue="#ifTs#" />
+			<date displayname="开始时间" name="begintime" class='Wdate' dateFmt='yyyyMMdd' defaultvalue="#begintime#"  />
+            <date displayname="结束时间" name="endtime" class='Wdate' dateFmt='yyyyMMdd' defaultvalue="#endtime#"  />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<bee prepend='and' operator='like' colname='A12'  value='#types#' split="," />
+     		<field prepend='and' operator='&gt;=' colname='STATIS_DATE'  value='#begintime#' />
+            <field prepend='and' operator='&lt;=' colname='STATIS_DATE'  value='#endtime#' />
+        	<field prepend='and' operator='=' colname='IF_TS'  value='#ifTs#' />
+        	<lotsel prepend='and' operator='like' colname='A02-A03-A04-A05-A06-A07-A08' value='#complainName#' splitcol="-" splitval="," />
+        </customwhere>
+	</sqlquery>
+	<sqlquery name="SQL_QUALITY_SJ_STATISTICS.query">
+        <select>
+            <![CDATA[
+         			SELECT /*COUNT*/ * /*COUNT*/ FROM (
+					 		SELECT a02,a03,a04,a05,a06,a07,a08,count(0) total
+							,sum(CASE area_name when '沈阳市' THEN 1 ELSE 0 END ) AS 沈阳市
+							,sum(CASE area_name when '大连市' THEN 1 ELSE 0 END ) AS 大连市
+							,sum(CASE area_name when '鞍山市' THEN 1 ELSE 0 END ) AS 鞍山市
+							,sum(CASE area_name when '抚顺市' THEN 1 ELSE 0 END ) AS 抚顺市
+							,sum(CASE area_name when '本溪市' THEN 1 ELSE 0 END ) AS 本溪市
+							,sum(CASE area_name when '丹东市' THEN 1 ELSE 0 END ) AS 丹东市
+							,sum(CASE area_name when '锦州市' THEN 1 ELSE 0 END ) AS 锦州市
+							,sum(CASE area_name when '营口市' THEN 1 ELSE 0 END ) AS 营口市
+							,sum(CASE area_name when '阜新市' THEN 1 ELSE 0 END ) AS 阜新市
+							,sum(CASE area_name when '辽阳市' THEN 1 ELSE 0 END ) AS 辽阳市
+							,sum(CASE area_name when '铁岭市' THEN 1 ELSE 0 END ) AS 铁岭市
+							,sum(CASE area_name when '朝阳市' THEN 1 ELSE 0 END ) AS 朝阳市
+							,sum(CASE area_name when '盘锦市' THEN 1 ELSE 0 END ) AS 盘锦市
+							,sum(CASE area_name when '葫芦岛市' THEN 1 ELSE 0 END ) AS 葫芦岛市
+							,sum(CASE area_name when '异地' THEN 1 ELSE 0 END ) AS 异地
+	 					    FROM NGCS_WF_CMPLNTS_ARC_DETAIL_SJ 
+	                    	where 1=1  $customwhere$ group by a02,a03,a04,a05,a06,a07,a08 
+                    )
+                    order by /*ORDERBY*/ a02,a03,a04,a05,a06,a07,a08 /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<lotselect displayname="投诉内容" name="complainName" value="" colspan="2" rowspan="1"/>
+			<hidden name="types" defaultvalue="#types#" />
+			<!-- <hidden name="acptChnlNm" defaultvalue="#acptChnlNm#" />
+			<hidden name="custStargrdNm" defaultvalue="#custStargrdNm#" /> -->
+			<date displayname="开始时间" name="begintime" class='Wdate' dateFmt='yyyyMMdd' defaultvalue="#begintime#"  />
+            <date displayname="结束时间" name="endtime" class='Wdate' dateFmt='yyyyMMdd' defaultvalue="#endtime#"  />
+            <select id="SLQD" displayname="受理渠道" name="acptChnlNm" defaultvalue="#acptChnlNm#"></select>
+        	<select id="YHXJ" displayname="用户星级" name="custStargrdNm" defaultvalue="#custStargrdNm#"></select>
+            <checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<bee prepend='and' operator='like' colname='A12'  value='#types#' split="," />
+     		<field prepend='and' operator='&gt;=' colname='STATIS_DATE'  value='#begintime#' />
+            <field prepend='and' operator='&lt;=' colname='STATIS_DATE'  value='#endtime#' />
+        	<field prepend='and' operator='like' colname='AREA_NAME'  value='#citys#' />
+			<field prepend='and' operator='=' colname='ACPT_CHNL_NM'  value='#acptChnlNm#' />
+			<field prepend='and' operator='=' colname='CUST_STARGRD_NM'  value='#custStargrdNm#' />
+        	<lotsel prepend='and' operator='like' colname='A02-A03-A04-A05-A06-A07-A08' value='#complainName#' splitcol="-" splitval="," />
+        
+        	
+        </customwhere>
+	</sqlquery>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<sqlquery name="SQL_ASSIST_STATISTICS.query">
+        <select>
+            <![CDATA[
+            		SELECT /*COUNT*/ * /*COUNT*/ FROM (
+					 		SELECT b02,b03,b04,b05,b06,b07,b08,count(0) total
+							,sum(CASE area_name when '沈阳市' THEN 1 ELSE 0 END ) AS 沈阳市
+							,sum(CASE area_name when '大连市' THEN 1 ELSE 0 END ) AS 大连市
+							,sum(CASE area_name when '鞍山市' THEN 1 ELSE 0 END ) AS 鞍山市
+							,sum(CASE area_name when '抚顺市' THEN 1 ELSE 0 END ) AS 抚顺市
+							,sum(CASE area_name when '本溪市' THEN 1 ELSE 0 END ) AS 本溪市
+							,sum(CASE area_name when '丹东市' THEN 1 ELSE 0 END ) AS 丹东市
+							,sum(CASE area_name when '锦州市' THEN 1 ELSE 0 END ) AS 锦州市
+							,sum(CASE area_name when '营口市' THEN 1 ELSE 0 END ) AS 营口市
+							,sum(CASE area_name when '阜新市' THEN 1 ELSE 0 END ) AS 阜新市
+							,sum(CASE area_name when '辽阳市' THEN 1 ELSE 0 END ) AS 辽阳市
+							,sum(CASE area_name when '铁岭市' THEN 1 ELSE 0 END ) AS 铁岭市
+							,sum(CASE area_name when '朝阳市' THEN 1 ELSE 0 END ) AS 朝阳市
+							,sum(CASE area_name when '盘锦市' THEN 1 ELSE 0 END ) AS 盘锦市
+							,sum(CASE area_name when '葫芦岛市' THEN 1 ELSE 0 END ) AS 葫芦岛市
+							,sum(CASE area_name when '异地' THEN 1 ELSE 0 END ) AS 异地 
+							 FROM NGCS_WF_CMPLNTS_ARC_DETAIL_XC
+	                    where 1=1  $customwhere$ 
+	                    group by b02,b03,b04,b05,b06,b07,b08
+	                )
+                    order by /*ORDERBY*/  b02,b03,b04,b05,b06,b07,b08 /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<lotselect displayname="投诉内容" name="complainName" value="" colspan="2" rowspan="1"/>
+			<hidden name="types" defaultvalue="#types#" />
+			<date displayname="开始时间" name="begintime" class='Wdate' dateFmt='yyyyMMdd' defaultvalue="#begintime#"  />
+            <date displayname="结束时间" name="endtime" class='Wdate' dateFmt='yyyyMMdd' defaultvalue="#endtime#"  />
+			<!-- <checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/> -->
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<bee prepend='and' operator='like' colname='A01' value='#types#' split="," />
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#citys#' /> 
+     		<field prepend='and' operator='&gt;=' colname='STATIS_DATE'  value='#begintime#' />
+            <field prepend='and' operator='&lt;=' colname='STATIS_DATE'  value='#endtime#' />
+        	<lotsel prepend='and' operator='like' colname='B02-B03-B04-B05-B06-B07-B08' value='#complainName#' splitcol="-" splitval="," />
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_COMPLAINT_STATISTICS.query">
+        <select>
+            <![CDATA[
+            		SELECT /*COUNT*/ * /*COUNT*/ FROM (
+							SELECT  a02,a03,a04,a05,a06,a07,a08,count(0) total
+							,sum(CASE area_name when '沈阳市' THEN 1 ELSE 0 END ) AS 沈阳市
+							,sum(CASE area_name when '大连市' THEN 1 ELSE 0 END ) AS 大连市
+							,sum(CASE area_name when '鞍山市' THEN 1 ELSE 0 END ) AS 鞍山市
+							,sum(CASE area_name when '抚顺市' THEN 1 ELSE 0 END ) AS 抚顺市
+							,sum(CASE area_name when '本溪市' THEN 1 ELSE 0 END ) AS 本溪市
+							,sum(CASE area_name when '丹东市' THEN 1 ELSE 0 END ) AS 丹东市
+							,sum(CASE area_name when '锦州市' THEN 1 ELSE 0 END ) AS 锦州市
+							,sum(CASE area_name when '营口市' THEN 1 ELSE 0 END ) AS 营口市
+							,sum(CASE area_name when '阜新市' THEN 1 ELSE 0 END ) AS 阜新市
+							,sum(CASE area_name when '辽阳市' THEN 1 ELSE 0 END ) AS 辽阳市
+							,sum(CASE area_name when '铁岭市' THEN 1 ELSE 0 END ) AS 铁岭市
+							,sum(CASE area_name when '朝阳市' THEN 1 ELSE 0 END ) AS 朝阳市
+							,sum(CASE area_name when '盘锦市' THEN 1 ELSE 0 END ) AS 盘锦市
+							,sum(CASE area_name when '葫芦岛市' THEN 1 ELSE 0 END ) AS 葫芦岛市
+							,sum(CASE area_name when '异地' THEN 1 ELSE 0 END ) AS 异地 
+							FROM NGCS_WF_CMPLNTS_ARC_DETAIL
+		                    where 1=1  $customwhere$ group by a02,a03,a04,a05,a06,a07,a08
+                    )
+                    order by /*ORDERBY*/ a02,a03,a04,a05,a06,a07,a08 /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<lotselect displayname="投诉内容" name="complainName" value="" colspan="2" rowspan="1"/>
+			<hidden name="types" defaultvalue="#types#" />
+            <date displayname="开始时间" name="begintime" class='Wdate' dateFmt='yyyyMMdd' />
+            <date displayname="结束时间" name="endtime" class='Wdate' dateFmt='yyyyMMdd' />
+			<!-- <checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/> -->
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend='and' operator='&gt;=' colname='STATIS_DATE'  value='#begintime#' />
+            <field prepend='and' operator='&lt;=' colname='STATIS_DATE'  value='#endtime#' />
+     		<if prepend="and" exp="'#userid#'>''">
+                <success>
+                    <![CDATA[ DEPTID = ((SELECT pid FROM BS_T_SM_DEP WHERE DEPDNS = (SELECT substr(depdns,0,7) FROM BS_T_SM_DEP WHERE PID = (SELECT DEPID FROM BS_T_SM_USER WHERE LOGINNAME =#userid#))))]]>
+                </success>
+            </if>
+     		<bee prepend='and' operator='like' colname='SRV_REQST_TYPE_FULL_NM'  value='#types#' split="," />
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#citys#' /> 
+     		<lotsel prepend='and' operator='like' colname='A02-A03-A04-A05-A06-A07-A08' value='#complainName#' splitcol="-" splitval="," />
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_NO_COMPLAINT_STATISTICS.query">
+        <select>
+            <![CDATA[
+            		SELECT /*COUNT*/ * /*COUNT*/ FROM (
+							SELECT  a02,a03,a04,a05,a06,a07,a08,count(0) total
+							,sum(CASE area_name when '沈阳市' THEN 1 ELSE 0 END ) AS 沈阳市
+							,sum(CASE area_name when '大连市' THEN 1 ELSE 0 END ) AS 大连市
+							,sum(CASE area_name when '鞍山市' THEN 1 ELSE 0 END ) AS 鞍山市
+							,sum(CASE area_name when '抚顺市' THEN 1 ELSE 0 END ) AS 抚顺市
+							,sum(CASE area_name when '本溪市' THEN 1 ELSE 0 END ) AS 本溪市
+							,sum(CASE area_name when '丹东市' THEN 1 ELSE 0 END ) AS 丹东市
+							,sum(CASE area_name when '锦州市' THEN 1 ELSE 0 END ) AS 锦州市
+							,sum(CASE area_name when '营口市' THEN 1 ELSE 0 END ) AS 营口市
+							,sum(CASE area_name when '阜新市' THEN 1 ELSE 0 END ) AS 阜新市
+							,sum(CASE area_name when '辽阳市' THEN 1 ELSE 0 END ) AS 辽阳市
+							,sum(CASE area_name when '铁岭市' THEN 1 ELSE 0 END ) AS 铁岭市
+							,sum(CASE area_name when '朝阳市' THEN 1 ELSE 0 END ) AS 朝阳市
+							,sum(CASE area_name when '盘锦市' THEN 1 ELSE 0 END ) AS 盘锦市
+							,sum(CASE area_name when '葫芦岛市' THEN 1 ELSE 0 END ) AS 葫芦岛市
+							,sum(CASE area_name when '异地' THEN 1 ELSE 0 END ) AS 异地 
+							FROM NGCS_WF_CMPLNTS_ARC_DETAIL_NO
+		                    where 1=1  $customwhere$ group by a02,a03,a04,a05,a06,a07,a08
+                    )
+                    order by /*ORDERBY*/ a02,a03,a04,a05,a06,a07,a08 /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+			<lotselect displayname="投诉内容" name="complainName" value="" colspan="2" rowspan="1"/>
+			<hidden name="types" defaultvalue="#types#" />
+            <date displayname="开始时间" name="begintime" class='Wdate' dateFmt='yyyyMMdd' />
+            <date displayname="结束时间" name="endtime" class='Wdate' dateFmt='yyyyMMdd' />
+            <!-- <checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/> -->
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend='and' operator='&gt;=' colname='STATIS_DATE'  value='#begintime#' />
+            <field prepend='and' operator='&lt;=' colname='STATIS_DATE'  value='#endtime#' />
+     		<if prepend="and" exp="'#userid#'>''">
+                <success>
+                    <![CDATA[ DEPTID = ((SELECT pid FROM BS_T_SM_DEP WHERE DEPDNS = (SELECT substr(depdns,0,7) FROM BS_T_SM_DEP WHERE PID = (SELECT DEPID FROM BS_T_SM_USER WHERE LOGINNAME =#userid#))))]]>
+                </success>
+            </if>
+     		<bee prepend='and' operator='like' colname='SRV_REQST_TYPE_FULL_NM'  value='#types#' split="," />
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#citys#' /> 
+        	<lotsel prepend='and' operator='like' colname='A02-A03-A04-A05-A06-A07-A08' value='#complainName#' splitcol="-" splitval="," />
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_COMPLAINED_STATISTICS.query">
+        <select>
+            <![CDATA[
+         			SELECT /*COUNT*/ * /*COUNT*/ FROM (
+					 		SELECT a02,a03,a04,a05,a06,a07,a08,count(0) total
+							,sum(CASE area_name when '沈阳市' THEN 1 ELSE 0 END ) AS 沈阳市
+							,sum(CASE area_name when '大连市' THEN 1 ELSE 0 END ) AS 大连市
+							,sum(CASE area_name when '鞍山市' THEN 1 ELSE 0 END ) AS 鞍山市
+							,sum(CASE area_name when '抚顺市' THEN 1 ELSE 0 END ) AS 抚顺市
+							,sum(CASE area_name when '本溪市' THEN 1 ELSE 0 END ) AS 本溪市
+							,sum(CASE area_name when '丹东市' THEN 1 ELSE 0 END ) AS 丹东市
+							,sum(CASE area_name when '锦州市' THEN 1 ELSE 0 END ) AS 锦州市
+							,sum(CASE area_name when '营口市' THEN 1 ELSE 0 END ) AS 营口市
+							,sum(CASE area_name when '阜新市' THEN 1 ELSE 0 END ) AS 阜新市
+							,sum(CASE area_name when '辽阳市' THEN 1 ELSE 0 END ) AS 辽阳市
+							,sum(CASE area_name when '铁岭市' THEN 1 ELSE 0 END ) AS 铁岭市
+							,sum(CASE area_name when '朝阳市' THEN 1 ELSE 0 END ) AS 朝阳市
+							,sum(CASE area_name when '盘锦市' THEN 1 ELSE 0 END ) AS 盘锦市
+							,sum(CASE area_name when '葫芦岛市' THEN 1 ELSE 0 END ) AS 葫芦岛市
+							,sum(CASE area_name when '异地' THEN 1 ELSE 0 END ) AS 异地
+	 					    FROM NGCS_WF_CMPLNTS_REQST_DETAIL 
+	                    	where 1=1  
+	                    	AND IF_TS = 0
+					   		AND (A02 = '移动业务' OR A02 = '增值业务' OR A02 = '家庭业务' OR A02 = '集团业务' OR (A02 = '服务类' AND A03 = '客户投诉'))
+	                    	$customwhere$ group by a02,a03,a04,a05,a06,a07,a08 
+                    )
+                    order by /*ORDERBY*/ a02,a03,a04,a05,a06,a07,a08 /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+			<lotselect displayname="投诉内容" name="complainName" value="" colspan="2" rowspan="1"/>
+			<hidden name="types" defaultvalue="#types#" />
+			<date displayname="开始时间" name="begintime" class='Wdate' dateFmt='yyyyMMdd' defaultvalue="#begintime#"  />
+            <date displayname="结束时间" name="endtime" class='Wdate' dateFmt='yyyyMMdd' defaultvalue="#endtime#"  />
+			<!-- <checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/> -->
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<bee prepend='and' operator='like' colname='A01' value='#types#' split="," />
+     		<field prepend='and' operator='like' colname='AREA_NAME'  value='#citys#' /> 
+     		<field prepend='and' operator='&gt;=' colname='STATIS_DATE'  value='#begintime#' />
+            <field prepend='and' operator='&lt;=' colname='STATIS_DATE'  value='#endtime#' />
+        	<lotsel prepend='and' operator='like' colname='A02-A03-A04-A05-A06-A07-A08' value='#complainName#' splitcol="-" splitval="," />
+        </customwhere>
+	</sqlquery>
+	
+</sql-group>

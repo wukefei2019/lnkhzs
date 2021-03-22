@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" 
+	   default-autowire="byName" default-lazy-init="true">
+
+    <bean id="IDaoAOP" class="com.ultrapower.omcs.common.core.dao.IDaoAOP" />
+
+
+
+
+	<!--服务质量管理-->
+	<bean id="sWfCmplntsReqstDetailDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.quality.model.SWfCmplntsReqstDetail</value>
+		</property>
+	</bean>
+	
+	<bean id="sWfCmplntsArcDetailXcDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.quality.model.SWfCmplntsArcDetailXc</value>
+		</property>
+	</bean>
+
+	<bean id="sWfCmplntsArcDetailDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.quality.model.SWfCmplntsArcDetail</value>
+		</property>
+	</bean>
+
+	<bean id="sWfCmplntsArcDetailNoDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.quality.model.SWfCmplntsArcDetailNo</value>
+		</property>
+	</bean>
+	
+	<bean id="sWfCmplntsArcDetailCfDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.quality.model.SWfCmplntsArcDetailCf</value>
+		</property>
+	</bean>
+	
+	<bean id="sWfCmplntsArcDetailSjDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.quality.model.SWfCmplntsArcDetailSj</value>
+		</property>
+	</bean>
+	
+	<bean id="sWfCmplntsCheckSheetDetailDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.quality.model.SWfCmplntsCheckSheetDetail</value>
+		</property>
+	</bean>
+
+	<bean id="sWfCmplntsArcDetailService" class="com.ultrapower.lnkhzs.quality.manager.SWfCmplntsArcDetailMgrImpl" />
+	
+	<bean id="sWfCmplntsArcDetailXcService" class="com.ultrapower.lnkhzs.quality.manager.SWfCmplntsArcDetailXcMgrImpl" />
+	
+	<bean id="sWfCmplntsReqstDetailService" class="com.ultrapower.lnkhzs.quality.manager.SWfCmplntsReqstDetailMgrImpl" />
+	
+	<bean id="sWfCmplntsArcDetailNoService" class="com.ultrapower.lnkhzs.quality.manager.SWfCmplntsArcDetailNoMgrImpl" />
+	
+	<bean id="sWfCmplntsArcDetailCfService" class="com.ultrapower.lnkhzs.quality.manager.SWfCmplntsArcDetailCfMgrImpl" />
+	
+	<bean id="sWfCmplntsArcDetailSjService" class="com.ultrapower.lnkhzs.quality.manager.SWfCmplntsArcDetailSjMgrImpl" />
+	
+	<bean id="sWfCmplntsCheckSheetDetailService" class="com.ultrapower.lnkhzs.quality.manager.SWfCmplntsCheckSheetDetailMgrImpl" />
+	
+	<bean id="sWfCmplntsReqstDetailAction" class="com.ultrapower.lnkhzs.quality.web.SWfCmplntsReqstDetailAction"/>
+	
+	<bean id="sWfCmplntsArcDetailAction" class="com.ultrapower.lnkhzs.quality.web.SWfCmplntsArcDetailAction"/>
+	
+	<bean id="sWfCmplntsArcDetailXcAction" class="com.ultrapower.lnkhzs.quality.web.SWfCmplntsArcDetailXcAction"/> 
+	
+	<bean id="sWfCmplntsArcDetailNoAction" class="com.ultrapower.lnkhzs.quality.web.SWfCmplntsArcDetailNoAction"/> 
+	
+	<bean id="sWfCmplntsArcDetailCfAction" class="com.ultrapower.lnkhzs.quality.web.SWfCmplntsArcDetailCfAction"/> 
+	
+	<bean id="sWfCmplntsArcDetailSjAction" class="com.ultrapower.lnkhzs.quality.web.SWfCmplntsArcDetailSjAction"/> 
+	
+	<bean id="sWfCmplntsCheckSheetDetailAction" class="com.ultrapower.lnkhzs.quality.web.SWfCmplntsCheckSheetDetailAction"/> 
+	
+	<!-- 标签维护 -->
+	<bean id="tAGAdminDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.quality.model.TAGAdmin</value>
+		</property>
+	</bean>
+	
+	<bean id="tAGInfoDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.quality.model.TAGInfo</value>
+		</property>
+	</bean>
+	
+	<bean id="viceRequestNodeDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.quality.model.ViceRequestNode</value>
+		</property>
+	</bean>
+
+	<bean id="viceRequestNodeBakDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.quality.model.ViceRequestNodeBak</value>
+		</property>
+	</bean>
+	
+	<bean id="tagMaintainService" class="com.ultrapower.lnkhzs.quality.manager.TagMaintainMgrImpl" />
+	
+	<bean id="tAGAdminService" class="com.ultrapower.lnkhzs.quality.manager.TAGAdminMgrImpl" />
+	
+	<bean id="tAGApprovalService" class="com.ultrapower.lnkhzs.quality.manager.TAGApprovalMgrImpl" />
+	
+	<bean id="tAGReportService" class="com.ultrapower.lnkhzs.quality.manager.TAGReportMgrImpl" />
+	
+	<bean id="tAGAdminAction" class="com.ultrapower.lnkhzs.quality.web.TAGAdminAction"/>
+	
+	<bean id="tAGApprovalAction" class="com.ultrapower.lnkhzs.quality.web.TAGApprovalAction"/>
+	
+	<bean id="tAGReportAction" class="com.ultrapower.lnkhzs.quality.web.TAGReportAction"/>  
+	
+	<bean id="tagMaintainAction" class="com.ultrapower.lnkhzs.quality.web.TagMaintainAction"/>
+	
+</beans>

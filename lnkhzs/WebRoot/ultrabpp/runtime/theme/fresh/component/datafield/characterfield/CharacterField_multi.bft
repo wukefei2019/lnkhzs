@@ -1,0 +1,9 @@
+<table border="0" cellpadding="0" cellspacing="0" style="width:@!{W-2}px; height:@!{H-1}px;">
+<tr>
+    @!{LABEL}
+    <td valign="top">
+	<textarea id="@!{ID}" name="@!{ID}" @!{RO} style="width:@!{VW-31}px; height:@!{H-10}px;">@!{VAL}</textarea>
+	<div id="@!{ID}_extend" class="bpp_Field_Multi_Extend"></div>
+    </td>
+</tr>
+</table>

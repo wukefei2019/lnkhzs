@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN" "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+
+    <package name="lnkhzs" extends="eoms">
+    	<interceptors>
+			<interceptor-stack name="omcsStack">
+                <interceptor-ref name="fileUpload">  
+              		<param name="allowedTypes">application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream
+              		</param>
+        		</interceptor-ref>
+         		<interceptor-ref name="defaultStack" /> 
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="omcsStack" />
+        <global-results>
+            <result name="session_time_out">/mobile/common/session_time_out.jsp</result>
+            <result name="input">/omcs/common/ajaxResult.jsp</result>
+            <result name="successAjax">/omcs/common/ajaxResult.jsp</result> 
+        </global-results>
+    </package>
+	<!-- 服务质量列表 -->
+    <package name="sWfCmplntsReqstDetailAction" namespace="/quality/reqst" extends="lnkhzs">
+        <action name="*" method="{1}" class="sWfCmplntsReqstDetailAction">
+            <result name="success">/lnkhzs/quality/{1}.jsp</result>
+        </action>
+    </package>
+
+    <package name="sWfCmplntsArcDetailAction" namespace="/quality/complaint" extends="lnkhzs">
+        <action name="*" method="{1}" class="sWfCmplntsArcDetailAction">
+            <result name="success">/lnkhzs/quality/{1}.jsp</result>
+        </action>
+    </package>
+    
+    <package name="sWfCmplntsArcDetailXcAction" namespace="/quality/assist" extends="lnkhzs">
+        <action name="*" method="{1}" class="sWfCmplntsArcDetailXcAction">
+            <result name="success">/lnkhzs/quality/{1}.jsp</result>
+        </action>
+    </package>
+    
+    <package name="sWfCmplntsArcDetailNoAction" namespace="/quality/noComplaint" extends="lnkhzs">
+        <action name="*" method="{1}" class="sWfCmplntsArcDetailNoAction">
+            <result name="success">/lnkhzs/quality/{1}.jsp</result>
+        </action>
+    </package>
+    
+    
+    <package name="sWfCmplntsArcDetailCfAction" namespace="/quality/repeat" extends="lnkhzs">
+        <action name="*" method="{1}" class="sWfCmplntsArcDetailCfAction">
+            <result name="success">/lnkhzs/quality/{1}.jsp</result>
+        </action>
+    </package>
+    
+    
+    <package name="sWfCmplntsArcDetailSjAction" namespace="/quality/promotion" extends="lnkhzs">
+        <action name="*" method="{1}" class="sWfCmplntsArcDetailSjAction">
+            <result name="success">/lnkhzs/quality/{1}.jsp</result>
+        </action>
+    </package>
+    
+    <package name="sWfCmplntsCheckSheetDetailAction" namespace="/quality/checksheet" extends="lnkhzs">
+        <action name="*" method="{1}" class="sWfCmplntsCheckSheetDetailAction">
+            <result name="success">/lnkhzs/quality/{1}.jsp</result>
+        </action>
+    </package>
+    
+    <!-- 标签维护 -->
+    <package name="tAGAdminAction" namespace="/quality/tagadmin" extends="lnkhzs">
+        <action name="*" method="{1}" class="tAGAdminAction">
+            <result name="success">/lnkhzs/quality/{1}.jsp</result>
+        </action>
+    </package>
+    <package name="tAGApprovalAction" namespace="/quality/tagapproval" extends="lnkhzs">
+        <action name="*" method="{1}" class="tAGApprovalAction">
+            <result name="success">/lnkhzs/quality/{1}.jsp</result>
+        </action>
+    </package>
+    <package name="tAGReportAction" namespace="/quality/tagreport" extends="lnkhzs">
+        <action name="*" method="{1}" class="tAGReportAction">
+            <result name="success">/lnkhzs/quality/{1}.jsp</result>
+        </action>
+    </package>
+    <package name="tagMaintainAction" namespace="/quality/tagMaintain" extends="lnkhzs">
+		<action name="*" method="{1}" class="tagMaintainAction">
+			<result name="khzsSuccess">/lnkhzs/quality/{1}.jsp</result>
+		</action>
+	</package>
+</struts>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-group>
+	<doc>
+		<author></author> 
+		<date></date> 
+		<description>派发问题相关</description>
+	</doc>
+	
+	<sqlquery name="SQL_PF_TRACK_LIST.query">
+        <select>
+            <![CDATA[
+				select /*COUNT*/ t.* /*COUNT*/ from NGCS_WF_CMPLNTS_RESEND_DETAIL t 
+				where 1 = 1 and t.RETURNTEXT not like '%失败%' and t.RETURNTEXT is not null
+				$customwhere$ 
+				order by /*ORDERBY*/ t.EXPIRYDATE desc ,t.APPLYTITLE /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<!-- <hidden displayname="时间" name="begintime" class='Wdate' dateFmt='yyyyMM' />
+			<hidden name="types" defaultvalue="#types#" />
+			<hidden name="citys" defaultvalue="#citys#" /> -->
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<!-- <bee prepend='and' operator='like' colname='z.A12'  value='#types#' split="," />
+     		<field prepend='and' operator='like' colname='t.statis_date'  value='#begintime#' />
+     		<field prepend='and' operator='like' colname='t.area_name'  value='#citys#' />  -->
+        </customwhere>
+	</sqlquery>
+	<sqlquery name="SQL_PF_TRACK_ONE.query">
+        <select>
+            <![CDATA[
+				select /*COUNT*/ 
+					t.activity || '，' || t.depart || '的' || t.executor || '在' || t.time || '审批，审批意见为' || t.opinion || '。' as detail,
+					t.*
+				/*COUNT*/ from NGCS_WF_CMPLNTS_RESEND_DEAL t 
+				where 1 = 1 $customwhere$ 
+				order by /*ORDERBY*/ t.TIME desc/*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+			<hidden name="curStep" defaultvalue="#curStep#" />
+			<hidden name="parentid" defaultvalue="#parentid#" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<field prepend='and' operator='=' colname='t.step'  value='#curStep#' /> 
+     		<if prepend="and" exp="'#parentid#'>''">
+				<success>
+					<![CDATA[ t.uids = #parentid# ]]>
+				</success>
+				<else>
+					<![CDATA[ 1 = 2 ]]>
+				</else>
+			</if>
+     		<!-- <field prepend='and' operator='=' colname='t.uids'  value='#parentid#' />  -->
+        </customwhere>
+	</sqlquery>
+	
+	
+	<sqlquery name="SQL_DB_MANAGER.query">
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_DB_MANAGER
+                    where 1=1 $customwhere$  
+                    order by /*ORDERBY*/ ID DESC /*ORDERBY*/             
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<lotselect displayname="内容" name="complainName" value="" colspan="2" rowspan="1"/>
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="ADMINISTRATORID"
+				value="#ADMINISTRATORID#" />
+				<lotsel prepend='and' operator='like' colname='ADMINISTRATORNAME-CITYNAME' value='#complainName#' splitcol="-" splitval="," />
+		</customwhere>
+	</sqlquery>
+	
+	
+	<sqlquery name="SQL_SWORK.query">
+
+		
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_SUPERVISE_WORK_ORDERS
+                    where 1=1 
+                    order by /*ORDERBY*/ createtime DESC /*ORDERBY*/             
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+		<field prepend="and" operator="like" colname="PID" value="#PID#" />
+			<lotselect displayname="内容" name="complainName" value="" colspan="2" rowspan="1"/>
+			
+		</condition>
+		<!-- <customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="PID" value="#PID#" />
+		</customwhere> -->
+	</sqlquery>
+	
+	<sqlquery name="SQL_WORKATTACH.query">
+
+		
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_SUPERVICE_WORK_ATTACH
+                   where 1 = 1 $customwhere$ 
+                    order by /*ORDERBY*/ ATTACHCREATETIME DESC /*ORDERBY*/             
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">	
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="BACKGUID" value="#backguid#" />
+		</customwhere>
+	</sqlquery>
+	
+</sql-group>
+
+
+
+
+

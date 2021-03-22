@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN" "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+
+    <package name="lnkhzs" extends="eoms">
+    	<!-- <interceptors>
+			<interceptor-stack name="omcsStack">
+                <interceptor-ref name="fileUpload">  
+              		<param name="allowedTypes">application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream,text/plain
+              		</param>
+        		</interceptor-ref>
+         		<interceptor-ref name="defaultStack" /> 
+			</interceptor-stack>
+		</interceptors> -->
+		<!-- <default-interceptor-ref name="omcsStack" /> -->
+        <global-results>
+            <result name="session_time_out">/mobile/common/session_time_out.jsp</result>
+            <result name="input">/omcs/common/ajaxResult.jsp</result>
+            <result name="successAjax">/omcs/common/ajaxResult.jsp</result> 
+        </global-results>
+    </package>
+	<!-- 客户之声列表 -->
+    <package name="tsgdAction" namespace="/tsgd/tsgd" extends="lnkhzs">
+        <action name="*" method="{1}" class="tsgdAction">
+            <result name="success">/lnkhzs/propage/{1}.jsp</result>
+        </action>
+    </package>
+    
+<!--     饼图折线图
+    <package name="tsgdAction" namespace="/tsgd/tsgd/linepie" extends="lnkhzs">
+        <action name="*" method="{1}" class="tsgdAction">
+            <result name="success">/lnkhzs/propage/comTable.jsp</result>
+        </action>
+    </package>
+     -->
+    <!-- 问题派单列表 -->
+    <package name="wFresendAction" namespace="/tsgd/resend"	extends="lnkhzs">
+		<action name="*" method="{1}" class="wFresendAction">
+			<result name="success">/lnkhzs/propage/{1}.jsp</result>
+		</action>
+	</package>
+	
+	
+	<!-- 问题派单管理员列表 -->
+    <package name="dbManagerAction" namespace="/tsgd/resendmanager"	extends="lnkhzs">
+		<action name="*" method="{1}" class="dbManagerAction">
+			<result name="success">/lnkhzs/propage/{1}.jsp</result>
+		</action>
+	</package>
+
+	 <package name="sWorkAction" namespace="/tsgd/swork"	extends="lnkhzs">
+		<action name="*" method="{1}" class="sWorkAction">
+		
+			
+			<interceptor-ref name="paramsPrepareParamsStack" />
+			<interceptor-ref name="fileUpload">
+                <param name="allowedTypes">application/vnd.ms-excel,application/msword,
+                application/vnd.ms-powerpoint,text/plain,application/pdf,
+                application/vnd.openxmlformats-officedocument.wordprocessingml.document,
+                application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,
+                application/vnd.openxmlformats-officedocument.presentationml.presentation
+             </param>
+                 <param name="maximumSize">10240000000</param>
+			</interceptor-ref>
+            <interceptor-ref name="defaultStack" />	
+			
+			
+		
+			<result name="success">/lnkhzs/propage/{1}.jsp</result>
+		</action>
+	</package>
+	
+
+</struts>

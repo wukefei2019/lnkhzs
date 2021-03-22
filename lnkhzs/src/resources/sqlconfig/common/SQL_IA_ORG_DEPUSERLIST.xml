@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-group>
+	<doc>
+		<author></author> 
+		<date></date> 
+		<description>内审管理-矩阵列表管理</description> 		
+	</doc>
+	<!-- 获取矩阵列表信息 -->
+	<sqlquery name="SQL_IA_SM_DEPUSERLIST.QUERY" ><!-- 人员部门关系显示 -->
+        <select>
+            <![CDATA[ 
+                  select distinct
+                    /*COUNT*/ u.pid,u.loginname,u.fullname,u.status,d.pid depid, d.depname/*COUNT*/
+                    from bs_t_sm_user u ,bs_t_sm_dep d
+                    where u.depid = d.pid $customwhere$
+                    order by d.depname
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="11" textprecent="22" >
+            <hidden name="depid"/>
+            <hidden name="fullname"/>
+            <hidden name="loginname"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend="and" operator="="  colname="u.loginname"  value="#loginname#" />
+            <field prepend="and" operator="like"  colname="u.fullname||u.loginname"  value="#fullname#" />
+            <field prepend="and" operator="="  colname="u.status"  value="#status#" />
+            <field prepend="and" operator="in" colname="d.pid" value="#depid#"/>
+        </customwhere>
+    </sqlquery>
+</sql-group>

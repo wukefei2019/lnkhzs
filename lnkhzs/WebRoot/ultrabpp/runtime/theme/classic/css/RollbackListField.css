@@ -1,0 +1,31 @@
+@CHARSET "UTF-8";
+.bpp_RollbackListField
+{
+	margin: 4px 0px;
+}
+.bpp_RollbackListField .bpp_RollbackListField_Table
+{
+	padding:1px;
+	margin:0px;
+}
+.bpp_RollbackListField .bpp_RollbackListField_Table table
+{
+	width:858px;
+	margin:0px;
+}
+
+.bpp_RollbackListField .bpp_RollbackListField_Table table th
+{
+	height:28px;
+	width:auto;
+}
+.bpp_RollbackListField .bpp_RollbackListField_Table table td
+{
+	height:28px;
+	width:auto;
+	padding-left:5px;
+	padding-right:5px;
+	cursor:pointer;
+}
+
+

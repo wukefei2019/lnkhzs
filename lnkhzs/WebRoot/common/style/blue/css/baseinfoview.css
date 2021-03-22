@@ -1,0 +1,108 @@
+@charset "utf-8";
+
+body
+{
+	margin:0px;
+	font-size:12px;
+	padding-bottom:10px;
+	color: #666;
+	font-family: "microsoft yahei";
+}
+.marginRight10{
+	margin-right: 10px;
+}
+.treediv {
+
+}
+.treetitlehead
+{
+	background-color:#ffffff;
+	height:40px;
+	padding:1px 0px 0px 1px;
+}
+.treecharhead
+{
+	font-weight:bold;
+	color:#000000;
+	font-size:14px;
+}
+.treetitle
+{
+	color:#666;
+	font-size:12px;
+	height: 28px;
+	line-height: 28px;
+	background-color: #f8f8f8;
+}
+.treechar
+{
+	font-size:14px;
+	padding-left:15px;
+}
+.titleline {
+	
+}
+
+.title {
+	background-color: #eff7fb;
+	padding: 0px 10px;
+	font-size: 12px;
+	cursor: pointer;
+	height: 38px;
+	line-height: 38px;
+	border-top: 1px solid #dae5f7;
+	border-bottom:#dae5f7 solid 1px;
+	color: #28a6e5;
+	font-weight: bolder;
+}
+.tdline {
+	background-color: #EFFAFF;
+	height: 1px;
+}
+.tableline {
+	border-collapse:collapse;
+}
+.ColumntableTD_LookProcess {
+	background-color: #fafafa;
+	font-size: 12px;
+	height: 28px;
+	border: 1px solid #dae5f7;
+	text-align: right;
+}
+
+.ColumntableTD {
+	border: 1px solid #dae5f7;
+	font-size: 12px;
+	height: 28px;
+	color:#137cb0;
+}
+.ColumntableTD_1 {
+	font-size: 12px;
+
+}
+.ChildBaseColumntableTD_LookProcess {
+	border: 1px solid #dbdbdb;
+	background-color: #f3f3f3;
+	font-size: 12px;
+	height: 25px;
+}
+.ChildBaseColumntableTD {
+	border: 1px solid #dbdbdb;
+	font-size: 12px;
+	height: 25px;
+}
+.treespan
+{
+	border:#28a6e5 solid 1px;
+	background-color:#f0f8ff;
+	padding:5px;
+	cursor: pointer;
+	border-radius: 2px;
+	color:#28a6e5;
+}
+input.button
+{
+	font-size:12px;
+	border: 1px solid #ccc;
+	margin-left:10px;
+}

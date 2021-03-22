@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" 
+	   default-autowire="byName" default-lazy-init="true">
+
+    <bean id="IDaoAOP" class="com.ultrapower.omcs.common.core.dao.IDaoAOP" />
+
+	<!--投诉处理满意度统计表-->
+	<bean id="satisTsclmylDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.satisfaction.model.SatisTsclmyl</value>
+		</property>
+	</bean>
+
+	<bean id="satisJtzxktmydDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.satisfaction.model.SatisJtzxktmyd</value>
+		</property>
+	</bean>
+	
+	<!--政企客户满意度调研结果统计表-->
+	<bean id="satisZqkhmydDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.satisfaction.model.SatisZqkhmyd</value>
+		</property>
+	</bean>
+	
+	<!--集团联系人满意度调研结果统计表-->
+	<bean id="satisJtlxrmydDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.satisfaction.model.SatisJtlxrmyd</value>
+		</property>
+	</bean>
+	
+	<!--集团关键人满意度调研结果统计表-->
+	<bean id="satisJtgjrmydDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.satisfaction.model.SatisJtgjrmyd</value>
+		</property>
+	</bean>
+	
+	<!--家宽客户满意度调研结果统计表-->
+	<bean id="satisJkkhmydDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.satisfaction.model.SatisJkkhmyd</value>
+		</property>
+	</bean>
+	
+	<!--手厅客户满意度调研结果统计表-->
+	<bean id="satisStkhmydDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.satisfaction.model.SatisStkhmyd</value>
+		</property>
+	</bean>
+	
+	<!--投诉处理满意度调研明细表-->
+	<bean id="satisTsclmydmxbDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.satisfaction.model.SatisTsclmydmxb</value>
+		</property>
+	</bean>
+	
+	
+    <!--投诉处理满意度统计表-->
+	<bean id="satisTsclmylService" class="com.ultrapower.lnkhzs.satisfaction.manager.SatisTsclmylImpl" />
+	
+	<!--政企客户满意度调研结果统计表-->
+	<bean id="satisZqkhmydService" class="com.ultrapower.lnkhzs.satisfaction.manager.SatisZqkhmydImpl" />
+	
+	<!--集团联系人满意度调研结果统计表-->
+	<bean id="satisJtlxrmydService" class="com.ultrapower.lnkhzs.satisfaction.manager.SatisJtlxrmydImpl" />
+					
+	<!--集团关键人满意度调研结果统计表-->
+	<bean id="satisJtgjrmydService" class="com.ultrapower.lnkhzs.satisfaction.manager.SatisJtgjrmydImpl" />
+	
+	<!--家宽客户满意度调研结果统计表-->
+	<bean id="satisJkkhmydService" class="com.ultrapower.lnkhzs.satisfaction.manager.SatisJkkhmydImpl" />			
+	
+	<!--手厅客户满意度调研结果统计表-->
+	<bean id="satisStkhmydService" class="com.ultrapower.lnkhzs.satisfaction.manager.SatisStkhmydImpl" />	
+	
+	<!--投诉处理满意度调研明细表-->
+	<bean id="satisTsclmydmxbService" class="com.ultrapower.lnkhzs.satisfaction.manager.SatisTsclmydmxbImpl" />	
+    
+	<bean id="satisQykdktmydDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.satisfaction.model.SatisQykdktmyd</value>
+		</property>
+	</bean>
+	
+	<bean id="satisKddsmydDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.satisfaction.model.SatisKddsmyd</value>
+		</property>
+	</bean>
+	
+	<bean id="satisSjkhmydDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.satisfaction.model.SatisSjkhmyd</value>
+		</property>
+	</bean>
+	
+    
+	
+	<bean id="satisJtzxktmydService" class="com.ultrapower.lnkhzs.satisfaction.manager.SatisJtzxktmydImpl" />
+									    
+	<bean id="satisQykdktmydService" class="com.ultrapower.lnkhzs.satisfaction.manager.SatisQykdktmydImpl" />
+
+
+
+
+
+
+
+
+	<!--投诉处理满意度统计表-->
+	<bean id="satisTsclmylAction" class=" com.ultrapower.lnkhzs.satisfaction.web.SatisTsclmylAction"/>
+	
+	<!--投诉处理满意度统计表-->
+	<bean id="satisZqkhmydAction" class=" com.ultrapower.lnkhzs.satisfaction.web.SatisZqkhmydAction"/>
+	
+	<!--集团联系人满意度调研结果统计表-->
+	<bean id="satisJtlxrmydAction" class=" com.ultrapower.lnkhzs.satisfaction.web.SatisJtlxrmydAction"/>
+	
+	<!--集团关键人满意度调研结果统计表-->
+	<bean id="satisJtgjrmydAction" class=" com.ultrapower.lnkhzs.satisfaction.web.SatisJtgjrmydAction"/>
+	
+	<!--家宽客户满意度调研结果统计表-->
+	<bean id="satisJkkhmydAction" class=" com.ultrapower.lnkhzs.satisfaction.web.SatisJkkhmydAction"/>
+	
+	<!--手厅客户满意度调研结果统计表-->
+	<bean id="satisStkhmydAction" class=" com.ultrapower.lnkhzs.satisfaction.web.SatisStkhmydAction"/>
+	         						  
+	<bean id="satisKddsmydService" class="com.ultrapower.lnkhzs.satisfaction.manager.SatisKddsmydImpl" />
+	
+	<bean id="satisSjkhmydService" class="com.ultrapower.lnkhzs.satisfaction.manager.SatisSjkhmydImpl" />
+	
+	
+	
+	
+	<bean id="satisJtzxktmydAction" class=" com.ultrapower.lnkhzs.satisfaction.web.SatisJtzxktmydAction"/>
+	
+	<bean id="satisQykdktmydAction" class=" com.ultrapower.lnkhzs.satisfaction.web.SatisQykdktmydAction"/>
+	
+	<bean id="satisKddsmydAction" class=" com.ultrapower.lnkhzs.satisfaction.web.SatisKddsmydAction"/>
+	
+	<bean id="satisSjkhmydAction" class=" com.ultrapower.lnkhzs.satisfaction.web.SatisSjkhmydAction"/>
+	
+	<!--投诉处理满意度调研明细表-->
+	<bean id="satisTsclmydmxbAction" class=" com.ultrapower.lnkhzs.satisfaction.web.SatisTsclmydmxbAction"/>
+	         						  
+</beans>

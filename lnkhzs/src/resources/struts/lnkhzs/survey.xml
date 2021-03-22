@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN" "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+
+	<package name="lnkhzs" extends="eoms">
+		<interceptors>
+			<interceptor-stack name="omcsStack">
+				<interceptor-ref name="fileUpload">
+					<param name="allowedTypes">application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream
+					</param>
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="omcsStack" />
+		<global-results>
+			<result name="session_time_out">/mobile/common/session_time_out.jsp</result>
+			<result name="input">/omcs/common/ajaxResult.jsp</result>
+			<result name="successAjax">/omcs/common/ajaxResult.jsp</result>
+		</global-results>
+	</package>
+
+
+	<!-- 智慧调研列表 -->
+
+	<package name="khzsAnswerAction" namespace="/survey/answer"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="khzsAnswerAction">
+			<result name="success">/lnkhzs/survey/{1}.jsp</result>
+			<!-- <result name="error">/lnkhzs/survey/{1}.jsp</result> -->
+		</action>
+	</package>
+
+	<!-- 问卷 -->
+	<package name="khzsQuestionnaireAction" namespace="/khzs/survey"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="khzsQuestionnaireAction">
+			<result name="success">/lnkhzs/survey/{1}.jsp</result>
+			<result name="custom">/lnkhzs/survey/${target}.jsp</result>
+		</action>
+	</package>
+
+	<!-- vue接口 -->
+	<package name="khzsQuestionVueAction" namespace="/khzs/vue/surveys"
+		extends="json-default">
+		<action name="seleVueByid" method="seleByid" class="khzsQuestionVueAction">
+			<result name="list" type="json">
+				<param name="root">vuelist</param>
+				<param name="callbackParameter">callback</param>
+			</result>
+		</action>
+		<action name="seleDetailVueByid" method="seleDetailByid" class="khzsQuestionVueAction">
+			<result name="list" type="json">
+				<param name="root">vuelist</param>
+				<param name="callbackParameter">callback</param>
+			</result>
+		</action>
+		<action name="seleOtherSetVueByid" method="seleOtherSetByid" class="khzsQuestionVueAction">
+			<result name="list" type="json">
+				<param name="root">vuelist</param>
+				<param name="callbackParameter">callback</param>
+			</result>
+		</action>
+		<action name="receiveData" method="receiveData" class="khzsQuestionVueAction">
+			<result name="list" type="json">
+				<param name="root">vuelist</param>
+				<param name="callbackParameter">callback</param>
+			</result>
+		</action>
+		<action name="receiveDataWJ" method="receiveDataWJ" class="khzsQuestionVueAction">
+			<result name="list" type="json">
+				<param name="root">vuelist</param>
+				<param name="callbackParameter">callback</param>
+			</result>
+		</action>
+		<action name="receiveDataChoose" method="receiveDataChoose" class="khzsQuestionVueAction">
+			<result name="list" type="json">
+				<param name="root">vuelist</param>
+				<param name="callbackParameter">callback</param>
+			</result>
+		</action>
+		<action name="doAction" method="doAction" class="khzsQuestionVueAction">
+			<result name="list" type="json">
+				<param name="root">vuelist</param>
+				<param name="callbackParameter">callback</param>
+			</result>
+		</action>
+		<action name="getDESUtil" method="getDESUtil" class="khzsQuestionVueAction">
+			<result name="list" type="json">
+				<param name="root">vuelist</param>
+				<param name="callbackParameter">callback</param>
+			</result>
+		</action>
+	</package>
+	
+	
+
+	<!-- 调研题库 -->
+	<package name="khzsQuestionAction" namespace="/khzs/surveys"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="khzsQuestionAction">
+			<result name="input">/lnkhzs/survey/editDytk.jsp</result>
+			<result name="success">/lnkhzs/survey/{1}.jsp</result>
+		</action>
+	</package>
+	
+	<!-- 信息维护 -->
+	<package name="khzsQuestionAnnounceAction" namespace="/khzs/surveys/announce"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="khzsQuestionAnnounceAction">
+			<result name="input">/lnkhzs/survey/editAnnounce.jsp</result>
+			<result name="success">/lnkhzs/survey/{1}.jsp</result>
+		</action>
+	</package>
+	
+	<!-- 管理员配置 -->
+	<package name="khzsSurverManagerAction" namespace="/khzs/surveys/manager"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="khzsSurverManagerAction">
+			<result name="input">/lnkhzs/survey/editManager.jsp</result>
+			<result name="success">/lnkhzs/survey/{1}.jsp</result>
+		</action>
+	</package>
+
+
+
+	<!-- 问卷题库关系表 -->
+	<package name="khzsRelationshipAction" namespace="/khzs/surveyRe"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="khzsRelationshipAction">
+			<result name="success">/lnkhzs/survey/{1}.jsp</result>
+		</action>
+	</package>
+
+	<package name="ultrabpp_atttemplate" extends="lnkhzs"
+		namespace="/ultrabpp/atttemplate">
+		<action name="*" method="{1}" class="attachTemplateAction">
+			<result name="success">/ultrabpp/runtime/service/atttemplate/{1}.jsp
+			</result>
+			<result name="custom">/ultrabpp/runtime/service/atttemplate/${target}.jsp
+			</result>
+			<result name="refresh">/common/core/close.jsp</result>
+		</action>
+	</package>
+</struts>

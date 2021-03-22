@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN" "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+
+	<package name="lnkhzs" extends="eoms">
+		<interceptors>
+			<interceptor-stack name="omcsStack">
+				<interceptor-ref name="fileUpload">
+					<param name="allowedTypes">application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream
+					</param>
+				</interceptor-ref>
+				<interceptor-ref name="defaultStack" />
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="omcsStack" />
+		<global-results>
+			<result name="session_time_out">/mobile/common/session_time_out.jsp</result>
+			<result name="input">/omcs/common/ajaxResult.jsp</result>
+			<result name="successAjax">/omcs/common/ajaxResult.jsp</result>
+		</global-results>
+	</package>
+
+
+	<!-- 投诉处理满意度统计表 -->
+
+	<package name="satisTsclmylAction" namespace="/satisfation/tics"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="satisTsclmylAction">
+			<result name="success">/lnkhzs/satisfaction/{1}.jsp</result>
+		</action>
+	</package>
+	
+	<!-- 投诉处理满意度调研明细表 -->
+
+	<package name="satisTsclmydmxbAction" namespace="/satisfation/tsmx"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="satisTsclmydmxbAction">
+			<result name="success">/lnkhzs/satisfaction/{1}.jsp</result>
+		</action>
+	</package>
+	
+	
+	
+	
+		<!-- 政企客户满意度调研结果统计表 -->
+	<package name="satisZqkhmydAction" namespace="/satisfation/zqkh"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="satisZqkhmydAction">
+			<result name="success">/lnkhzs/satisfaction/{1}.jsp</result>
+		</action>
+	</package>
+	
+		<!-- 集团联系人满意度调研结果统计表 -->
+	<package name="satisJtlxrmydAction" namespace="/satisfation/jtlxr"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="satisJtlxrmydAction">
+			<result name="success">/lnkhzs/satisfaction/{1}.jsp</result>
+		</action>
+	</package>
+	
+	<!-- 集团关键人满意度调研结果统计表 -->
+	<package name="satisJtgjrmydAction" namespace="/satisfation/jtgjr"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="satisJtgjrmydAction">
+			<result name="success">/lnkhzs/satisfaction/{1}.jsp</result>
+		</action>
+	</package>
+	
+	<!-- 家宽客户满意度调研结果统计表 -->
+	<package name="satisJkkhmydAction" namespace="/satisfation/jkkh"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="satisJkkhmydAction">
+			<result name="success">/lnkhzs/satisfaction/{1}.jsp</result>
+		</action>
+	</package>
+	
+	<!-- 手厅客户满意度调研结果统计表 -->
+	<package name="satisStkhmydAction" namespace="/satisfation/stkh"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="satisStkhmydAction">
+			<result name="success">/lnkhzs/satisfaction/{1}.jsp</result>
+		</action>
+	</package>
+	
+	
+	
+	
+	<package name="satisJtzxktmydAction" namespace="/satisfation/jtzxktmyd"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="satisJtzxktmydAction">
+			<result name="success">/lnkhzs/satisfaction/{1}.jsp</result>
+		</action>
+	</package>
+	
+	<package name="satisQykdktmydAction" namespace="/satisfation/qykdktmyd"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="satisQykdktmydAction">
+			<result name="success">/lnkhzs/satisfaction/{1}.jsp</result>
+		</action>
+	</package>
+	
+	<package name="satisKddsmydAction" namespace="/satisfation/kddsmyd"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="satisKddsmydAction">
+			<result name="success">/lnkhzs/satisfaction/{1}.jsp</result>
+		</action>
+	</package>
+	
+	<package name="satisSjkhmydAction" namespace="/satisfation/sjkhmyd"
+		extends="lnkhzs">
+		<action name="*" method="{1}" class="satisSjkhmydAction">
+			<result name="success">/lnkhzs/satisfaction/{1}.jsp</result>
+		</action>
+	</package>
+
+</struts>

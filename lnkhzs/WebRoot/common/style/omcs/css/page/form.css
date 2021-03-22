@@ -1,0 +1,188 @@
+@charset "utf-8";
+
+/*table表*/
+.tableTitle{
+	height: 38px;
+	line-height: 38px;
+	background: #eff7fb;
+	border: 1px solid #dae5f7;
+}
+.btn1{
+	float: right;
+	width: 56px;
+	height: 26px;
+	line-height: 26px;
+	text-align: center;
+	color: #ffffff;
+	font-size: 12px;
+	margin-top: 7px;
+	margin-right: 8px;
+	border-radius: 2px;
+	cursor: pointer;
+}
+.table_body1 th, .table_body1 td{
+	border: 1px solid #EEEEEE;
+	text-align: left;
+	text-indent: 1em;
+	color: #666666;
+}
+th.center,td.center {
+	text-align: center;
+}
+.page li{
+	float: left;
+	font-size: 12px;
+	color: #666666;
+}
+.input_page{
+	width: 40px;
+	height: 20px;
+	line-height: 20px;
+	border: 1px solid #CCCCCC;
+	border-radius: 2px;
+}
+.btn_go{
+	width: 22px;
+	height: 20px;
+	line-height: 20px;
+	background:url(../../image/btn_go.png) repeat-x;
+	border-radius: 2px;
+	border: 1px solid #cccccc;
+	margin-top: 8px;
+	cursor: pointer;
+	text-align: center;
+}
+
+
+/*详情页table*/
+
+/*任务核查*/
+.table_body2{
+	font-size: 14px;
+	color: #333333;
+	line-height: 40px;
+}
+
+.inputText1{
+	height: 24px;
+	line-height: 24px;
+	border: 1px solid #ddd;
+	border-radius: 2px;
+	padding-left: 10px;
+}
+
+.inputText2{
+	height: 24px;
+	line-height: 24px;
+	border: 1px solid #ddd;
+	border-radius: 2px;
+	padding-left: 10px;
+	icon-roundadd;
+}
+
+.btnipt{
+	height: 26px;
+	line-height: 26px;
+	text-align: center;
+	width: 26px;
+	border: 1px solid #eeeeee;
+	cursor: pointer;
+	outline: none;
+	position: absolute;
+	right: -12px;
+	top: 0px;
+	background: url(../../images/shenglue.png) no-repeat center center;
+}
+.txtarea1{
+	border: 1px solid #eeeeee;
+	border-radius: 2px;
+	padding: 5px 8px 5px 8px;
+	height: 76px;
+	margin: 6px 0px;
+	width: 100%;
+	font-size:12px;
+	line-height:15px
+}
+
+/*工单table*/
+.table_body3 td{
+	border: 1px solid #eeeeee;
+}
+
+/*附件*/
+.delete1{
+	width: 8px;
+	height: 38px;
+	background: url(../../images/delete1.png) no-repeat center center;
+	position: absolute;
+	top: 0px;
+	right: 6px;
+}
+.btn_shangchuan{
+	width: 50px;
+	height: 26px;
+	line-height: 26px;
+	text-align: center;
+	color: #666666;
+	font-size: 12px;
+	background: url(../../images/btn_bg.png) repeat-x;
+	border: 1px solid #DDDDDD;
+	margin-left: 4px;
+	cursor: pointer;
+}
+
+
+/*查询*/
+.xiala{
+	width: 1000px;
+	margin: 0 auto;
+	background-color: #fdfdfd;
+	border: 1px solid #eeeeee;
+	position: absolute;
+	left: 0px;
+	top: 40px;
+	z-index: 9;
+	-moz-box-shadow: 1px 1px 5px #d2d2d2; /* 老的 Firefox */
+	box-shadow: 1px 1px 5px #d2d2d2;
+}
+.btn3{
+	float: right;
+	width: 56px;
+	height: 26px;
+	line-height: 26px;
+	text-align: center;
+	font-size: 12px;
+	margin-top: 7px;
+	border-radius: 2px;
+	cursor: pointer;
+}
+
+.Ct > h1{
+    text-align: center;
+    margin: 1em auto;
+    width: 100%;
+    
+}
+.Ct form select.select {
+    border: 1px solid #e3e3e3;
+    width: 70%;
+    min-width: 125px;
+    height: 24px;
+    padding-left: 10px;
+    color: #666;
+    font-family: "微软雅黑";
+}
+.Ct form select.select option {
+    padding: 10px 0 10px 0;
+    width:50px;
+    color: #666;
+    font-family: "微软雅黑";
+}
+
+.fysp_content_head_disabled_btn{
+    color: #aaa;
+}
+.hidden{
+    display: none;
+}
+h

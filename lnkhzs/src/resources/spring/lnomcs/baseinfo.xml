@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" 
+	   default-autowire="byName" default-lazy-init="true">
+       
+    <!-- 下拉列表 关联查询  -->
+    <bean id="dicManager4CityAction" class="com.ultrapower.omcs.common.DicManager4CityAction" />
+    <bean id="dicManager4FlowAction" class="com.ultrapower.omcs.common.DicManager4FlowAction" />      
+	<bean id="omcsBaseAction" class="com.ultrapower.omcs.base.web.BaseAction" />
+    <bean id="omcsBaseExportAction" class="com.ultrapower.omcs.base.web.BaseExportAction" />
+	
+	<bean id="iaExportFileDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.omcs.base.model.IaExportFile</value>
+		</property>
+	</bean>
+	
+	<bean id="baseExportService" class="com.ultrapower.omcs.base.manager.BaseExportMgrImpl" />
+    
+</beans>

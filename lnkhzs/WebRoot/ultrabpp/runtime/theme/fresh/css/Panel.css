@@ -1,0 +1,110 @@
+@CHARSET "UTF-8";
+/* Tab panel START */
+.bpp_TabPanelGroup { }
+.bpp_TabPanelGroup .bpp_TabPanelGroup_Header
+{
+	width:100%;
+	background:url(../images/panelheader-bg.png) repeat-x center bottom;
+}
+.bpp_TabPanelGroup .bpp_TabPanelGroup_Header_front
+{
+	float:left;
+	width:0px;
+}
+.bpp_TabPanelGroup .bpp_TabPanelGroup_Header ul
+{
+	list-style:none;
+	margin:0px;
+	padding:0px;
+	height:40px;
+}
+.bpp_TabPanelGroup .bpp_TabPanelGroup_Header ul li
+{
+	float:left;
+	height:100%;
+	line-height:300%;
+}
+.bpp_TabPanelGroup .bpp_TabPanelGroup_Header ul li a
+{
+	margin:0px 15px 0px 15px;
+	text-decoration:none;
+	color:#999999;
+	font-weight:bold;
+	font-size:14px;
+}
+.bpp_TabPanelGroup .bpp_TabPanelGroup_Header ul li a:hover
+{
+	margin:0px 15px 0px 15px;
+	color:#3399cc;
+	font-weight:bold;
+}
+.bpp_TabPanelGroup .bpp_TabPanelGroup_Header ul .bpp_TabPanelGroup_Header_Active
+{
+	background:url(../images/line_on.png) #fcfcfc repeat-x center bottom;
+}
+.bpp_TabPanelGroup .bpp_TabPanelGroup_Header ul .bpp_TabPanelGroup_Header_Active a
+{
+	margin:0px 15px 0px 15px;
+	text-decoration:none;
+	color:#63acd6;
+	font-weight:bold;
+}
+.bpp_TabPanelGroup .bpp_TabPanelGroup_Header ul .bpp_TabPanelGroup_Header_Active a:hover
+{
+	margin:0px 15px 0px 15px;
+	text-decoration:none;
+	color:#63acd6;
+	font-weight:bold;
+}
+.bpp_TabPanelGroup_Body
+{
+	float:left;
+	width:100%;
+	border:solid #eeeeee 1px;
+	background:#fcfcfc;
+}
+/* Tab panel END */
+
+/* Box panel START */
+.bpp_BoxPanelGroup
+{
+}
+.bpp_BoxPanelGroup .bpp_BoxPanelGroup_Item
+{
+	float:left;
+	width:100%;
+	//background:#ffffff url(../images/panel-border.png) top repeat-y;
+}
+.bpp_BoxPanelGroup .bpp_BoxPanelGroup_Item .bpp_BoxPanelGroup_Header
+{
+	background:#f6f6f6;
+	height:36px;
+	border-top:#eeeeee 1px solid;
+}
+.bpp_BoxPanelGroup .bpp_BoxPanelGroup_Item .bpp_BoxPanelGroup_Header div
+{
+	font-size:14px;
+	color:#6a8dbc;
+	line-height:36px;
+	margin-left:6px;
+	margin-right:1px;
+	padding-left:30px;
+	cursor:pointer;
+	background:url(../images/minus.gif) no-repeat 5px center;
+}
+.bpp_BoxPanelGroup .bpp_BoxPanelGroup_Item .bpp_BoxPanelGroup_Header .div_minus
+{
+	font-size:14px;
+	color:#6a8dbc;
+	line-height:36px;
+	margin-left:6px;
+	padding-left:30px;
+	cursor:pointer;
+	background:url(../images/plus.gif) no-repeat 5px center;
+}
+.bpp_BoxPanelGroup .bpp_BoxPanelGroup_Item .bpp_BoxPanelGroup_Body
+{
+	padding-top:5px;
+	padding-bottom:5px;
+}
+/* Box panel END */

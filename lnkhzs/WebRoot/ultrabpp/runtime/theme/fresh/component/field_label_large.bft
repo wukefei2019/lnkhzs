@@ -1,0 +1,7 @@
+<td valign="top" class="bpp_Field_Label_Large">
+<div style="height:@!{H-1}px;">
+    <div>
+	<span class="@!{REQ}" style="line-height:@!{H/2}px;">@!{TXT}：</span>
+    </div>
+</div>
+</td>

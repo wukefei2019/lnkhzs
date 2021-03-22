@@ -1,0 +1,718 @@
+<!doctype html>
+<html class="no-js">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="keywords" content="" />
+<meta name="description" content="" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title></title>
+
+<!--360 browser -->
+<meta name="renderer" content="webkit">
+<meta name="author" content="wos">
+<!-- Android -->
+<meta name="mobile-web-app-capable" content="yes">
+<link rel="icon" sizes="192x192" href="images/i/app.png">
+<!--Safari on iOS -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Amaze UI" />
+<link rel="apple-touch-icon-precomposed" href="images/i/app.png">
+<!--Win8 or 10 -->
+<meta name="msapplication-TileImage" content="images/i/app.png">
+<meta name="msapplication-TileColor" content="#e1652f">
+
+<link rel="icon" type="image/png" href="images/i/favicon.png">
+<link rel="stylesheet" href="assets/css/amazeui.css">
+<link rel="stylesheet" href="css/public.css">
+
+<!--[if (gte IE 9)|!(IE)]><!-->
+<script src="assets/js/jquery.min.js"></script>
+<!--<![endif]-->
+<!--[if lte IE 8 ]>
+    <script src="http://libs.baidu.com/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+    <script src="assets/js/amazeui.ie8polyfill.min.js"></script>
+    <![endif]-->
+<script src="assets/js/amazeui.min.js"></script>
+<script src="js/public.js"></script>
+<script type="text/javascript">
+	$(document).ready(function() {
+		$(function() {
+			//var TodayDate = new Date(doHandleDate());
+			/* var str='2019/04';
+			str = str.replace(/-/g, '/'); // "2010/08/01";
+			var date = new Date().format("yyyy-MM");
+	  		$('#month').datepicker('setValue', date); */
+	  		$('#month').datepicker('setValue', new Date(doHandleDate()));
+	  		$('#week').datepicker('setValue', new Date(doHandleDate()));
+		});
+		getmonth();
+		getweek();
+	});
+
+	function getmonth() {
+		
+		$.ajax({
+			type : 'post',
+			url : '/lnfwzl/situation/sTotal/getCHBN.action',
+			data : {
+				selecttime : $("#month").val(),
+				selecttype : "month"
+			},
+			async : false,
+			success : function(data) {
+				var html0 = "<tr id='tr0'>",
+					html1 = "<tr>",
+					html2 = "<tr>",
+					html3 = "<tr>",
+					html4 = "<tr>",
+					html5 = "<tr>",
+					html6 = "<tr>",
+					html7 = "<tr>",
+					html8 = "<tr>",
+					html9 = "<tr>",
+					html10 = "<tr>",
+					html11 = "<tr>",
+					
+					html12 = "<tr>",
+					html13 = "<tr>",
+					html14 = "<tr>",
+					html15 = "<tr>",
+					html16 = "<tr>",
+					html17 = "<tr>",
+					html18 = "<tr>",
+					html19 = "<tr>",
+					html20 = "<tr>",
+					html21 = "<tr>",
+					html22 = "<tr>",
+					
+					html23 = "<tr>",
+					html24 = "<tr>",
+					html25 = "<tr>",
+					html26 = "<tr>";
+					
+				html0 += "<td colspan='3' style='text-align: center;' >客户分类</td>";
+				html1 += '<td style="vertical-align: middle;text-align: center;" rowspan="7">广<br>义<br>投<br>诉<br>量</td><td colspan="2">总量</td>';
+				html2 += '<td style="vertical-align: middle;" colspan="2">其中：市场类</td>';
+				html3 += '<td colspan="2">市场类占比</td>';
+				html4 += '<td style="vertical-align: middle;" colspan="2">其中：网络类</td>';
+				html5 += '<td colspan="2">网络类占比</td>';
+				html6 += '<td colspan="2">其中：信安类</td>';
+				html7 += '<td colspan="2">信安类占比</td>';
+				//
+				html8 += '<td style="vertical-align: middle;text-align: center;" rowspan="7">在<br>线<br>抱<br>怨<br>量</td><td colspan="2">总量</td>';
+				html9 += '<td style="vertical-align: middle;" colspan="2">其中：市场类</td>';
+				html10 += '<td colspan="2">市场类占比</td>';
+				html11 += '<td style="vertical-align: middle;" colspan="2">其中：网络类</td>';
+				html12 += '<td colspan="2">网络类占比</td>';
+				html13 += '<td colspan="2">其中：信安类</td>';
+				html14 += '<td colspan="2">信安类占比</td>';
+				//
+				html15 += '<td style="vertical-align: middle;text-align: center;" rowspan="12">狭<br>义<br>抱<br>怨<br>量</td><td colspan="2">总量</td>';
+				html16 += '<td colspan="2">升级投诉量</td>';
+				html17 += '<td colspan="2">升级投诉占比</td>';
+				html18 += '<td style="vertical-align: middle;" colspan="2">其中：市场类</td>';
+				html19 += '<td colspan="2">市场类占比</td>';
+				html20 += '<td colspan="2">市场类中升级投诉量</td>';
+				html21 += '<td style="vertical-align: middle;" colspan="2">其中：网络类</td>';
+				html22 += '<td colspan="2">网络类占比</td>';
+				html23 += '<td colspan="2">网络类中升级投诉量</td>';
+				html24 += '<td colspan="2">其中：信安类</td>';
+				html25 += '<td colspan="2">信安类占比</td>';
+				html26 += '<td colspan="2">信安类中升级投诉量</td>';
+				
+				
+				for (var i = 0; i < data.length; i++) {
+					html0 += "<td>" + data[i].rowHashMap.CHBN + "</td>";
+					
+					html1 += "<td>" + data[i].rowHashMap.BROAD_TOTAL + "</td>";
+					html2 += "<td>" + data[i].rowHashMap.BROAD_MARKET + "</td>";
+					html3 += "<td>" + data[i].rowHashMap.BROAD_MARKET_RAT + "</td>";
+					html4 += "<td>" + data[i].rowHashMap.BROAD_NET + "</td>";
+					html5 += "<td>" + data[i].rowHashMap.BROAD_NET_RAT + "</td>";
+					html6 += "<td>" + data[i].rowHashMap.BROAD_XA + "</td>";
+					html7 += "<td>" + data[i].rowHashMap.BROAD_XA_RAT + "</td>";
+					
+					html8 += "<td>" + data[i].rowHashMap.ONLINE_TOTAL + "</td>";
+					html9 += "<td>" + data[i].rowHashMap.ONLINE_MARKET + "</td>";
+					html10 += "<td>" + data[i].rowHashMap.ONLINE_MARKET_RAT + "</td>";
+					html11 += "<td>" + data[i].rowHashMap.ONLINE_NET + "</td>";
+					html12 += "<td>" + data[i].rowHashMap.ONLINE_NET_RAT + "</td>";
+					html13 += "<td>" + data[i].rowHashMap.BROAD_XA + "</td>";
+					html14 += "<td>" + data[i].rowHashMap.BROAD_XA_RAT + "</td>";
+					
+					html15 += "<td>" + data[i].rowHashMap.NARROW_TOTAL + "</td>";
+					html16 += "<td>" + data[i].rowHashMap.NARROW_SJ + "</td>";
+					html17 += "<td>" + data[i].rowHashMap.NARROW_SJ_RAT + "</td>";
+					html18 += "<td>" + data[i].rowHashMap.NARROW_MARKET + "</td>";
+					html19 += "<td>" + data[i].rowHashMap.NARROW_MARKET_RAT + "</td>";
+					html20 += "<td>" + data[i].rowHashMap.NARROW_MARKET_SJ + "</td>";
+					html21 += "<td>" + data[i].rowHashMap.NARROW_NET + "</td>";
+					html22 += "<td>" + data[i].rowHashMap.NARROW_NET_RAT + "</td>";
+					html23 += "<td>" + data[i].rowHashMap.NARROW_NET_SJ + "</td>";
+					html24 += "<td>" + data[i].rowHashMap.NARROW_XA + "</td>";
+					html25 += "<td>" + data[i].rowHashMap.NARROW_XA_RAT + "</td>";
+					html26 += "<td>" + data[i].rowHashMap.NARROW_XA_SJ + "</td>";
+					
+					
+				}
+				html0 += "</tr>";
+				html1 += "</tr>";
+				html2 += "</tr>";
+				html3 += "</tr>";
+				html4 += "</tr>";
+				html5 += "</tr>";
+				html6 += "</tr>";
+				html7 += "</tr>";
+				
+				html8 += "</tr>";
+				html9 += "</tr>";
+				html10 += "</tr>";
+				html11 += "</tr>";
+				html12 += "</tr>";
+				html13 += "</tr>";
+				html14 += "</tr>";
+				
+				html15 += "</tr>";
+				html16 += "</tr>";
+				html17 += "</tr>";
+				html18 += "</tr>";
+				html19 += "</tr>";
+				html20 += "</tr>";
+				html21 += "</tr>";
+				html22 += "</tr>";
+				html23 += "</tr>";
+				html24 += "</tr>";
+				html25 += "</tr>";
+				html26 += "</tr>";
+				
+
+				$("#table1").empty();
+				$("#table1").append(html0+html1+html2+html3+html4+html5+html6+html7+html8+html9+html10+html11
+				+html12+html13+html14+html15+html16+html17+html18+html19+html20+html21+html22
+				+html23+html24+html25+html26);
+			},
+			error : function() {}
+		});
+	}
+	
+	
+	function getweek() {
+		var rweek=makeDate(new Date($("#calendar").val()));
+		var myweek="'"+rweek[0]+"','"+rweek[1]+"','"+rweek[2]+"','"+rweek[3]+"','"+rweek[4]+"','"+rweek[5]+"','"+rweek[6]+"'";
+		myweek=myweek.replace(/\//g, '-');
+		/* myweek="'"+dealTime(1,$("#week").val())+"','"+
+		dealTime(2,$("#week").val())+"','"+dealTime(3,$("#week").val())+
+		"','"+dealTime(4,$("#week").val())+"','"+dealTime(5,$("#week").val())+
+		"','"+dealTime(6,$("#week").val())+"','"+dealTime(7,$("#week").val())+"'"; */
+		myweek="'"+dealTime(-3,$("#week").val())+"','"+
+		dealTime(-2,$("#week").val())+"','"+dealTime(-1,$("#week").val())+
+		"','"+dealTime(0,$("#week").val())+"','"+dealTime(1,$("#week").val())+
+		"','"+dealTime(2,$("#week").val())+"','"+dealTime(3,$("#week").val())+"'";
+		$.ajax({
+			type : 'post',
+			url : '/lnfwzl/situation/sTotal/getCHBN.action',
+			data : {
+				selecttime : myweek,
+				selecttype : "week"
+			},
+			async : false,
+			success : function(data) {
+				var html0 = "<tr id='tr0'>",
+					html00 = "<tr>",
+					html1 = "<tr>",
+					html2 = "<tr>",
+					html3 = "<tr>",
+					html4 = "<tr>",
+					html5 = "<tr>",
+					html6 = "<tr>",
+					html7 = "<tr>",
+					html8 = "<tr>",
+					html9 = "<tr>",
+					html10 = "<tr>",
+					html11 = "<tr>",
+					
+					html12 = "<tr>",
+					html13 = "<tr>",
+					html14 = "<tr>",
+					html15 = "<tr>",
+					html16 = "<tr>",
+					html17 = "<tr>",
+					html18 = "<tr>",
+					html19 = "<tr>",
+					html20 = "<tr>",
+					html21 = "<tr>",
+					html22 = "<tr>",
+					
+					html23 = "<tr>",
+					html24 = "<tr>",
+					html25 = "<tr>",
+					html26 = "<tr>";
+					
+				html0 += "<td colspan='3' style='text-align: center;' >客户分类</td>";
+				html00 += "<td colspan='3' style='text-align: center;' >日期</td><td id = 'myweekcol'>"+dealTime(-3,$("#week").val())+"至"+dealTime(3,$("#week").val())+"</td>";
+				//html0+="<td rowspan="11" >省/XX市/XX区县/XX网格</td>";
+				html1 += '<td style="vertical-align: middle;text-align: center;" rowspan="7">广<br>义<br>投<br>诉<br>量</td><td colspan="2">总量</td>';
+				html2 += '<td style="vertical-align: middle;" colspan="2">其中：市场类</td>';
+				html3 += '<td colspan="2">市场类占比</td>';
+				html4 += '<td style="vertical-align: middle;" colspan="2">其中：网络类</td>';
+				html5 += '<td colspan="2">网络类占比</td>';
+				html6 += '<td colspan="2">其中：信安类</td>';
+				html7 += '<td colspan="2">信安类占比</td>';
+				//
+				html8 += '<td style="vertical-align: middle;text-align: center;" rowspan="7">在<br>线<br>抱<br>怨<br>量</td><td colspan="2">总量</td>';
+				html9 += '<td style="vertical-align: middle;" colspan="2">其中：市场类</td>';
+				html10 += '<td colspan="2">市场类占比</td>';
+				html11 += '<td style="vertical-align: middle;" colspan="2">其中：网络类</td>';
+				html12 += '<td colspan="2">网络类占比</td>';
+				html13 += '<td colspan="2">其中：信安类</td>';
+				html14 += '<td colspan="2">信安类占比</td>';
+				//
+				html15 += '<td style="vertical-align: middle;text-align: center;" rowspan="12">狭<br>义<br>抱<br>怨<br>量</td><td colspan="2">总量</td>';
+				html16 += '<td colspan="2">升级投诉量</td>';
+				html17 += '<td colspan="2">升级投诉占比</td>';
+				html18 += '<td style="vertical-align: middle;" colspan="2">其中：市场类</td>';
+				html19 += '<td colspan="2">市场类占比</td>';
+				html20 += '<td colspan="2">市场类中升级投诉量</td>';
+				html21 += '<td style="vertical-align: middle;" colspan="2">其中：网络类</td>';
+				html22 += '<td colspan="2">网络类占比</td>';
+				html23 += '<td colspan="2">网络类中升级投诉量</td>';
+				html24 += '<td colspan="2">其中：信安类</td>';
+				html25 += '<td colspan="2">信安类占比</td>';
+				html26 += '<td colspan="2">信安类中升级投诉量</td>';
+				
+				
+				for (var i = 0; i < data.length; i++) {
+					html0 += "<td>" + data[i].rowHashMap.CHBN + "</td>";
+					
+					html1 += "<td>" + data[i].rowHashMap.BROAD_TOTAL + "</td>";
+					html2 += "<td>" + data[i].rowHashMap.BROAD_MARKET + "</td>";
+					html3 += "<td>" + data[i].rowHashMap.BROAD_MARKET_RAT + "</td>";
+					html4 += "<td>" + data[i].rowHashMap.BROAD_NET + "</td>";
+					html5 += "<td>" + data[i].rowHashMap.BROAD_NET_RAT + "</td>";
+					html6 += "<td>" + data[i].rowHashMap.BROAD_XA + "</td>";
+					html7 += "<td>" + data[i].rowHashMap.BROAD_XA_RAT + "</td>";
+					
+					html8 += "<td>" + data[i].rowHashMap.ONLINE_TOTAL + "</td>";
+					html9 += "<td>" + data[i].rowHashMap.ONLINE_MARKET + "</td>";
+					html10 += "<td>" + data[i].rowHashMap.ONLINE_MARKET_RAT + "</td>";
+					html11 += "<td>" + data[i].rowHashMap.ONLINE_NET + "</td>";
+					html12 += "<td>" + data[i].rowHashMap.ONLINE_NET_RAT + "</td>";
+					html13 += "<td>" + data[i].rowHashMap.BROAD_XA + "</td>";
+					html14 += "<td>" + data[i].rowHashMap.BROAD_XA_RAT + "</td>";
+					
+					html15 += "<td>" + data[i].rowHashMap.NARROW_TOTAL + "</td>";
+					html16 += "<td>" + data[i].rowHashMap.NARROW_SJ + "</td>";
+					html17 += "<td>" + data[i].rowHashMap.NARROW_SJ_RAT + "</td>";
+					html18 += "<td>" + data[i].rowHashMap.NARROW_MARKET + "</td>";
+					html19 += "<td>" + data[i].rowHashMap.NARROW_MARKET_RAT + "</td>";
+					html20 += "<td>" + data[i].rowHashMap.NARROW_MARKET_SJ + "</td>";
+					html21 += "<td>" + data[i].rowHashMap.NARROW_NET + "</td>";
+					html22 += "<td>" + data[i].rowHashMap.NARROW_NET_RAT + "</td>";
+					html23 += "<td>" + data[i].rowHashMap.NARROW_NET_SJ + "</td>";
+					html24 += "<td>" + data[i].rowHashMap.NARROW_XA + "</td>";
+					html25 += "<td>" + data[i].rowHashMap.NARROW_XA_RAT + "</td>";
+					html26 += "<td>" + data[i].rowHashMap.NARROW_XA_SJ + "</td>";
+					
+					
+				}
+				html0 += "</tr>";
+				html00 += "</tr>";
+				html1 += "</tr>";
+				html2 += "</tr>";
+				html3 += "</tr>";
+				html4 += "</tr>";
+				html5 += "</tr>";
+				html6 += "</tr>";
+				html7 += "</tr>";
+				
+				html8 += "</tr>";
+				html9 += "</tr>";
+				html10 += "</tr>";
+				html11 += "</tr>";
+				html12 += "</tr>";
+				html13 += "</tr>";
+				html14 += "</tr>";
+				
+				html15 += "</tr>";
+				html16 += "</tr>";
+				html17 += "</tr>";
+				html18 += "</tr>";
+				html19 += "</tr>";
+				html20 += "</tr>";
+				html21 += "</tr>";
+				html22 += "</tr>";
+				html23 += "</tr>";
+				html24 += "</tr>";
+				html25 += "</tr>";
+				html26 += "</tr>";
+				
+
+				$("#table2").empty();
+				$("#table2").append(html0+html00+html1+html2+html3+html4+html5+html6+html7+html8+html9+html10+html11
+				+html12+html13+html14+html15+html16+html17+html18+html19+html20+html21+html22
+				+html23+html24+html25+html26);
+				
+				/*alert($("#tr0").find("td").length-1);
+				if($("#tr0").find("td").length-1==0){
+					//当前无数据
+				}*/
+				$("#myweekcol").attr("colspan",4);
+			},
+			error : function() {}
+		});
+	}
+
+	function doHandleDate() {
+		var myDate = new Date();
+		var tYear = myDate.getFullYear();
+		var tMonth = myDate.getMonth();
+
+		var m = tMonth + 1;
+		if (m.toString().length == 1) {
+			m = "0" + m;
+		}
+		return tYear + '-' + m;
+
+	}
+
+	function makeDate(mydate) {
+		var new_Date = mydate;
+		var timesStamp = new_Date.getTime();
+		var currenDay = new_Date.getDay();
+		var dates = [];
+		for (var i = 0; i < 7; i++) {
+			dates.push(new Date(timesStamp + 24 * 60 * 60 * 1000 * (i - (currenDay + 6) % 7)).toLocaleDateString().replace(/[年月]/g, '-').replace(/[日上下午]/g, ''));
+		}
+		return dates
+	}
+
+	//处理时间方法
+	function dealTime(dayNum, dat) {
+		if (dayNum == "0") {
+			dayNum = 7;
+		}
+		var uom = new Date(),
+			dateStr = '',
+			fday = '';
+		fday = dat.substring(8, 10);
+		uom.setYear(dat.substring(0, 4));
+		uom.setMonth(parseInt(dat.substring(5, 7)) - 1);
+		uom.setDate(fday);
+
+		if (uom.getDay() == 0) {
+			uom.setDate(uom.getDate() - (7 - dayNum));
+		} else {
+			uom.setDate(uom.getDate() - (uom.getDay() - dayNum));
+		}
+		var mon = (uom.getMonth() + 1) + '';
+		if (mon.length != 2) {
+			mon = '0' + mon;
+		}
+		var day = uom.getDate() + '';
+		if (day.length != 2) {
+			day = '0' + day;
+		}
+		dateStr = '' + uom.getFullYear() + "-" + mon + "-" + day;
+		return dateStr;
+	}
+</script>
+</head>
+<body>
+
+	<header class="am-topbar am-topbar-fixed-top wos-header"
+		style="background: steelblue;">
+		<div class="am-container">
+			<h1 class="am-topbar-brand">
+				<!-- <a href="#"><img src="images/logo.png" alt=""></a> -->
+				<a href="#">辽宁移动服务质量</a>
+			</h1>
+		</div>
+	</header>
+	<!--banner-->
+	<div class="banner">
+		<div class="am-g am-container">
+			<div class="am-u-sm-0 am-u-md-0 am-u-lg-4 padding-none">
+				<div class="am-tabs" data-am-tabs="{noSwipe: 1}" id="doc-tab-demo-1">
+					<ul class="am-tabs-nav am-nav am-nav-tabs">
+						<li style="width: 50%;" class="am-active"><a
+							style="margin-right: 0px;" href="javascript: void(0)">月</a></li>
+						<li style="width: 50%;"><a style="margin-right: 0px;"
+							href="javascript: void(0)">周</a></li>
+					</ul>
+
+					<div class="am-tabs-bd" style="height: 100%">
+						<div class="am-tab-panel am-active" style="height: 100%;">
+							<!-- 日历控件 -->
+							<div class="am-input-group am-datepicker-date"
+								data-am-datepicker="{format: 'yyyy-mm',viewMode: 'months', minViewMode: 'months'}">
+								<input type="text" class="am-form-field" placeholder="日历组件"
+									readonly id="month" onchange="getmonth()" style="pointer-events:none"> <span
+									class="am-input-group-btn am-datepicker-add-on">
+									<button class="am-btn am-btn-default" type="button">
+										<span class="am-icon-calendar"></span>
+									</button>
+								</span>
+							</div>
+							<!-- 表数据 -->
+							<div>
+								<div class="am-scrollable-horizontal">
+									<table style="vertical-align: middle;"
+										class="am-table am-table-bordered am-table-striped am-text-nowrap">
+										<tbody id="table1">
+										<!-- <tr>
+											<td colspan="3">省/XX市/XX区县</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td style="vertical-align: middle;" rowspan="11">升<br>级<br>投<br>诉<br>总<br>量</td>
+											<td colspan="2">升级投诉总量</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td style="vertical-align: middle;" rowspan="3">其<br>中：<br>市<br>场<br>类</td>
+											<td>个人市场</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td>家庭市场</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td>政企市场</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td colspan="2">市场类占比</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										
+										<tr>
+											<td style="vertical-align: middle;" rowspan="3">其<br>中：<br>网<br>络<br>类</td>
+											<td>个人网络</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td>家庭网络</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td>政企网络</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td colspan="2">网络类占比</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td colspan="2">其中：信安类</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td colspan="2">信安类占比</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr> -->
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+						<div class="am-tab-panel">
+							<!-- 日历控件 -->
+							<div class="am-input-group am-datepicker-date"
+								data-am-datepicker="{format: 'yyyy-mm-dd',viewMode: 'days', minViewMode: 'days'}">
+								<input type="text" class="am-form-field" placeholder="日历组件"
+									readonly id="week" onchange="getweek()"> <span
+									class="am-input-group-btn am-datepicker-add-on">
+									<button class="am-btn am-btn-default" type="button">
+										<span class="am-icon-calendar"></span>
+									</button>
+								</span>
+							</div>
+							<!-- 表数据 -->
+							<div>
+								<div class="am-scrollable-horizontal">
+									<table style="vertical-align: middle;"
+										class="am-table am-table-bordered am-table-striped am-text-nowrap">
+										<tbody id="table2">
+										<!-- <tr>
+											<td colspan="3">省/XX市/XX区县</td>
+											<td>日期</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td style="vertical-align: middle;" rowspan="11">升<br>级<br>投<br>诉<br>总<br>量</td>
+											<td colspan="2">升级投诉总量</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td style="vertical-align: middle;" rowspan="3">其<br>中：<br>市<br>场<br>类</td>
+											<td>个人市场</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td>家庭市场</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td>政企市场</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td colspan="2">市场类占比</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										
+										<tr>
+											<td style="vertical-align: middle;" rowspan="3">其<br>中：<br>网<br>络<br>类</td>
+											<td>个人网络</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td>家庭网络</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td>政企网络</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td colspan="2">网络类占比</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td colspan="2">其中：信安类</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr>
+										<tr>
+											<td colspan="2">信安类占比</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+											<td>1</td>
+										</tr> -->
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<div data-am-widget="gotop" class="am-gotop am-gotop-fixed">
+		<a href="#top" title="回到顶部"> <span class="am-gotop-title">回到顶部</span>
+			<i class="am-gotop-icon am-icon-chevron-up"></i>
+		</a>
+	</div>
+
+</body>
+</html>

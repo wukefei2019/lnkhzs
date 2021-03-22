@@ -1,0 +1,146 @@
+/* a {color:#3C6E31;text-decoration: underline;}
+a:hover {background-color:#3C6E31;color:white;} */
+input.radio {margin: 0 2px 0 8px;}
+input.radio.first {margin-left:0;}
+input.empty {color: lightgray;}
+code {color: #2f332a;}
+.highlight_red {color:#A60000;}
+.highlight_green {color:#A7F43D;}
+
+div.content_wrap {width: 100%;height:580px;}
+div.content_wrap div.left{float: left;width: 25%;
+}
+div.content_wrap div.right{float: right;width: 74%;height: 100%;
+}
+div.zTreeDemoBackground {width:250px;height:540px;text-align:left;}
+
+ul.ztree {margin-top: 10px;border: 1px solid #617775;height:540px;overflow-y:scroll;overflow-x:auto;}
+
+.tree .right .fysp_table1Box {
+    padding:0px;
+}
+.tree .right .panel {
+    margin-top: 10px;
+    
+    
+}
+
+.selectperson .person {
+    margin-right: 10px;
+    height: 2.8em;
+    line-height: 2.8em;
+    margin:  5px 6px;
+    width: 11.2em;
+    display: inline-block;
+    border : solid 1px #ccc;
+    background-color:#ddd;  
+    border-radius: 1px;
+}
+.selectperson .person .label {
+    margin:  0 0 0 0;
+    padding:  0 0 0 5px;
+    color: #666;
+    line-height: 2.8em;
+    width:8em;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    position: relative;
+    float:left;
+    text-align: left;
+    
+}
+
+.selectperson .person .delete {
+    line-height: 2.8em;
+    margin-left: 5px;
+    position: relative;
+    float:right;
+    right:5px;
+}
+
+.ztree li span.button.noPic_ico_open{
+	background-image:none;
+	width: 0px;
+}
+.ztree li span.button.noPic_ico_close{
+	background-image:none;
+	width: 0px;
+}
+.ztree li span.button.noPic_ico_docu{
+	background-image:none;
+	width: 0px;
+}
+
+.ztree li span.button.lv_ico_open{
+	background-image:url("./img/warn3.png");
+	width:21px !important;
+    height:21px !important;
+}
+.ztree li span.button.lv_ico_close{
+	background-image:url("./img/warn3.png");
+	width:21px !important;
+    height:21px !important;
+}
+.ztree li span.button.lv_ico_docu{
+	background-image:url("./img/warn3.png");
+	width:18px !important;
+    height:18px !important;
+}
+
+.ztree li span.button.red_ico_open{
+	background-image:url("./img/warn1.png");
+	width:18px !important;
+    height:18px !important;
+}
+.ztree li span.button.red_ico_close{
+	background-image:url("./img/warn1.png");
+	width:18px !important;
+    height:18px !important;
+}
+.ztree li span.button.red_ico_docu{
+	background-image:url("./img/warn1.png");
+	width:18px !important;
+    height:18px !important;
+}
+
+
+.ztree li span.button.yellow_ico_open{
+	background-image:url("./img/warn2.png");
+	width:18px !important;
+    height:18px !important;
+}
+.ztree li span.button.yellow_ico_close{
+	background-image:url("./img/warn2.png");
+	width:18px !important;
+    height:18px !important;
+}
+.ztree li span.button.yellow_ico_docu{
+	background-image:url("./img/warn2.png");
+	width:18px !important;
+    height:18px !important;
+}
+ 
+.ztree li span.button.person_ico_open{
+	background-image:url("./img/person.png");
+}
+.ztree li span.button.person_ico_close{
+	background-image:url("./img/person.png");
+}
+.ztree li span.button.person_ico_docu{
+	background-image:url("./img/person.png");
+}
+
+.ztree li a {
+    padding-right: 3px;
+    margin: 0;
+    cursor: pointer;
+    line-height: 22px;
+    height: 22px;
+    color: #333;
+    background-color: transparent;
+    text-decoration: none;
+    vertical-align: top;
+    display: inline-block;
+    width: 100%;
+}
+

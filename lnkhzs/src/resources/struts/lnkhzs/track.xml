@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN" "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+
+	<package name="trackAction" namespace="/track/trackSource" extends="lnkhzs">
+		<action name="*" method="{1}" class="trackAction">
+			<result name="success">/lnkhzs/issueTrack/{1}.jsp</result>
+			<result name="custom">/lnkhzs/issueTrack/${target}.jsp</result>
+		</action>
+	</package>
+
+</struts>

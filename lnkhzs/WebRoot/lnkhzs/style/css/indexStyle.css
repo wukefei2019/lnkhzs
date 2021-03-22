@@ -1,0 +1,162 @@
+.notice{
+    width: 120px;
+    height: 30px;
+    float: left;
+    /* position: absolute; */
+}
+.noticePic{
+    width: 30px;
+    height: 100%;
+    background-image: url(../image/notice.png);
+    background-position: 10px center;
+    background-size: 40% 50%;
+    background-repeat: no-repeat;
+    float: left;
+}
+.noticeFont{
+	padding-top: 6px;
+	font-weight: 600;
+	float: left;
+}
+.noticeStem{
+	width: 5px; 
+	height: 30px;
+	float: right; 
+	background-color: white;
+	display: inline-block;
+    position: relative;
+    z-index: 99;
+}
+.fonta{
+	color: rgb(119, 176, 208);
+    float: left;
+    margin-left: 28px;
+}
+.noticeInfo{
+	width: calc(100% - 125px);
+	height: 30px;
+    float: left;
+    overflow:hidden;
+    /* width: 5000px; */
+    /* padding-left: 120px; */
+    /* position: absolute; */
+}
+.noticeInfoPic{
+	height: 30px;
+	background-image: url(../image/picss.png);
+    background-position: 10px center;
+    background-repeat: no-repeat;
+    float: left;
+    margin-left: 5px;
+    margin-right: 15px;
+}
+
+
+.titleDiv {
+	width: 100%;
+	/* height: 20px; */
+	height: 35px;
+	font-weight: 600;
+}
+.titleDivPic{
+	padding-left: 4%;
+    background-image: url(../image/rightArr.png);
+    background-position: right top;
+    background-repeat: no-repeat;
+    background-size: 7%;
+}
+
+.contentDiv {
+	width: 100%;
+	height: calc(100% - 20px);
+	margin-top: -15px;
+}
+
+.modelDiv {
+	width: 100%;
+	height: 100%;
+	background-color: #fff;
+	padding: 10px 10px 0 10px;
+}
+
+.custFont{
+	height: 30%;
+}
+.chartKh{
+	width: 32%; 
+	height: 100%;
+	float: left;
+	font-weight: 600;
+	text-align: center;
+	margin: 2% 1% 2% 1%;
+}
+.chartKh div[class^='kh'] {
+	margin-top: 5%;
+    height: 70%;
+    background-position: center 68%;
+    background-repeat: no-repeat;
+    background-size: 36%;
+    margin-bottom: 10px;
+}
+.khal{
+	color: rgb(0, 182, 126);
+    background-image: url(../image/cogreen.png);
+}
+.khjy{
+	color: rgb(228, 62, 41);
+    background-image: url(../image/cored.png);
+}
+.khjdz{
+	color: rgb(0, 128, 183);
+    background-image: url(../image/coblue.png);
+}
+
+.service{
+	width: 100%;
+    height: calc(20% - 1px);
+    padding: 2.5% 0 2% 0;
+    border-bottom: 1px solid rgb(221, 221, 221);
+}
+.service div[class^='form'] {
+	width:20px;
+	height:100%;
+	border-radius:50%;
+	display: block;
+	float: left;
+}
+.formA{
+	background-color: #e04b4b;
+}
+.formB{
+	background-color: #0abb87;
+}
+.formC{
+	background-color: #ffb882;
+}
+.formD{
+	background-color: #0abb87;
+}
+.formE{
+	background-color: #e04b4b;
+}
+.service div[class^='fContent'] {
+	width: calc(100% - 25px);
+    height: 100%;
+    float: left;
+    text-align: center;
+}
+.mychartDiv {
+    height: 100%;
+    display: inline-block;
+    overflow: hidden;
+}
+.horizontal-div {
+    float: left;
+    /* padding-right: 10px; */
+    text-align: center;
+    /* width: 150px;
+    height: 150px; */
+}
+
+
+

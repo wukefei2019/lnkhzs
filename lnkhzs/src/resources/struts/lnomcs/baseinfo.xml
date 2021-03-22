@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN" "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+    <package name="lnomcs" extends="eoms">
+    	<interceptors>
+			<interceptor-stack name="omcsStack">
+                <interceptor-ref name="fileUpload">  
+              		<param name="allowedTypes">application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/octet-stream
+              		</param>
+        		</interceptor-ref>
+         		<interceptor-ref name="defaultStack" /> 
+			</interceptor-stack>
+		</interceptors>
+		<default-interceptor-ref name="omcsStack" />
+        <global-results>
+            <result name="session_time_out">/mobile/common/session_time_out.jsp</result>
+            <result name="input">/omcs/common/ajaxResult.jsp</result>
+            <result name="successAjax">/omcs/common/ajaxResult.jsp</result> 
+        </global-results>
+    </package>
+    
+    <package name="omcsBaseAction" extends="lnomcs" namespace="/omcs/baseAction">
+        <action name="*" class="omcsBaseAction" method="{1}">
+        </action>
+    </package>
+    
+    <package name="omcsBaseExportAction" extends="lnomcs" namespace="/omcs/baseExport">
+        <action name="*" class="omcsBaseExportAction" method="{1}">
+        </action>
+    </package>     
+</struts>

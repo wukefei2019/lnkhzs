@@ -1,0 +1,10 @@
+@CHARSET "UTF-8";
+.bpp_LabelField
+{
+	margin: 4px 0px;
+	overflow:hidden;
+}
+.bpp_LabelField table td div
+{
+	margin:9px 3px 0px 5px;
+}

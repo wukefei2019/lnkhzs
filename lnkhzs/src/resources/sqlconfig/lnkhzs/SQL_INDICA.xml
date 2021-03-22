@@ -1,0 +1,1413 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-group>
+	<doc>
+		<author></author>
+		<date></date>
+		<description>普通投诉</description>
+	</doc>
+
+	<!-- 投诉首次响应 -->
+	<sqlquery name="SQL_IND_W1.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				select '100' as value from dual
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 投诉回访 -->
+	<sqlquery name="SQL_IND_W2.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				select '100' as value from dual
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 投诉处理 -->
+	<sqlquery name="SQL_IND_W3.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT  ROUND((
+		CASE WHEN ( SELECT	COUNT (*)	
+							FROM	NGCS_WF_CMPLNTS_ARC_DETAIL
+							WHERE
+								SRV_REQST_TYPE_FULL_NM LIKE '集团业务→产品质量→物联卡→%'	OR SRV_REQST_TYPE_FULL_NM LIKE '集团业务→网络质量→物联卡→%'	OR SRV_REQST_TYPE_FULL_NM LIKE '集团业务→基础服务→物联卡→%'  
+		    
+		) != 0 THEN    ((
+		    SELECT	COUNT (*)	
+							FROM	NGCS_WF_CMPLNTS_ARC_DETAIL
+							WHERE
+								(SRV_REQST_TYPE_FULL_NM LIKE '集团业务→产品质量→物联卡→%'	OR SRV_REQST_TYPE_FULL_NM LIKE '集团业务→网络质量→物联卡→%'	OR SRV_REQST_TYPE_FULL_NM LIKE '集团业务→基础服务→物联卡→%' 
+		    
+		 ) AND TOTAL_TIME3 < 48 )) /  (
+		    SELECT	COUNT (*)	
+							FROM	NGCS_WF_CMPLNTS_ARC_DETAIL
+							WHERE
+								SRV_REQST_TYPE_FULL_NM LIKE '集团业务→产品质量→物联卡→%'	OR SRV_REQST_TYPE_FULL_NM LIKE '集团业务→网络质量→物联卡→%'	OR SRV_REQST_TYPE_FULL_NM LIKE '集团业务→基础服务→物联卡→%' 
+		    
+		)
+		    ELSE  NULL
+		END)*100,2) as value
+		from dual
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="AREA_NAME"
+				value="#area_name#" />
+			<field prepend="and" operator="=" colname="acpt_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="acpt_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	<!-- 集团专线 -->
+	
+	
+	<!-- 专线资源勘查反馈时长 -->
+	<sqlquery name="SQL_IND_GROUP1.query">
+		<select>
+            <![CDATA[
+				select * from (select 
+				       a.exploration_time,ROW_NUMBER() OVER(ORDER BY a.statistical_time DESC)
+				  from dw_group_eoms_handle1 a
+				  left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue
+				  WHERE 1 = 1 $customwhere$) where ROWNUM=1
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+		<!--  专线资源勘查反馈时长_月 -->
+	<sqlquery name="SQL_IND_GROUP1_MON.query">
+		<select>
+            <![CDATA[
+				SELECT * FROM (
+	 select TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -ROWNUM+1), 'mm'),'yyyy-mm') as mons FROM dual CONNECT by ROWNUM<=12 ) d LEFT JOIN (
+	   	 SELECT exploration_time AS VALUE ,  SUBSTR(statistical_time,0,7) AS MON 
+    FROM (SELECT ROW_NUMBER() OVER(PARTITION BY SUBSTR(statistical_time,0,7) ORDER BY statistical_time DESC) rn,       
+          a.*   FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue  WHERE 1 = 1 $customwhere$ )       
+   WHERE rn = 1   ) a ON d.mons=a.mon ORDER BY d.MONS desc
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+
+	<!-- 专线业务可实施满足率 -->
+	<sqlquery name="SQL_IND_GROUP2.query">
+			<select>
+	            <![CDATA[
+					select * from (select 
+					       a.enforceable_time,ROW_NUMBER() OVER(ORDER BY a.statistical_time DESC)
+					  from dw_group_eoms_handle1 a
+					  left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+					    on a.city = b.divalue
+					  WHERE 1 = 1 $customwhere$) where ROWNUM=1
+	              ]]>
+			</select>
+			<condition cols="3" labprecent="11" textprecent="22">
+				<hidden name="area_name" />
+				<hidden name="month" />
+				<hidden name="year" />
+			</condition>
+			<customwhere name="customwhere" prepend="and">
+				<field prepend="and" operator="=" colname="b.diname"
+					value="#area_name#" />
+				<field prepend="and" operator="like" colname="a.statistical_time"
+					value="#month#" />
+				<field prepend="and" operator="like" colname="a.statistical_time"
+					value="#year#" />
+			</customwhere>
+	
+			<colname_name>
+				<name>NAME</name>
+				<namestr>投诉名称</namestr>
+				<name>VALUE</name>
+				<namestr>投诉数量</namestr>
+				<name>AREA_NAME</name>
+				<namestr>地市</namestr>
+				<name>ACPT_TIME</name>
+				<namestr>投诉时间</namestr>
+			</colname_name>
+	
+		</sqlquery>
+		
+		
+		<!--  专线业务可实施满足率_月 -->
+	<sqlquery name="SQL_IND_GROUP2_MON.query">
+		<select>
+            <![CDATA[
+				SELECT * FROM (
+	 select TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -ROWNUM+1), 'mm'),'yyyy-mm') as mons FROM dual CONNECT by ROWNUM<=12 ) d LEFT JOIN (
+	   	 SELECT enforceable_time AS VALUE ,  SUBSTR(statistical_time,0,7) AS MON 
+    FROM (SELECT ROW_NUMBER() OVER(PARTITION BY SUBSTR(statistical_time,0,7) ORDER BY statistical_time DESC) rn,       
+          a.*   FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue  WHERE 1 = 1 $customwhere$ )       
+   WHERE rn = 1   ) a ON d.mons=a.mon ORDER BY d.MONS desc
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+		
+		<!-- 专线业务一次性资源满足率 -->
+		<sqlquery name="SQL_IND_GROUP3.query">
+			<select>
+	            <![CDATA[
+					select * from (select 
+					       a.disposable_time,ROW_NUMBER() OVER(ORDER BY a.statistical_time DESC)
+					  from dw_group_eoms_handle1 a
+					  left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+					    on a.city = b.divalue
+					  WHERE 1 = 1 $customwhere$) where ROWNUM=1
+	              ]]>
+			</select>
+			<condition cols="3" labprecent="11" textprecent="22">
+				<hidden name="area_name" />
+				<hidden name="month" />
+				<hidden name="year" />
+			</condition>
+			<customwhere name="customwhere" prepend="and">
+				<field prepend="and" operator="=" colname="b.diname"
+					value="#area_name#" />
+				<field prepend="and" operator="like" colname="a.statistical_time"
+					value="#month#" />
+				<field prepend="and" operator="like" colname="a.statistical_time"
+					value="#year#" />
+			</customwhere>
+	
+			<colname_name>
+				<name>NAME</name>
+				<namestr>投诉名称</namestr>
+				<name>VALUE</name>
+				<namestr>投诉数量</namestr>
+				<name>AREA_NAME</name>
+				<namestr>地市</namestr>
+				<name>ACPT_TIME</name>
+				<namestr>投诉时间</namestr>
+			</colname_name>
+	
+	</sqlquery>
+	
+	
+	<!--  专线业务一次性资源满足率_月 -->
+	<sqlquery name="SQL_IND_GROUP3_MON.query">
+		<select>
+            <![CDATA[
+				SELECT * FROM (
+	 select TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -ROWNUM+1), 'mm'),'yyyy-mm') as mons FROM dual CONNECT by ROWNUM<=12 ) d LEFT JOIN (
+	   	 SELECT disposable_time AS VALUE ,  SUBSTR(statistical_time,0,7) AS MON 
+    FROM (SELECT ROW_NUMBER() OVER(PARTITION BY SUBSTR(statistical_time,0,7) ORDER BY statistical_time DESC) rn,       
+          a.*   FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue  WHERE 1 = 1 $customwhere$ )       
+   WHERE rn = 1   ) a ON d.mons=a.mon ORDER BY d.MONS desc
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+		
+	<!-- 专线业务开通时长 -->
+	<sqlquery name="SQL_IND_GROUP4.query">
+			<select>
+	            <![CDATA[
+					select * from (select 
+					       a.opening_time,ROW_NUMBER() OVER(ORDER BY a.statistical_time DESC)
+					  from dw_group_eoms_handle1 a
+					  left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+					    on a.city = b.divalue
+					  WHERE 1 = 1 $customwhere$) where ROWNUM=1
+	              ]]>
+			</select>
+			<condition cols="3" labprecent="11" textprecent="22">
+				<hidden name="area_name" />
+				<hidden name="month" />
+				<hidden name="year" />
+			</condition>
+			<customwhere name="customwhere" prepend="and">
+				<field prepend="and" operator="=" colname="b.diname"
+					value="#area_name#" />
+				<field prepend="and" operator="like" colname="a.statistical_time"
+					value="#month#" />
+				<field prepend="and" operator="like" colname="a.statistical_time"
+					value="#year#" />
+			</customwhere>
+	
+			<colname_name>
+				<name>NAME</name>
+				<namestr>投诉名称</namestr>
+				<name>VALUE</name>
+				<namestr>投诉数量</namestr>
+				<name>AREA_NAME</name>
+				<namestr>地市</namestr>
+				<name>ACPT_TIME</name>
+				<namestr>投诉时间</namestr>
+			</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 专线业务开通时长_月 -->
+	<sqlquery name="SQL_IND_GROUP4_MON.query">
+		<select>
+            <![CDATA[
+				SELECT * FROM (
+	 select TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -ROWNUM+1), 'mm'),'yyyy-mm') as mons FROM dual CONNECT by ROWNUM<=12 ) d LEFT JOIN (
+	   	 SELECT opening_time AS VALUE ,  SUBSTR(statistical_time,0,7) AS MON 
+    FROM (SELECT ROW_NUMBER() OVER(PARTITION BY SUBSTR(statistical_time,0,7) ORDER BY statistical_time DESC) rn,       
+          a.*   FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue  WHERE 1 = 1 $customwhere$ )       
+   WHERE rn = 1   ) a ON d.mons=a.mon ORDER BY d.MONS desc
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 专线业务计费及时率 -->
+	<sqlquery name="SQL_IND_GROUP5.query">
+		<select>
+            <![CDATA[
+				select * from (select 
+				       a.charging_time,ROW_NUMBER() OVER(ORDER BY a.statistical_time DESC)
+				  from dw_group_eoms_handle1 a
+				  left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue
+				  WHERE 1 = 1 $customwhere$) where ROWNUM=1
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 专线业务计费及时率_月 -->
+	<sqlquery name="SQL_IND_GROUP5_MON.query">
+		<select>
+            <![CDATA[
+				SELECT * FROM (
+	 select TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -ROWNUM+1), 'mm'),'yyyy-mm') as mons FROM dual CONNECT by ROWNUM<=12 ) d LEFT JOIN (
+	   	 SELECT charging_time AS VALUE ,  SUBSTR(statistical_time,0,7) AS MON 
+    FROM (SELECT ROW_NUMBER() OVER(PARTITION BY SUBSTR(statistical_time,0,7) ORDER BY statistical_time DESC) rn,       
+          a.*   FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue  WHERE 1 = 1 $customwhere$ )       
+   WHERE rn = 1   ) a ON d.mons=a.mon ORDER BY d.MONS desc
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 专线业务变更时长（停机、销户） -->
+	<sqlquery name="SQL_IND_GROUP6.query">
+		<select>
+            <![CDATA[
+				select * from (select 
+				       a.change_cancellation_time,ROW_NUMBER() OVER(ORDER BY a.statistical_time DESC)
+				  from dw_group_eoms_handle1 a
+				  left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue
+				  WHERE 1 = 1 $customwhere$) where ROWNUM=1
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 专线业务变更时长（停机、销户）_月 -->
+	<sqlquery name="SQL_IND_GROUP6_MON.query">
+		<select>
+            <![CDATA[
+				SELECT * FROM (
+	 select TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -ROWNUM+1), 'mm'),'yyyy-mm') as mons FROM dual CONNECT by ROWNUM<=12 ) d LEFT JOIN (
+	   	 SELECT change_cancellation_time AS VALUE ,  SUBSTR(statistical_time,0,7) AS MON 
+    FROM (SELECT ROW_NUMBER() OVER(PARTITION BY SUBSTR(statistical_time,0,7) ORDER BY statistical_time DESC) rn,       
+          a.*   FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue  WHERE 1 = 1 $customwhere$ )       
+   WHERE rn = 1   ) a ON d.mons=a.mon ORDER BY d.MONS desc
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 专线业务变更时长（变更） -->
+	<sqlquery name="SQL_IND_GROUP7.query">
+		<select>
+            <![CDATA[
+				select * from (select 
+				       a.change_change_time,ROW_NUMBER() OVER(ORDER BY a.statistical_time DESC)
+				  from dw_group_eoms_handle1 a
+				  left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue
+				  WHERE 1 = 1 $customwhere$) where ROWNUM=1
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 专线业务变更时长（变更）_月 -->
+	<sqlquery name="SQL_IND_GROUP7_MON.query">
+		<select>
+            <![CDATA[
+				SELECT * FROM (
+	 select TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -ROWNUM+1), 'mm'),'yyyy-mm') as mons FROM dual CONNECT by ROWNUM<=12 ) d LEFT JOIN (
+	   	 SELECT change_change_time AS VALUE ,  SUBSTR(statistical_time,0,7) AS MON 
+    FROM (SELECT ROW_NUMBER() OVER(PARTITION BY SUBSTR(statistical_time,0,7) ORDER BY statistical_time DESC) rn,       
+          a.*   FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue  WHERE 1 = 1 $customwhere$ )       
+   WHERE rn = 1   ) a ON d.mons=a.mon ORDER BY d.MONS desc
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 专线业务变更时长（复机 ） -->
+	<sqlquery name="SQL_IND_GROUP8.query">
+		<select>
+            <![CDATA[
+				select * from (select 
+				       a.change_recovery_time,ROW_NUMBER() OVER(ORDER BY a.statistical_time DESC)
+				  from dw_group_eoms_handle1 a
+				  left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue
+				  WHERE 1 = 1 $customwhere$) where ROWNUM=1
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 专线业务变更时长（复机 ）_月 -->
+	<sqlquery name="SQL_IND_GROUP8_MON.query">
+		<select>
+            <![CDATA[
+				SELECT * FROM (
+	 select TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -ROWNUM+1), 'mm'),'yyyy-mm') as mons FROM dual CONNECT by ROWNUM<=12 ) d LEFT JOIN (
+	   	 SELECT change_recovery_time AS VALUE ,  SUBSTR(statistical_time,0,7) AS MON 
+    FROM (SELECT ROW_NUMBER() OVER(PARTITION BY SUBSTR(statistical_time,0,7) ORDER BY statistical_time DESC) rn,       
+          a.*   FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue  WHERE 1 = 1 $customwhere$ )       
+   WHERE rn = 1   ) a ON d.mons=a.mon ORDER BY d.MONS desc
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	<!-- 专线业务变更平均时长（停机、销户）的平均时长 -->
+	<sqlquery name="SQL_IND_GROUP9.query">
+		<select>
+            <![CDATA[
+				select * from (select 
+				       a.average_cancellation_time,ROW_NUMBER() OVER(ORDER BY a.statistical_time DESC)
+				  from dw_group_eoms_handle1 a
+				  left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue
+				  WHERE 1 = 1 $customwhere$) where ROWNUM=1
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+		
+	<!-- 专线业务变更平均时长（停机、销户）的平均时长_月 -->
+	<sqlquery name="SQL_IND_GROUP9_MON.query">
+		<select>
+            <![CDATA[
+				SELECT * FROM (
+	 select TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -ROWNUM+1), 'mm'),'yyyy-mm') as mons FROM dual CONNECT by ROWNUM<=12 ) d LEFT JOIN (
+	   	 SELECT average_cancellation_time AS VALUE ,  SUBSTR(statistical_time,0,7) AS MON 
+    FROM (SELECT ROW_NUMBER() OVER(PARTITION BY SUBSTR(statistical_time,0,7) ORDER BY statistical_time DESC) rn,       
+          a.*   FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue  WHERE 1 = 1 $customwhere$ )       
+   WHERE rn = 1   ) a ON d.mons=a.mon ORDER BY d.MONS desc
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+
+	
+	<!-- 专线业务变更平均时长（变更） -->
+	<sqlquery name="SQL_IND_GROUP10.query">
+		<select>
+            <![CDATA[
+				select * from (select 
+				       a.average_change_time,ROW_NUMBER() OVER(ORDER BY a.statistical_time DESC)
+				  from dw_group_eoms_handle1 a
+				  left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue
+				  WHERE 1 = 1 $customwhere$) where ROWNUM=1
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 专线业务变更平均时长（变更）_月 -->
+	<sqlquery name="SQL_IND_GROUP10_MON.query">
+		<select>
+            <![CDATA[
+				SELECT * FROM (
+	 select TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -ROWNUM+1), 'mm'),'yyyy-mm') as mons FROM dual CONNECT by ROWNUM<=12 ) d LEFT JOIN (
+	   	 SELECT average_change_time AS VALUE ,  SUBSTR(statistical_time,0,7) AS MON 
+    FROM (SELECT ROW_NUMBER() OVER(PARTITION BY SUBSTR(statistical_time,0,7) ORDER BY statistical_time DESC) rn,       
+          a.*   FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue  WHERE 1 = 1 $customwhere$ )       
+   WHERE rn = 1   ) a ON d.mons=a.mon ORDER BY d.MONS desc
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	
+	<!-- 专线业务变更平均时长（复机 ） -->
+	<sqlquery name="SQL_IND_GROUP11.query">
+		<select>
+            <![CDATA[
+				select * from (select 
+				       a.average_recovery_time,ROW_NUMBER() OVER(ORDER BY a.statistical_time DESC)
+				  from dw_group_eoms_handle1 a
+				  left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue
+				  WHERE 1 = 1 $customwhere$ )
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!-- 专线业务变更平均时长（复机 ）_月 -->
+	<sqlquery name="SQL_IND_GROUP11_MON.query">
+		<select>
+            <![CDATA[
+				SELECT * FROM (
+	 select TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -ROWNUM+1), 'mm'),'yyyy-mm') as mons FROM dual CONNECT by ROWNUM<=12 ) d LEFT JOIN (
+	   	 SELECT average_recovery_time AS VALUE ,  SUBSTR(statistical_time,0,7) AS MON 
+    FROM (SELECT ROW_NUMBER() OVER(PARTITION BY SUBSTR(statistical_time,0,7) ORDER BY statistical_time DESC) rn,       
+          a.*   FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003') b
+				    on a.city = b.divalue  WHERE 1 = 1 $customwhere$ )       
+   WHERE rn = 1   ) a ON d.mons=a.mon ORDER BY d.MONS desc
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#month#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#year#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+
+	</sqlquery>
+	
+	
+	<!--  专线业务一次性资源满足率_柱状图 -->
+	<sqlquery name="SQL_IND_GROUP3_PIE.query">
+		<select>
+            <![CDATA[
+				 
+	   	 SELECT DINAME AS CITY ,disposable_time AS VALUE
+    FROM (SELECT a.* ,b.*,ROW_NUMBER() OVER(PARTITION BY DINAME ORDER BY a.statistical_time DESC) rn  FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003' ) b
+				    on a.city = b.divalue  WHERE 1=1 $customwhere$  ) WHERE rn = 1  GROUP BY  DINAME  , disposable_time ORDER BY value desc
+    
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="time" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#time#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!--  专线业务变更平均时长（停机、销户）的平均时长_柱状图 -->
+	<sqlquery name="SQL_IND_GROUP9_PIE.query">
+		<select>
+            <![CDATA[
+				 
+	   	 SELECT DINAME AS CITY ,average_cancellation_time AS VALUE
+    FROM (SELECT a.* ,b.* ,ROW_NUMBER() OVER(PARTITION BY DINAME ORDER BY a.statistical_time DESC) rn  FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003' ) b
+				    on a.city = b.divalue   WHERE 1=1 $customwhere$  ) WHERE rn = 1 GROUP BY  DINAME  , average_cancellation_time ORDER BY value desc
+    
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="time" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#time#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!--  专线业务变更平均时长（变更）_柱状图 -->
+	<sqlquery name="SQL_IND_GROUP10_PIE.query">
+		<select>
+            <![CDATA[
+				 
+	   	 SELECT DINAME AS CITY ,average_change_time AS VALUE
+    FROM (SELECT a.* ,b.* ,ROW_NUMBER() OVER(PARTITION BY DINAME ORDER BY a.statistical_time DESC) rn  FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003' ) b
+				    on a.city = b.divalue   WHERE 1=1 $customwhere$  ) WHERE rn = 1 GROUP BY  DINAME  , average_change_time ORDER BY value desc
+    
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="time" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#time#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!--  专线业务变更平均时长（复机 ）_柱状图 -->
+	<sqlquery name="SQL_IND_GROUP11_PIE.query">
+		<select>
+            <![CDATA[
+				 
+	   	 SELECT DINAME AS CITY ,average_recovery_time AS VALUE
+    FROM (SELECT a.* ,b.* ,ROW_NUMBER() OVER(PARTITION BY DINAME ORDER BY a.statistical_time DESC) rn  FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003' ) b
+				    on a.city = b.divalue   WHERE 1=1 $customwhere$  ) WHERE rn = 1 GROUP BY  DINAME  , average_recovery_time ORDER BY value desc
+    
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="time" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#time#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!--  专线资源勘查反馈时长_柱状图 -->
+	<sqlquery name="SQL_IND_GROUP1_PIE.query">
+		<select>
+            <![CDATA[
+				 
+	   	 SELECT DINAME AS CITY ,exploration_time AS VALUE
+    FROM (SELECT a.* ,b.* ,ROW_NUMBER() OVER(PARTITION BY DINAME ORDER BY a.statistical_time DESC) rn  FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003' ) b
+				    on a.city = b.divalue   WHERE 1=1 $customwhere$  ) WHERE rn = 1 GROUP BY  DINAME  , exploration_time ORDER BY value desc
+    
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="time" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#time#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!--  专线业务可实施满足率_柱状图 -->
+	<sqlquery name="SQL_IND_GROUP2_PIE.query">
+		<select>
+            <![CDATA[
+				 
+	   	 SELECT DINAME AS CITY ,enforceable_time AS VALUE
+    FROM (SELECT a.* ,b.* ,ROW_NUMBER() OVER(PARTITION BY DINAME ORDER BY a.statistical_time DESC) rn FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003' ) b
+				    on a.city = b.divalue   WHERE 1=1 $customwhere$  ) WHERE rn = 1 GROUP BY  DINAME  , enforceable_time ORDER BY value desc
+    
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="time" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#time#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!--  专线业务开通时长_柱状图 -->
+	<sqlquery name="SQL_IND_GROUP4_PIE.query">
+		<select>
+            <![CDATA[
+				 
+	   	 SELECT DINAME AS CITY ,opening_time AS VALUE
+    FROM (SELECT a.* ,b.* ,ROW_NUMBER() OVER(PARTITION BY DINAME ORDER BY a.statistical_time DESC) rn  FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003' ) b
+				    on a.city = b.divalue   WHERE 1=1 $customwhere$  ) WHERE rn = 1 GROUP BY  DINAME  , opening_time ORDER BY value desc
+    
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="time" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#time#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!--  专线业务计费及时率_柱状图 -->
+	<sqlquery name="SQL_IND_GROUP5_PIE.query">
+		<select>
+            <![CDATA[
+				 
+	   	 SELECT DINAME AS CITY ,charging_time AS VALUE
+    FROM (SELECT a.* ,b.* ,ROW_NUMBER() OVER(PARTITION BY DINAME ORDER BY a.statistical_time DESC) rn  FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003' ) b
+				    on a.city = b.divalue   WHERE 1=1 $customwhere$  ) WHERE rn = 1 GROUP BY  DINAME  , charging_time ORDER BY value desc
+    
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="time" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#time#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!--  专线业务变更时长（停机、销户）_柱状图 -->
+	<sqlquery name="SQL_IND_GROUP6_PIE.query">
+		<select>
+            <![CDATA[
+				 
+	   	 SELECT DINAME AS CITY ,change_cancellation_time AS VALUE
+    FROM (SELECT a.* ,b.* ,ROW_NUMBER() OVER(PARTITION BY DINAME ORDER BY a.statistical_time DESC) rn  FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003' ) b
+				    on a.city = b.divalue   WHERE 1=1 $customwhere$  )  WHERE rn = 1 GROUP BY  DINAME  , change_cancellation_time ORDER BY value desc
+    
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="time" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#time#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!--  专线业务变更时长（变更）_柱状图 -->
+	<sqlquery name="SQL_IND_GROUP7_PIE.query">
+		<select>
+            <![CDATA[
+				 
+	   	 SELECT DINAME AS CITY ,change_change_time AS VALUE
+    FROM (SELECT a.* ,b.* ,ROW_NUMBER() OVER(PARTITION BY DINAME ORDER BY a.statistical_time DESC) rn  FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003' ) b
+				    on a.city = b.divalue   WHERE 1=1 $customwhere$  ) WHERE rn = 1 GROUP BY  DINAME  , change_change_time ORDER BY value desc
+    
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="time" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#time#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+	
+	<!--  专线业务变更时长（复机）_柱状图 -->
+	<sqlquery name="SQL_IND_GROUP8_PIE.query">
+		<select>
+            <![CDATA[
+				 
+	   	 SELECT DINAME AS CITY ,change_recovery_time AS VALUE
+    FROM (SELECT a.* ,b.* ,ROW_NUMBER() OVER(PARTITION BY DINAME ORDER BY a.statistical_time DESC) rn  FROM dw_group_eoms_handle1 a left join (SELECT * FROM BS_T_SM_DICITEM WHERE DTID = '201908220000003' ) b
+				    on a.city = b.divalue   WHERE 1=1 $customwhere$  ) WHERE rn = 1 GROUP BY  DINAME  , change_recovery_time ORDER BY value desc
+    
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="time" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="b.diname"
+				value="#area_name#" />
+			<field prepend="and" operator="like" colname="a.statistical_time"
+				value="#time#" />
+		</customwhere>
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+	</sqlquery>
+
+	
+</sql-group>

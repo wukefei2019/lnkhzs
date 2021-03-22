@@ -1,0 +1,14 @@
+@CHARSET "UTF-8";
+.bpp_SelectField
+{
+	margin: 4px 0px;
+}
+.bpp_SelectField table td input
+{
+	float:left;
+	margin-top:3px;
+	padding: 3px 14px 3px 8px;
+	line-height:150%;
+	height:20px;
+	
+}

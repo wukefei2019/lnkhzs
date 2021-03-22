@@ -1,0 +1,1268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-group>
+	<doc>
+		<author></author> 
+		<date></date> 
+		<description>服务质量数据分析信息</description>
+	</doc>
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_LIST_EXPORT.query">
+        <select>
+            <![CDATA[
+				select /*COUNT*/
+						distinct t.code,
+						 t.trace_source_time,
+						 t.trace_source_type,
+						 t.question_subcategory,
+						 t.concrete_problems,
+						 t.resp_dept,
+						 t.auxiliary_department,
+						 t.trigger_complaints_num,
+						 t.trigger_wantou_ratio,
+						 t.trigger_handling_volume,
+						 t.completion_status,
+						 t.acceptance_time,
+						 t.acceptance_complaints,
+						 t.acceptance_complaints_rate,
+						 l.link_progress,
+						 t.problem,
+						 t.rectification_goal,
+						 l.not_finished_reason,
+						 l.not_completed_description,
+						 l.responsible_unit,
+						 l.responsible_department,
+						 l.responsible_person,
+						 l.remark /*COUNT*/
+						  from ZL_TRACE_SOURCE_LIST t, zl_trace_source_flow l
+						 where t.pid = l.sourcepid
+								$customwhere$ 
+				order by /*ORDERBY*/ t.code Desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="11" textprecent="22" >
+        	<hidden displayname="序号" name="code" defaultvalue="#code#" />
+			<hidden displayname="pid" name="pid" defaultvalue="#pid#" />	
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	<field prepend='and' operator='like' colname='t.code'  value='#code#' /> 
+     		<field prepend='and' operator='like' colname='t.pid'  value='#pid#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_LIST_EXPORT2.query">
+        <select>
+            <![CDATA[
+				select /*COUNT*/ * /*COUNT*/
+					  from (select l.*,
+					               t.nextloginname,
+					               t.status flowstatus,
+					               t.link_progress,
+					               t.not_finished_reason,
+					               t.not_completed_description,
+					               t.responsible_unit,
+					               t.responsible_department,
+					               t.responsible_person
+					          from (SELECT *
+					                  FROM (SELECT z.sourcepid,
+					                               z.status,
+					                               z.createtime,
+					                               z.nextloginname,
+					                               z.link_progress,
+					                               z.problem,
+					                               z.rectification_goal,
+					                               z.not_finished_reason,
+					                               z.not_completed_description,
+					                               z.responsible_unit,
+					                               z.responsible_department,
+					                               z.responsible_person,
+					                               z.remark,
+					                               ROW_NUMBER() OVER(PARTITION BY z.sourcepid ORDER BY z.createtime Desc) AS code_id
+					                          FROM ZL_TRACE_SOURCE_FLOW z
+					                         where 1 = 1)
+					                 WHERE code_id = 1) t
+					         right join ZL_TRACE_SOURCE_LIST l
+					            on t.sourcepid = l.pid
+					         where 1 = 1 $customwhere$ 
+					           and t.LINK_PROGRESS like '%待验证%')
+					 order by /*ORDERBY*/ to_number(serialno) /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="11" textprecent="22" >
+			<hidden displayname="pid" name="pid" defaultvalue="#pid#" />
+			<!-- <hidden name="nextloginname" defaultvalue="#nextloginname#" />	 -->
+			<select displayname="环节进展" name="linkProgress" dictype="link_progress"></select>
+         	<date displayname="溯源时间" name="traceSourceTime" class='Wdate' dateFmt='yyyyMMdd' />
+         	<select displayname="溯源分类" name="traceSourceType" dictype="trace_type"></select>
+         	<select displayname="问题小类" name="questionSubcategory" dictype="question_subcategory"></select>
+        	<text displayname='具体问题点' name='concreteProblems' />
+        	<text displayname='影响范围' name='auxiliaryDepartment' />
+        	<text displayname='主责部门' name='respDept' />
+        	<text displayname='问题原因' name='problem' />
+    	    <text displayname='整改目标' name='rectificationGoal' />
+        	<text displayname='解决进度-未完成具体原因' name='notFinishedReason' />
+        	<text displayname='未完成详细描述' name='notCompletedDescription' />
+        	<text displayname='落实责任单位' name='responsibleUnit' />
+        	<text displayname='落实责任部门' name='responsibleDepartment' />
+        	<text displayname='落实责任人' name='responsiblePerson' />
+    	    <text displayname='触发投诉量' name='triggerComplaintsNum' />
+        	<text displayname='触发万投比' name='triggerWantouRatio' />
+        	<text displayname='触发办理量' name='triggerHandlingVolume' />
+        	<text displayname='验收全量投诉量' name='acceptanceComplaints' />
+        	<text displayname='验证万投比' name='acceptanceComplaintsRate' />
+         	<select displayname="完成情况" name="completionStatus" dictype="completion_status"></select>
+         	<date displayname="完成时间" name="acceptanceTime" class='Wdate' dateFmt='yyyyMMdd' />
+        	<text displayname='回头看发起时间' name='lookBackTime' />
+        	<text displayname='ID' name='id' />
+    	    <text displayname='市场三级网格ID' name='network3Id' />
+        	<text displayname='市场三级网格名称' name='network3Name' />
+        	<checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<field prepend='and' operator='like' colname='l.pid'  value='#pid#' /> 
+     		<!-- <field prepend='and' operator='=' colname='t.nextloginname'  value='#nextloginname#' /> -->
+     		 <if prepend="and" exp="'#linkProgress#'='新发起'">
+				<success>
+                    <![CDATA[ t.LINK_PROGRESS is null ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='处理中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='待验证'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='整改中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='已完成'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if> 
+			 
+			<field prepend='and' operator='=' colname='l.TRACE_SOURCE_TIME' value='#traceSourceTime#' />
+        	<field prepend="and" operator="like" colname="l.TRACE_SOURCE_TYPE"  value="#traceSourceType#" />
+        	<field prepend="and" operator="like" colname="l.QUESTION_SUBCATEGORY"  value="#questionSubcategory#" />
+        	<field prepend="and" operator="like" colname="l.CONCRETE_PROBLEMS"  value="#concreteProblems#" />
+        	<field prepend="and" operator="like" colname="l.AUXILIARY_DEPARTMENT"  value="#auxiliaryDepartment#" />
+        	<field prepend="and" operator="like" colname="l.RESP_DEPT"  value="#respDept#" />
+        	<field prepend="and" operator="like" colname="l.problem"  value="#problem#" />
+        	<field prepend="and" operator="like" colname="l.RECTIFICATION_GOAL"  value="#rectificationGoal#" />
+        	<field prepend="and" operator="like" colname="t.NOT_FINISHED_REASON"  value="#notFinishedReason#" />
+        	<field prepend="and" operator="like" colname="t.NOT_COMPLETED_DESCRIPTION"  value="#notCompletedDescription#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_UNIT"  value="#responsibleUnit#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_DEPARTMENT"  value="#responsibleDepartment#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_PERSON"  value="#responsiblePerson#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_COMPLAINTS_NUM"  value="#triggerComplaintsNum#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_WANTOU_RATIO"  value="#triggerWantouRatio#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_HANDLING_VOLUME"  value="#triggerHandlingVolume#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS"  value="#acceptanceComplaints#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS_RATE"  value="#acceptanceComplaintsRate#" />
+        	<if prepend="and" exp="'#completionStatus#'='已完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS like #completionStatus# ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#completionStatus#'='未完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS is null ]]>
+				</success>
+			</if>
+        	<field prepend="and" operator="like" colname="l.COMPLETION_STATUS"  value="#completionStatus#" />
+        	<field prepend='and' operator='=' colname='l.ACCEPTANCE_TIME' value='#acceptanceTime#' />
+        	<field prepend="and" operator="=" colname="l.LOOK_BACK_TIME"  value="#lookBackTimes#" />
+        	<field prepend="and" operator="like" colname="l.ID"  value="#id#" />
+        	<field prepend="and" operator="like" colname="l.NETWORK3_ID"  value="#network3Id#" />
+        	<field prepend="and" operator="like" colname="l.NETWORK3_NAME"  value="#network3Name#" />
+        	<field prepend='and' operator='like' colname='l.AUXILIARY_DEPARTMENT'  value='#citys#' />
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_LIST_EXPORT3.query">
+        <select>
+            <![CDATA[
+				select /*COUNT*/ * /*COUNT*/
+					  from (select l.*,
+					               t.nextloginname,
+					               t.status flowstatus,
+					               t.link_progress,
+					               t.not_finished_reason,
+					               t.not_completed_description,
+					               t.responsible_unit,
+					               t.responsible_department,
+					               t.responsible_person
+					          from (SELECT *
+					                  FROM (SELECT z.sourcepid,
+					                               z.status,
+					                               z.createtime,
+					                               z.nextloginname,
+					                               z.link_progress,
+					                               z.problem,
+					                               z.rectification_goal,
+					                               z.not_finished_reason,
+					                               z.not_completed_description,
+					                               z.responsible_unit,
+					                               z.responsible_department,
+					                               z.responsible_person,
+					                               z.remark,
+					                               ROW_NUMBER() OVER(PARTITION BY z.sourcepid ORDER BY z.createtime Desc) AS code_id
+					                          FROM ZL_TRACE_SOURCE_FLOW z
+					                         where 1 = 1)
+					                 WHERE code_id = 1) t
+					         right join ZL_TRACE_SOURCE_LIST l
+					            on t.sourcepid = l.pid
+					         where 1 = 1 $customwhere$ 
+					           and (t.LINK_PROGRESS like '%处理中%' or t.LINK_PROGRESS like '%整改中%'))
+					 order by /*ORDERBY*/ to_number(serialno) /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="11" textprecent="22" >
+        	<hidden displayname="序号" name="code" defaultvalue="#code#" />
+			<hidden displayname="pid" name="pid" defaultvalue="#pid#" />	
+			<hidden name="nextloginname" defaultvalue="#nextloginname#" />
+			<select displayname="环节进展" name="linkProgress" dictype="link_progress"></select>
+         	<date displayname="溯源时间" name="traceSourceTime" class='Wdate' dateFmt='yyyyMMdd' />
+         	<select displayname="溯源分类" name="traceSourceType" dictype="trace_type"></select>
+         	<select displayname="问题小类" name="questionSubcategory" dictype="question_subcategory"></select>
+        	<text displayname='具体问题点' name='concreteProblems' />
+        	<text displayname='影响范围' name='auxiliaryDepartment' />
+        	<text displayname='主责部门' name='respDept' />
+        	<text displayname='问题原因' name='problem' />
+    	    <text displayname='整改目标' name='rectificationGoal' />
+        	<text displayname='解决进度-未完成具体原因' name='notFinishedReason' />
+        	<text displayname='未完成详细描述' name='notCompletedDescription' />
+        	<text displayname='落实责任单位' name='responsibleUnit' />
+        	<text displayname='落实责任部门' name='responsibleDepartment' />
+        	<text displayname='落实责任人' name='responsiblePerson' />
+    	    <text displayname='触发投诉量' name='triggerComplaintsNum' />
+        	<text displayname='触发万投比' name='triggerWantouRatio' />
+        	<text displayname='触发办理量' name='triggerHandlingVolume' />
+        	<text displayname='验收全量投诉量' name='acceptanceComplaints' />
+        	<text displayname='验证万投比' name='acceptanceComplaintsRate' />
+         	<select displayname="完成情况" name="completionStatus" dictype="completion_status"></select>
+         	<date displayname="完成时间" name="acceptanceTime" class='Wdate' dateFmt='yyyyMMdd' />
+        	<text displayname='回头看发起时间' name='lookBackTime' />
+        	<text displayname='ID' name='id' />
+    	    <text displayname='市场三级网格ID' name='network3Id' />
+        	<text displayname='市场三级网格名称' name='network3Name' />
+        	<checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	<field prepend='and' operator='like' colname='l.code'  value='#code#' /> 
+     		<field prepend='and' operator='like' colname='l.pid'  value='#pid#' /> 
+     		<field prepend='and' operator='=' colname='t.nextloginname'  value='#nextloginname#' />
+    		<if prepend="and" exp="'#linkProgress#'='新发起'">
+				<success>
+                    <![CDATA[ t.LINK_PROGRESS is null ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='处理中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='待验证'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='整改中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='已完成'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if> 
+			 
+			<field prepend='and' operator='=' colname='l.TRACE_SOURCE_TIME' value='#traceSourceTime#' />
+        	<field prepend="and" operator="like" colname="l.TRACE_SOURCE_TYPE"  value="#traceSourceType#" />
+        	<field prepend="and" operator="like" colname="l.QUESTION_SUBCATEGORY"  value="#questionSubcategory#" />
+        	<field prepend="and" operator="like" colname="l.CONCRETE_PROBLEMS"  value="#concreteProblems#" />
+        	<field prepend="and" operator="like" colname="l.AUXILIARY_DEPARTMENT"  value="#auxiliaryDepartment#" />
+        	<field prepend="and" operator="like" colname="l.RESP_DEPT"  value="#respDept#" />
+        	<field prepend="and" operator="like" colname="l.problem"  value="#problem#" />
+        	<field prepend="and" operator="like" colname="l.RECTIFICATION_GOAL"  value="#rectificationGoal#" />
+        	<field prepend="and" operator="like" colname="t.NOT_FINISHED_REASON"  value="#notFinishedReason#" />
+        	<field prepend="and" operator="like" colname="t.NOT_COMPLETED_DESCRIPTION"  value="#notCompletedDescription#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_UNIT"  value="#responsibleUnit#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_DEPARTMENT"  value="#responsibleDepartment#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_PERSON"  value="#responsiblePerson#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_COMPLAINTS_NUM"  value="#triggerComplaintsNum#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_WANTOU_RATIO"  value="#triggerWantouRatio#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_HANDLING_VOLUME"  value="#triggerHandlingVolume#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS"  value="#acceptanceComplaints#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS_RATE"  value="#acceptanceComplaintsRate#" />
+        	<if prepend="and" exp="'#completionStatus#'='已完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS like #completionStatus# ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#completionStatus#'='未完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS is null ]]>
+				</success>
+			</if>
+        	<field prepend="and" operator="like" colname="l.COMPLETION_STATUS"  value="#completionStatus#" />
+        	<field prepend='and' operator='=' colname='l.ACCEPTANCE_TIME' value='#acceptanceTime#' />
+        	<field prepend="and" operator="=" colname="l.LOOK_BACK_TIME"  value="#lookBackTimes#" />
+        	<field prepend="and" operator="like" colname="l.ID"  value="#id#" />
+        	<field prepend="and" operator="like" colname="l.NETWORK3_ID"  value="#network3Id#" />
+        	<field prepend="and" operator="like" colname="l.NETWORK3_NAME"  value="#network3Name#" />
+        	<field prepend='and' operator='like' colname='l.AUXILIARY_DEPARTMENT'  value='#citys#' />
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_LIST.query">
+        <select>
+            <![CDATA[
+            select /*COUNT*/
+             * /*COUNT*/
+              from (select l.*,t.nextloginname,t.status flowstatus ,
+                                           t.link_progress,
+                                           t.not_finished_reason,
+                                           t.not_completed_description,
+                                           t.responsible_unit,
+                                           t.responsible_department,
+                                           t.responsible_person
+                      from (SELECT *
+                              FROM (SELECT z.sourcepid,
+                                           z.status,
+                                           z.createtime,
+                                           z.nextloginname,
+                                           z.link_progress,
+                                           --z.problem,
+                                           --z.rectification_goal,
+                                           z.not_finished_reason,
+                                           z.not_completed_description,
+                                           z.responsible_unit,
+                                           z.responsible_department,
+                                           z.responsible_person,
+                                           ROW_NUMBER() OVER(PARTITION BY z.sourcepid ORDER BY z.createtime Desc) AS code_id
+                                      FROM ZL_TRACE_SOURCE_FLOW z
+                                     where 1 = 1 )
+                             WHERE code_id = 1) t right join 
+                           ZL_TRACE_SOURCE_LIST l
+                     on t.sourcepid = l.pid where 1=1 $customwhere$ )
+             order by /*ORDERBY*/ to_number(serialno) /*ORDERBY*/
+              ]]> 
+        </select>
+         <condition  cols="3" labprecent="11" textprecent="22" >
+         	<select displayname="环节进展" name="linkProgress" dictype="link_progress"></select>
+         	<date displayname="溯源时间" name="traceSourceTime" class='Wdate' dateFmt='yyyyMMdd' />
+         	<select displayname="溯源分类" name="traceSourceType" dictype="trace_type"></select>
+         	<select displayname="问题小类" name="questionSubcategory" dictype="question_subcategory"></select>
+        	<text displayname='具体问题点' name='concreteProblems' />
+        	<text displayname='影响范围' name='auxiliaryDepartment' />
+        	<text displayname='主责部门' name='respDept' />
+        	<text displayname='问题原因' name='problem' />
+    	    <text displayname='整改目标' name='rectificationGoal' />
+        	<text displayname='解决进度-未完成具体原因' name='notFinishedReason' />
+        	<text displayname='未完成详细描述' name='notCompletedDescription' />
+        	<text displayname='落实责任单位' name='responsibleUnit' />
+        	<text displayname='落实责任部门' name='responsibleDepartment' />
+        	<text displayname='落实责任人' name='responsiblePerson' />
+    	    <text displayname='触发投诉量' name='triggerComplaintsNum' />
+        	<text displayname='触发万投比' name='triggerWantouRatio' />
+        	<text displayname='触发办理量' name='triggerHandlingVolume' />
+        	<text displayname='验收全量投诉量' name='acceptanceComplaints' />
+        	<text displayname='验证万投比' name='acceptanceComplaintsRate' />
+         	<select displayname="完成情况" name="completionStatus" dictype="completion_status"></select>
+         	<date displayname="完成时间" name="acceptanceTime" class='Wdate' dateFmt='yyyyMMdd' />
+        	<text displayname='回头看发起时间' name='lookBackTime' />
+        	<text displayname='ID' name='id' />
+    	    <text displayname='市场三级网格ID' name='network3Id' />
+        	<text displayname='市场三级网格名称' name='network3Name' />
+        	<checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	<!-- <field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" /> -->
+     	    <if prepend="and" exp="'#linkProgress#'='新发起'">
+				<success>
+                    <![CDATA[ t.LINK_PROGRESS is null ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='处理中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='待验证'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='整改中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='已完成'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if> 
+			 
+			<field prepend='and' operator='=' colname='l.TRACE_SOURCE_TIME' value='#traceSourceTime#' />
+        	<field prepend="and" operator="like" colname="l.TRACE_SOURCE_TYPE"  value="#traceSourceType#" />
+        	<field prepend="and" operator="like" colname="l.QUESTION_SUBCATEGORY"  value="#questionSubcategory#" />
+        	<field prepend="and" operator="like" colname="l.CONCRETE_PROBLEMS"  value="#concreteProblems#" />
+        	<field prepend="and" operator="like" colname="l.AUXILIARY_DEPARTMENT"  value="#auxiliaryDepartment#" />
+        	<field prepend="and" operator="like" colname="l.RESP_DEPT"  value="#respDept#" />
+        	<field prepend="and" operator="like" colname="l.problem"  value="#problem#" />
+        	<field prepend="and" operator="like" colname="l.RECTIFICATION_GOAL"  value="#rectificationGoal#" />
+        	<field prepend="and" operator="like" colname="t.NOT_FINISHED_REASON"  value="#notFinishedReason#" />
+        	<field prepend="and" operator="like" colname="t.NOT_COMPLETED_DESCRIPTION"  value="#notCompletedDescription#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_UNIT"  value="#responsibleUnit#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_DEPARTMENT"  value="#responsibleDepartment#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_PERSON"  value="#responsiblePerson#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_COMPLAINTS_NUM"  value="#triggerComplaintsNum#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_WANTOU_RATIO"  value="#triggerWantouRatio#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_HANDLING_VOLUME"  value="#triggerHandlingVolume#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS"  value="#acceptanceComplaints#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS_RATE"  value="#acceptanceComplaintsRate#" />
+        	<if prepend="and" exp="'#completionStatus#'='已完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS like #completionStatus# ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#completionStatus#'='未完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS is null ]]>
+				</success>
+			</if>
+        	<field prepend="and" operator="like" colname="l.COMPLETION_STATUS"  value="#completionStatus#" />
+        	<field prepend='and' operator='=' colname='l.ACCEPTANCE_TIME' value='#acceptanceTime#' />
+        	<field prepend="and" operator="=" colname="l.LOOK_BACK_TIME"  value="#lookBackTimes#" />
+        	<field prepend="and" operator="like" colname="l.ID"  value="#id#" />
+        	<field prepend="and" operator="like" colname="l.NETWORK3_ID"  value="#network3Id#" />
+        	<field prepend="and" operator="like" colname="l.NETWORK3_NAME"  value="#network3Name#" />
+        	<field prepend='and' operator='like' colname='l.AUXILIARY_DEPARTMENT'  value='#citys#' />
+        </customwhere> 
+	</sqlquery>
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_LIST2.query">
+        <select>
+            <![CDATA[
+				select /*COUNT*/ t.trace_source_time,
+				                 t.trace_source_type,
+				                 t.question_subcategory,
+				                 t.concrete_problems,
+				                 t.resp_dept,
+				                 t.auxiliary_department,
+				                 t.TRIGGER_COMPLAINTS_NUM,
+				                 t.trigger_wantou_ratio,
+				                 t.create_time,
+				                 t.pid,
+				                 t.key,
+				                 t.serialno,
+				                 t.code,
+				                 t.status,
+				                 t.loginname,
+				                 t.fullname,
+				                 t.completion_status,
+				                 t.acceptance_time,
+				                 t.acceptance_complaints,
+				                 t.acceptance_complaints_rate/*COUNT*/ 
+                 from ZL_TRACE_SOURCE_LIST t 
+        		where 1 = 1 and status is not null 
+				$customwhere$ 
+				order by /*ORDERBY*/ t.CREATE_TIME Desc,to_number(t.SERIALNO) /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="11" textprecent="22" >
+        	<text displayname="主责部门" name="respDept" defaultvalue="#respDept#" />
+        	<select displayname="地市" name="auxiliaryDepartment" dictype="cityName"></select>
+        	<date displayname="溯源时间" name="traceSourceTime" class='Wdate' dateFmt='yyyyMMdd' />
+        	<date displayname="入库时间" name="createTime" class='Wdate' dateFmt='yyyyMMdd' />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	<field prepend='and' operator='like' colname='t.RESP_DEPT'  value='#respDept#' /> 
+     		<field prepend='and' operator='like' colname='t.AUXILIARY_DEPARTMENT'  value='#auxiliaryDepartment#' /> 
+     		<field prepend='and' operator='=' colname='t.trace_source_time'  value='#traceSourceTime#' />
+     		<field prepend='and' operator='=' colname='t.CREATE_TIME'  value='#createTime#' />
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_LIST3.query">
+        <select>
+            <![CDATA[
+            select /*COUNT*/
+             * /*COUNT*/
+              from (select l.*,t.nextloginname,t.status flowstatus ,
+                                           t.link_progress,
+                                           t.not_finished_reason,
+                                           t.not_completed_description,
+                                           t.responsible_unit,
+                                           t.responsible_department,
+                                           t.responsible_person
+                      from (SELECT *
+                              FROM (SELECT z.sourcepid,
+                                           z.status,
+                                           z.createtime,
+                                           z.nextloginname,
+                                           z.link_progress,
+                                           z.problem,
+                                           z.rectification_goal,
+                                           z.not_finished_reason,
+                                           z.not_completed_description,
+                                           z.responsible_unit,
+                                           z.responsible_department,
+                                           z.responsible_person,
+                                           ROW_NUMBER() OVER(PARTITION BY z.sourcepid ORDER BY z.createtime Desc) AS code_id
+                                      FROM ZL_TRACE_SOURCE_FLOW z
+                                     where 1 = 1 )
+                             WHERE code_id = 1) t right join 
+                           ZL_TRACE_SOURCE_LIST l
+                     on t.sourcepid = l.pid where 1=1 and t.LINK_PROGRESS like '%待验证%' $customwhere$ )
+             order by /*ORDERBY*/ to_number(serialno) /*ORDERBY*/
+              ]]> 
+        </select>
+         <condition  cols="3" labprecent="11" textprecent="22" >
+         	<select displayname="环节进展" name="linkProgress" dictype="link_progress"></select>
+         	<date displayname="溯源时间" name="traceSourceTime" class='Wdate' dateFmt='yyyyMMdd' />
+         	<select displayname="溯源分类" name="traceSourceType" dictype="trace_type"></select>
+         	<select displayname="问题小类" name="questionSubcategory" dictype="question_subcategory"></select>
+        	<text displayname='具体问题点' name='concreteProblems' />
+        	<text displayname='影响范围' name='auxiliaryDepartment' />
+        	<text displayname='主责部门' name='respDept' />
+        	<text displayname='问题原因' name='problem' />
+    	    <text displayname='整改目标' name='rectificationGoal' />
+        	<text displayname='解决进度-未完成具体原因' name='notFinishedReason' />
+        	<text displayname='未完成详细描述' name='notCompletedDescription' />
+        	<text displayname='落实责任单位' name='responsibleUnit' />
+        	<text displayname='落实责任部门' name='responsibleDepartment' />
+        	<text displayname='落实责任人' name='responsiblePerson' />
+    	    <text displayname='触发投诉量' name='triggerComplaintsNum' />
+        	<text displayname='触发万投比' name='triggerWantouRatio' />
+        	<text displayname='触发办理量' name='triggerHandlingVolume' />
+        	<text displayname='验收全量投诉量' name='acceptanceComplaints' />
+        	<text displayname='验证万投比' name='acceptanceComplaintsRate' />
+         	<select displayname="完成情况" name="completionStatus" dictype="completion_status"></select>
+         	<date displayname="完成时间" name="acceptanceTime" class='Wdate' dateFmt='yyyyMMdd' />
+        	<text displayname='回头看发起时间' name='lookBackTime' />
+        	<text displayname='ID' name='id' />
+    	    <text displayname='市场三级网格ID' name='network3Id' />
+        	<text displayname='市场三级网格名称' name='network3Name' />
+        	<checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	<!-- <field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" /> -->
+     	    <if prepend="and" exp="'#linkProgress#'='新发起'">
+				<success>
+                    <![CDATA[ t.LINK_PROGRESS is null ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='处理中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='待验证'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='整改中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='已完成'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if> 
+			 
+			<field prepend='and' operator='=' colname='l.TRACE_SOURCE_TIME' value='#traceSourceTime#' />
+        	<field prepend="and" operator="like" colname="l.TRACE_SOURCE_TYPE"  value="#traceSourceType#" />
+        	<field prepend="and" operator="like" colname="l.QUESTION_SUBCATEGORY"  value="#questionSubcategory#" />
+        	<field prepend="and" operator="like" colname="l.CONCRETE_PROBLEMS"  value="#concreteProblems#" />
+        	<field prepend="and" operator="like" colname="l.AUXILIARY_DEPARTMENT"  value="#auxiliaryDepartment#" />
+        	<field prepend="and" operator="like" colname="l.RESP_DEPT"  value="#respDept#" />
+        	<field prepend="and" operator="like" colname="l.problem"  value="#problem#" />
+        	<field prepend="and" operator="like" colname="l.RECTIFICATION_GOAL"  value="#rectificationGoal#" />
+        	<field prepend="and" operator="like" colname="t.NOT_FINISHED_REASON"  value="#notFinishedReason#" />
+        	<field prepend="and" operator="like" colname="t.NOT_COMPLETED_DESCRIPTION"  value="#notCompletedDescription#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_UNIT"  value="#responsibleUnit#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_DEPARTMENT"  value="#responsibleDepartment#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_PERSON"  value="#responsiblePerson#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_COMPLAINTS_NUM"  value="#triggerComplaintsNum#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_WANTOU_RATIO"  value="#triggerWantouRatio#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_HANDLING_VOLUME"  value="#triggerHandlingVolume#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS"  value="#acceptanceComplaints#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS_RATE"  value="#acceptanceComplaintsRate#" />
+        	<if prepend="and" exp="'#completionStatus#'='已完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS like #completionStatus# ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#completionStatus#'='未完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS is null ]]>
+				</success>
+			</if>
+        	<field prepend="and" operator="like" colname="l.COMPLETION_STATUS"  value="#completionStatus#" />
+        	<field prepend='and' operator='=' colname='l.ACCEPTANCE_TIME' value='#acceptanceTime#' />
+        	<field prepend="and" operator="=" colname="l.LOOK_BACK_TIME"  value="#lookBackTimes#" />
+        	<field prepend="and" operator="like" colname="l.ID"  value="#id#" />
+        	<field prepend="and" operator="like" colname="l.NETWORK3_ID"  value="#network3Id#" />
+        	<field prepend="and" operator="like" colname="l.NETWORK3_NAME"  value="#network3Name#" />
+        	<field prepend='and' operator='like' colname='l.AUXILIARY_DEPARTMENT'  value='#citys#' />
+        </customwhere>
+	</sqlquery>
+	
+	
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_FLIST.query">
+        <select>
+            <![CDATA[
+				select /*COUNT*/ t.* /*COUNT*/ from ZL_TRACE_SOURCE_FLOW t 
+				where 1 = 1 
+				$customwhere$ 
+				order by /*ORDERBY*/ t.CREATETIME /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="11" textprecent="22" >
+        	<hidden name="sourcepid" dictype="sourcepid"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	<field prepend='and' operator='like' colname='t.sourcepid'  value='#sourcepid#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_LISTED.query">
+        <select>
+            <![CDATA[
+				select /*COUNT*/ t.*/*COUNT*/ from ZL_TRACE_SOURCE_LIST t 
+				where 1 = 1 and status is not null 
+				$customwhere$ 
+				order by /*ORDERBY*/ t.CREATE_TIME Desc,to_number(t.SERIALNO) /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<hidden displayname="时间" name="begintime" class='Wdate' dateFmt='yyyyMM' />
+			<hidden name="types" defaultvalue="#types#" />
+			<hidden name="citys" defaultvalue="#citys#" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<bee prepend='and' operator='like' colname='z.A12'  value='#types#' split="," />
+     		<field prepend='and' operator='like' colname='t.statis_date'  value='#begintime#' />
+     		<field prepend='and' operator='like' colname='t.area_name'  value='#citys#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_STATISTICS.query">
+        <select>
+            <![CDATA[
+					select /*COUNT*/ * /*COUNT*/ from
+					(select code,
+					       sum(case
+					             when status = '已完成' then 0
+					             when status = '完成' then 0
+					             else
+					              1
+					           end) processing,
+					       sum(case
+					             when status = '已完成' then 1
+					             when status = '完成' then 1
+					             else
+					              0
+					           end) Completed 
+					  from ZL_TRACE_SOURCE_LIST 
+					 where status is not null
+									$customwhere$ 
+					 group by code)
+				order by /*ORDERBY*/ code Desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+			<!-- <text displayname="序号" name="code" defaultvalue="#code#" /> -->
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<!-- <field prepend='and' operator='like' colname='code'  value='#code#' />  -->
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_DEPADMIN.query">
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_TRACE_SOURCE_DEPADMIN
+                    where 1=1   $customwhere$  order by /*ORDERBY*/ PID DESC /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="4" labprecent="11" textprecent="22">
+			<text displayname='机构名称' name='depname' />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="like" colname="DEPNAME" value="#depname#" />
+
+		</customwhere>
+
+	</sqlquery>
+	
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_DETAIL_LIST.query">
+        <select>
+            <![CDATA[
+				            select /*COUNT*/
+             * /*COUNT*/
+              from (select l.*,t.nextloginname,t.status flowstatus ,
+                                           t.link_progress,
+                                           t.not_finished_reason,
+                                           t.not_completed_description,
+                                           t.responsible_unit,
+                                           t.responsible_department,
+                                           t.responsible_person
+                      from (SELECT *
+                              FROM (SELECT z.sourcepid,
+                                           z.status,
+                                           z.createtime,
+                                           z.nextloginname,
+                                           z.link_progress,
+                                           z.problem,
+                                           z.rectification_goal,
+                                           z.not_finished_reason,
+                                           z.not_completed_description,
+                                           z.responsible_unit,
+                                           z.responsible_department,
+                                           z.responsible_person,
+                                           ROW_NUMBER() OVER(PARTITION BY z.sourcepid ORDER BY z.createtime Desc) AS code_id
+                                      FROM ZL_TRACE_SOURCE_FLOW z
+                                     where 1 = 1 )
+                             WHERE code_id = 1) t right join 
+                           ZL_TRACE_SOURCE_LIST l
+                     on t.sourcepid = l.pid where 1=1 $customwhere$ )
+				order by /*ORDERBY*/ status ,to_number(SERIALNO) /*ORDERBY*/
+              ]]> 
+        </select>
+         <condition  cols="3" labprecent="11" textprecent="22" >
+         	<text displayname='批次号' name='code' />
+         	<select displayname="环节进展" name="linkProgress" dictype="link_progress"></select>
+         	<date displayname="溯源时间" name="traceSourceTime" class='Wdate' dateFmt='yyyyMMdd' />
+         	<select displayname="溯源分类" name="traceSourceType" dictype="trace_type"></select>
+         	<select displayname="问题小类" name="questionSubcategory" dictype="question_subcategory"></select>
+        	<text displayname='具体问题点' name='concreteProblems' />
+        	<text displayname='影响范围' name='auxiliaryDepartment' />
+        	<text displayname='主责部门' name='respDept' />
+        	<text displayname='问题原因' name='problem' />
+    	    <text displayname='整改目标' name='rectificationGoal' />
+        	<text displayname='解决进度-未完成具体原因' name='notFinishedReason' />
+        	<text displayname='未完成详细描述' name='notCompletedDescription' />
+        	<text displayname='落实责任单位' name='responsibleUnit' />
+        	<text displayname='落实责任部门' name='responsibleDepartment' />
+        	<text displayname='落实责任人' name='responsiblePerson' />
+    	    <text displayname='触发投诉量' name='triggerComplaintsNum' />
+        	<text displayname='触发万投比' name='triggerWantouRatio' />
+        	<text displayname='触发办理量' name='triggerHandlingVolume' />
+        	<text displayname='验收全量投诉量' name='acceptanceComplaints' />
+        	<text displayname='验证万投比' name='acceptanceComplaintsRate' />
+         	<select displayname="完成情况" name="completionStatus" dictype="completion_status"></select>
+         	<date displayname="完成时间" name="acceptanceTime" class='Wdate' dateFmt='yyyyMMdd' />
+        	<checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	<field prepend="and" operator="like" colname="l.CODE"  value="#code#" />
+     	    <if prepend="and" exp="'#linkProgress#'='新发起'">
+				<success>
+                    <![CDATA[ t.LINK_PROGRESS is null ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='处理中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='待验证'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='整改中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='已完成'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if> 
+			 
+			<field prepend='and' operator='=' colname='l.TRACE_SOURCE_TIME' value='#traceSourceTime#' />
+        	<field prepend="and" operator="like" colname="l.TRACE_SOURCE_TYPE"  value="#traceSourceType#" />
+        	<field prepend="and" operator="like" colname="l.QUESTION_SUBCATEGORY"  value="#questionSubcategory#" />
+        	<field prepend="and" operator="like" colname="l.CONCRETE_PROBLEMS"  value="#concreteProblems#" />
+        	<field prepend="and" operator="like" colname="l.AUXILIARY_DEPARTMENT"  value="#auxiliaryDepartment#" />
+        	<field prepend="and" operator="like" colname="l.RESP_DEPT"  value="#respDept#" />
+        	<field prepend="and" operator="like" colname="l.problem"  value="#problem#" />
+        	<field prepend="and" operator="like" colname="l.RECTIFICATION_GOAL"  value="#rectificationGoal#" />
+        	<field prepend="and" operator="like" colname="t.NOT_FINISHED_REASON"  value="#notFinishedReason#" />
+        	<field prepend="and" operator="like" colname="t.NOT_COMPLETED_DESCRIPTION"  value="#notCompletedDescription#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_UNIT"  value="#responsibleUnit#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_DEPARTMENT"  value="#responsibleDepartment#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_PERSON"  value="#responsiblePerson#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_COMPLAINTS_NUM"  value="#triggerComplaintsNum#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_WANTOU_RATIO"  value="#triggerWantouRatio#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_HANDLING_VOLUME"  value="#triggerHandlingVolume#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS"  value="#acceptanceComplaints#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS_RATE"  value="#acceptanceComplaintsRate#" />
+        	<if prepend="and" exp="'#completionStatus#'='已完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS like #completionStatus# ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#completionStatus#'='未完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS is null ]]>
+				</success>
+			</if>
+        	<field prepend="and" operator="like" colname="l.COMPLETION_STATUS"  value="#completionStatus#" />
+        	<field prepend='and' operator='=' colname='l.ACCEPTANCE_TIME' value='#acceptanceTime#' />
+        	<field prepend='and' operator='like' colname='l.AUXILIARY_DEPARTMENT'  value='#citys#' />
+        </customwhere>
+	</sqlquery>
+	
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_REMAIN.query">
+        <select>
+            <![CDATA[
+						select /*COUNT*/ * /*COUNT*/ from 
+						(select l.code,
+						 sum(case
+						       when l.status = '处理中' then
+						        1
+						       when l.status = '整改中' then
+                      			1
+						       else
+						        0
+						     end) processing,
+						 sum(case
+			                     when l.status = '处理中' then
+			                      0
+			                     when l.status = '整改中' then
+			                      0
+			                     when l.status = '已完成' then
+			                      1
+			                     when l.status = '待验证' then
+			                      1
+			                     else
+			                      0
+						     end) Completed 
+						  from (SELECT *
+						          FROM (SELECT z.nextloginname,
+						          			   z.sourcepid,
+						                       z.status,
+						                       z.createtime,
+						                       ROW_NUMBER() OVER(PARTITION BY z.sourcepid ORDER BY z.createtime Desc) AS code_id
+						                  FROM ZL_TRACE_SOURCE_FLOW z)
+						         WHERE code_id = 1 $customwhere$) t,ZL_TRACE_SOURCE_LIST l where t.sourcepid = l.pid 
+						 group by l.code	) where processing <> 0 $customwhere2$
+						 order by /*ORDERBY*/ code Desc/*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+       		<text displayname="批次号" name="code" defaultvalue="#code#" />
+			<hidden name="nextloginname" defaultvalue="#nextloginname#" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<field prepend='and' operator='=' colname='nextloginname'  value='#nextloginname#' />
+        </customwhere>
+        <customwhere name="customwhere2" prepend="and" >
+        	<field prepend='and' operator='like' colname='code'  value='#code#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_DONE.query">
+        <select>
+            <![CDATA[
+						select /*COUNT*/ * /*COUNT*/ from 
+						(select l.code,
+						 sum(0) processing,
+						 sum(1) Completed 
+						  from (SELECT *
+						          FROM (SELECT z.sourcepid,
+						                       z.status,
+						                       z.createtime,
+						                       ROW_NUMBER() OVER(PARTITION BY z.sourcepid ORDER BY z.createtime Desc) AS code_id
+						                  FROM ZL_TRACE_SOURCE_FLOW z
+						                 where 1 = 1 $customwhere$ )
+						         WHERE code_id = 1) t,ZL_TRACE_SOURCE_LIST l where t.sourcepid = l.pid 
+						 group by l.code	) $customwhere2$
+						 order by /*ORDERBY*/ code Desc/*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="1" labprecent="11" textprecent="22" >
+        	<text displayname="批次号" name="code" defaultvalue="#code#" />
+			<hidden name="loginname" defaultvalue="#loginname#" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<field prepend='and' operator='=' colname='z.loginname'  value='#loginname#' />
+        </customwhere>
+        <customwhere name="customwhere2" prepend="and" >
+        	<field prepend='and' operator='like' colname='code'  value='#code#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_TDETAIL.query">
+        <select>
+            <![CDATA[
+            select /*COUNT*/ * /*COUNT*/
+              from (select l.*,t.nextloginname,t.status flowstatus ,
+                                           t.link_progress,
+                                           t.not_finished_reason,
+                                           t.not_completed_description,
+                                           t.responsible_unit,
+                                           t.responsible_department,
+                                           t.responsible_person
+                      from (SELECT *
+                              FROM (SELECT z.sourcepid,
+                                           z.status,
+                                           z.createtime,
+                                           z.nextloginname,
+                                           z.link_progress,
+                                           z.problem,
+                                           z.rectification_goal,
+                                           z.not_finished_reason,
+                                           z.not_completed_description,
+                                           z.responsible_unit,
+                                           z.responsible_department,
+                                           z.responsible_person,
+                                           ROW_NUMBER() OVER(PARTITION BY z.sourcepid ORDER BY z.createtime Desc) AS code_id
+                                      FROM ZL_TRACE_SOURCE_FLOW z  )
+                             WHERE code_id = 1 and (status = '处理中' or status = '整改中') $customwhere$) t,
+                           ZL_TRACE_SOURCE_LIST l
+                     where t.sourcepid = l.pid $customwhere2$ )
+             order by /*ORDERBY*/ code Desc/*ORDERBY*/
+              ]]> 
+        </select>
+         <condition  cols="3" labprecent="11" textprecent="22" >
+         	<hidden name="nextloginname" defaultvalue="#nextloginname#" />
+         	<text displayname='批次号' name='code' />
+         	<select displayname="环节进展" name="linkProgress" dictype="link_progress"></select>
+         	<date displayname="溯源时间" name="traceSourceTime" class='Wdate' dateFmt='yyyyMMdd' />
+         	<select displayname="溯源分类" name="traceSourceType" dictype="trace_type"></select>
+         	<select displayname="问题小类" name="questionSubcategory" dictype="question_subcategory"></select>
+        	<text displayname='具体问题点' name='concreteProblems' />
+        	<text displayname='影响范围' name='auxiliaryDepartment' />
+        	<text displayname='主责部门' name='respDept' />
+        	<text displayname='问题原因' name='problem' />
+    	    <text displayname='整改目标' name='rectificationGoal' />
+        	<text displayname='解决进度-未完成具体原因' name='notFinishedReason' />
+        	<text displayname='未完成详细描述' name='notCompletedDescription' />
+        	<text displayname='落实责任单位' name='responsibleUnit' />
+        	<text displayname='落实责任部门' name='responsibleDepartment' />
+        	<text displayname='落实责任人' name='responsiblePerson' />
+    	    <text displayname='触发投诉量' name='triggerComplaintsNum' />
+        	<text displayname='触发万投比' name='triggerWantouRatio' />
+        	<text displayname='触发办理量' name='triggerHandlingVolume' />
+        	<text displayname='验收全量投诉量' name='acceptanceComplaints' />
+        	<text displayname='验证万投比' name='acceptanceComplaintsRate' />
+         	<select displayname="完成情况" name="completionStatus" dictype="completion_status"></select>
+         	<date displayname="完成时间" name="acceptanceTime" class='Wdate' dateFmt='yyyyMMdd' />
+        	<checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<field prepend='and' operator='=' colname='nextloginname'  value='#nextloginname#' />
+        </customwhere>
+        <customwhere name="customwhere2" prepend="and" >
+	        <field prepend="and" operator="like" colname="l.CODE"  value="#code#" />
+        	<!-- <field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" /> -->
+     	    <if prepend="and" exp="'#linkProgress#'='新发起'">
+				<success>
+                    <![CDATA[ t.LINK_PROGRESS is null ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='处理中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='待验证'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='整改中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='已完成'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if> 
+			 
+			<field prepend='and' operator='=' colname='l.TRACE_SOURCE_TIME' value='#traceSourceTime#' />
+        	<field prepend="and" operator="like" colname="l.TRACE_SOURCE_TYPE"  value="#traceSourceType#" />
+        	<field prepend="and" operator="like" colname="l.QUESTION_SUBCATEGORY"  value="#questionSubcategory#" />
+        	<field prepend="and" operator="like" colname="l.CONCRETE_PROBLEMS"  value="#concreteProblems#" />
+        	<field prepend="and" operator="like" colname="l.AUXILIARY_DEPARTMENT"  value="#auxiliaryDepartment#" />
+        	<field prepend="and" operator="like" colname="l.RESP_DEPT"  value="#respDept#" />
+        	<field prepend="and" operator="like" colname="l.problem"  value="#problem#" />
+        	<field prepend="and" operator="like" colname="l.RECTIFICATION_GOAL"  value="#rectificationGoal#" />
+        	<field prepend="and" operator="like" colname="t.NOT_FINISHED_REASON"  value="#notFinishedReason#" />
+        	<field prepend="and" operator="like" colname="t.NOT_COMPLETED_DESCRIPTION"  value="#notCompletedDescription#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_UNIT"  value="#responsibleUnit#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_DEPARTMENT"  value="#responsibleDepartment#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_PERSON"  value="#responsiblePerson#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_COMPLAINTS_NUM"  value="#triggerComplaintsNum#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_WANTOU_RATIO"  value="#triggerWantouRatio#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_HANDLING_VOLUME"  value="#triggerHandlingVolume#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS"  value="#acceptanceComplaints#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS_RATE"  value="#acceptanceComplaintsRate#" />
+        	<if prepend="and" exp="'#completionStatus#'='已完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS like #completionStatus# ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#completionStatus#'='未完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS is null ]]>
+				</success>
+			</if>
+        	<field prepend="and" operator="like" colname="l.COMPLETION_STATUS"  value="#completionStatus#" />
+        	<field prepend='and' operator='=' colname='l.ACCEPTANCE_TIME' value='#acceptanceTime#' />
+        	<field prepend='and' operator='like' colname='l.AUXILIARY_DEPARTMENT'  value='#citys#' />
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_TDETAIL2.query">
+        <select>
+            <![CDATA[
+          				select /*COUNT*/ * /*COUNT*/
+			              from (select * from (SELECT l.*,
+										               z.sourcepid,
+										               z.status flowstatus,
+										               z.createtime,
+										               z.nextloginname,
+										               z.link_progress,
+										               z.not_finished_reason,
+										               z.not_completed_description,
+										               z.responsible_unit,
+										               z.responsible_department,
+										               z.responsible_person,
+										               ROW_NUMBER() OVER(PARTITION BY z.sourcepid ORDER BY z.createtime Desc) AS code_id
+										          FROM ZL_TRACE_SOURCE_FLOW z,(SELECT *  FROM ZL_TRACE_SOURCE_FLOW z where 1 = 1  $customwhere$) d, ZL_TRACE_SOURCE_LIST l
+										         where z.sourcepid = l.pid and z.sourcepid = d.sourcepid 
+										           $customwhere2$) t
+										 WHERE code_id = 1
+								)
+			            order by /*ORDERBY*/ code Desc/*ORDERBY*/
+              ]]> 
+        </select>
+         <condition  cols="3" labprecent="11" textprecent="22" >
+         	<hidden name="loginname" defaultvalue="#loginname#" />
+         	<text displayname='批次号' name='code' />
+         	<select displayname="环节进展" name="linkProgress" dictype="link_progress"></select>
+         	<date displayname="溯源时间" name="traceSourceTime" class='Wdate' dateFmt='yyyyMMdd' />
+         	<select displayname="溯源分类" name="traceSourceType" dictype="trace_type"></select>
+         	<select displayname="问题小类" name="questionSubcategory" dictype="question_subcategory"></select>
+        	<text displayname='具体问题点' name='concreteProblems' />
+        	<text displayname='影响范围' name='auxiliaryDepartment' />
+        	<text displayname='主责部门' name='respDept' />
+        	<text displayname='问题原因' name='problem' />
+    	    <text displayname='整改目标' name='rectificationGoal' />
+        	<text displayname='解决进度-未完成具体原因' name='notFinishedReason' />
+        	<text displayname='未完成详细描述' name='notCompletedDescription' />
+        	<text displayname='落实责任单位' name='responsibleUnit' />
+        	<text displayname='落实责任部门' name='responsibleDepartment' />
+        	<text displayname='落实责任人' name='responsiblePerson' />
+    	    <text displayname='触发投诉量' name='triggerComplaintsNum' />
+        	<text displayname='触发万投比' name='triggerWantouRatio' />
+        	<text displayname='触发办理量' name='triggerHandlingVolume' />
+        	<text displayname='验收全量投诉量' name='acceptanceComplaints' />
+        	<text displayname='验证万投比' name='acceptanceComplaintsRate' />
+         	<select displayname="完成情况" name="completionStatus" dictype="completion_status"></select>
+         	<date displayname="完成时间" name="acceptanceTime" class='Wdate' dateFmt='yyyyMMdd' />
+        	<checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<field prepend='and' operator='=' colname='z.loginname'  value='#loginname#' />
+        </customwhere>
+        <customwhere name="customwhere2" prepend="and" >
+	        <field prepend="and" operator="like" colname="l.CODE"  value="#code#" />
+        	<!-- <field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" /> -->
+     	    <if prepend="and" exp="'#linkProgress#'='新发起'">
+				<success>
+                    <![CDATA[ z.LINK_PROGRESS is null ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='处理中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='待验证'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='整改中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='已完成'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if> 
+			 
+			<field prepend='and' operator='=' colname='l.TRACE_SOURCE_TIME' value='#traceSourceTime#' />
+        	<field prepend="and" operator="like" colname="l.TRACE_SOURCE_TYPE"  value="#traceSourceType#" />
+        	<field prepend="and" operator="like" colname="l.QUESTION_SUBCATEGORY"  value="#questionSubcategory#" />
+        	<field prepend="and" operator="like" colname="l.CONCRETE_PROBLEMS"  value="#concreteProblems#" />
+        	<field prepend="and" operator="like" colname="l.AUXILIARY_DEPARTMENT"  value="#auxiliaryDepartment#" />
+        	<field prepend="and" operator="like" colname="l.RESP_DEPT"  value="#respDept#" />
+        	<field prepend="and" operator="like" colname="l.PROBLEM"  value="#problem#" />
+        	<field prepend="and" operator="like" colname="l.RECTIFICATION_GOAL"  value="#rectificationGoal#" />
+        	<field prepend="and" operator="like" colname="z.NOT_FINISHED_REASON"  value="#notFinishedReason#" />
+        	<field prepend="and" operator="like" colname="z.NOT_COMPLETED_DESCRIPTION"  value="#notCompletedDescription#" />
+        	<field prepend="and" operator="like" colname="z.RESPONSIBLE_UNIT"  value="#responsibleUnit#" />
+        	<field prepend="and" operator="like" colname="z.RESPONSIBLE_DEPARTMENT"  value="#responsibleDepartment#" />
+        	<field prepend="and" operator="like" colname="z.RESPONSIBLE_PERSON"  value="#responsiblePerson#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_COMPLAINTS_NUM"  value="#triggerComplaintsNum#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_WANTOU_RATIO"  value="#triggerWantouRatio#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_HANDLING_VOLUME"  value="#triggerHandlingVolume#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS"  value="#acceptanceComplaints#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS_RATE"  value="#acceptanceComplaintsRate#" />
+        	<if prepend="and" exp="'#completionStatus#'='已完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS like #completionStatus# ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#completionStatus#'='未完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS is null ]]>
+				</success>
+			</if>
+        	<field prepend="and" operator="like" colname="l.COMPLETION_STATUS"  value="#completionStatus#" />
+        	<field prepend='and' operator='=' colname='l.ACCEPTANCE_TIME' value='#acceptanceTime#' />
+        	<field prepend='and' operator='like' colname='l.AUXILIARY_DEPARTMENT'  value='#citys#' />
+        </customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_ZL_TRACE_SOURCE_TDETAIL3.query">
+        <select>
+            <![CDATA[
+            select /*COUNT*/ * /*COUNT*/
+              from (select l.*,t.nextloginname,t.status flowstatus ,
+                                           t.link_progress,
+                                           t.not_finished_reason,
+                                           t.not_completed_description,
+                                           t.responsible_unit,
+                                           t.responsible_department,
+                                           t.responsible_person
+                      from (SELECT *
+                              FROM (SELECT z.sourcepid,
+                                           z.status,
+                                           z.createtime,
+                                           z.nextloginname,
+                                           z.link_progress,
+                                           z.problem,
+                                           z.rectification_goal,
+                                           z.not_finished_reason,
+                                           z.not_completed_description,
+                                           z.responsible_unit,
+                                           z.responsible_department,
+                                           z.responsible_person,
+                                           ROW_NUMBER() OVER(PARTITION BY z.sourcepid ORDER BY z.createtime Desc) AS code_id
+                                      FROM ZL_TRACE_SOURCE_FLOW z  )
+                             WHERE code_id = 1 and (status = '处理中' or status = '整改中') $customwhere$) t,
+                           ZL_TRACE_SOURCE_LIST l
+                     where t.sourcepid = l.pid $customwhere2$ )
+             order by /*ORDERBY*/ code Desc/*ORDERBY*/
+              ]]> 
+        </select>
+         <condition  cols="3" labprecent="11" textprecent="22" >
+         	<hidden name="nextloginname" defaultvalue="#nextloginname#" />
+         	<text displayname='批次号' name='code' />
+         	<select displayname="环节进展" name="linkProgress" dictype="link_progress"></select>
+         	<date displayname="溯源时间" name="traceSourceTime" class='Wdate' dateFmt='yyyyMMdd' />
+         	<select displayname="溯源分类" name="traceSourceType" dictype="trace_type"></select>
+         	<select displayname="问题小类" name="questionSubcategory" dictype="question_subcategory"></select>
+        	<text displayname='具体问题点' name='concreteProblems' />
+        	<text displayname='影响范围' name='auxiliaryDepartment' />
+        	<text displayname='主责部门' name='respDept' />
+         	<select displayname="完成情况" name="completionStatus" dictype="completion_status"></select>
+         	<date displayname="完成时间" name="acceptanceTime" class='Wdate' dateFmt='yyyyMMdd' />
+        	<checkbox displayname="地市" name="citys" checkboxname="cbcitys" value="" dictype="city_all" colspan="2" rowspan="3"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<field prepend='and' operator='=' colname='nextloginname'  value='#nextloginname#' />
+        </customwhere>
+        <customwhere name="customwhere2" prepend="and" >
+	        <field prepend="and" operator="like" colname="l.CODE"  value="#code#" />
+        	<!-- <field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" /> -->
+     	    <if prepend="and" exp="'#linkProgress#'='新发起'">
+				<success>
+                    <![CDATA[ t.LINK_PROGRESS is null ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='处理中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='待验证'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='整改中'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if>
+			<if prepend="and" exp="'#linkProgress#'='已完成'">
+				<success>
+					<field prepend="and" operator="like" colname="t.LINK_PROGRESS"  value="#linkProgress#" />
+				</success>
+			</if> 
+			 
+			<field prepend='and' operator='=' colname='l.TRACE_SOURCE_TIME' value='#traceSourceTime#' />
+        	<field prepend="and" operator="like" colname="l.TRACE_SOURCE_TYPE"  value="#traceSourceType#" />
+        	<field prepend="and" operator="like" colname="l.QUESTION_SUBCATEGORY"  value="#questionSubcategory#" />
+        	<field prepend="and" operator="like" colname="l.CONCRETE_PROBLEMS"  value="#concreteProblems#" />
+        	<field prepend="and" operator="like" colname="l.AUXILIARY_DEPARTMENT"  value="#auxiliaryDepartment#" />
+        	<field prepend="and" operator="like" colname="l.RESP_DEPT"  value="#respDept#" />
+        	<field prepend="and" operator="like" colname="l.problem"  value="#problem#" />
+        	<field prepend="and" operator="like" colname="l.RECTIFICATION_GOAL"  value="#rectificationGoal#" />
+        	<field prepend="and" operator="like" colname="t.NOT_FINISHED_REASON"  value="#notFinishedReason#" />
+        	<field prepend="and" operator="like" colname="t.NOT_COMPLETED_DESCRIPTION"  value="#notCompletedDescription#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_UNIT"  value="#responsibleUnit#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_DEPARTMENT"  value="#responsibleDepartment#" />
+        	<field prepend="and" operator="like" colname="t.RESPONSIBLE_PERSON"  value="#responsiblePerson#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_COMPLAINTS_NUM"  value="#triggerComplaintsNum#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_WANTOU_RATIO"  value="#triggerWantouRatio#" />
+        	<field prepend="and" operator="like" colname="l.TRIGGER_HANDLING_VOLUME"  value="#triggerHandlingVolume#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS"  value="#acceptanceComplaints#" />
+        	<field prepend="and" operator="like" colname="l.ACCEPTANCE_COMPLAINTS_RATE"  value="#acceptanceComplaintsRate#" />
+        	<if prepend="and" exp="'#completionStatus#'='已完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS like #completionStatus# ]]>
+				</success>
+			</if>
+			<if prepend="and" exp="'#completionStatus#'='未完成'">
+				<success>
+                    <![CDATA[ l.COMPLETION_STATUS is null ]]>
+				</success>
+			</if>
+        	<field prepend="and" operator="like" colname="l.COMPLETION_STATUS"  value="#completionStatus#" />
+        	<field prepend='and' operator='=' colname='l.ACCEPTANCE_TIME' value='#acceptanceTime#' />
+        	<field prepend='and' operator='like' colname='l.AUXILIARY_DEPARTMENT'  value='#citys#' />
+        </customwhere>
+	</sqlquery>
+	
+</sql-group>

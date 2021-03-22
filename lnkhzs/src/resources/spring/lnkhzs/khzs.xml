@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" 
+	   default-autowire="byName" default-lazy-init="true">
+
+    <bean id="IDaoAOP" class="com.ultrapower.omcs.common.core.dao.IDaoAOP" />
+
+
+
+
+	<!--客户之声管理-->
+	<bean id="khzsTMainDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.khzs.model.KhzsTMain</value>
+		</property>
+	</bean>
+	
+	<bean id="hzsTMainBakDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.khzs.model.KhzsTMainBak</value>
+		</property>
+	</bean>
+
+	<bean id="khzsTDepadminDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.khzs.model.KhzsTDepadmin</value>
+		</property>
+	</bean>
+
+	<bean id="khzsTCommentDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.khzs.model.KhzsTComment</value>
+		</property>
+	</bean>
+	
+	<bean id="khzsTFlowDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.khzs.model.KhzsTFlow</value>
+		</property>
+	</bean>
+
+	<bean id="khzsTFlowService" class="com.ultrapower.lnkhzs.khzs.manager.KhzsTFlowMgrImpl" />
+	
+	<bean id="khzsTFlowAction" class="com.ultrapower.lnkhzs.khzs.web.KhzsTFlowAction"/>  
+
+	<bean id="khzsTDepadminService" class="com.ultrapower.lnkhzs.khzs.manager.KhzsTDepadminMgrImpl" />
+	
+	<bean id="khzsTDepadminAction" class="com.ultrapower.lnkhzs.khzs.web.KhzsTDepadminAction"/>  
+	
+		<!-- 附件模版 -->
+	<bean id="attachTemplateAction" class="com.ultrapower.eoms.ultrabpp.runtime.web.AttachTemplateAction"/>
+	<bean id="attachTemplateService" class="com.ultrapower.eoms.ultrabpp.runtime.manage.AttachTemplateManagerImpl"/>
+	
+</beans>

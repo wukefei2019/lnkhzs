@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" 
+	   default-autowire="byName" default-lazy-init="true">
+
+    <bean id="IDaoAOP" class="com.ultrapower.omcs.common.core.dao.IDaoAOP" />
+
+	<!--服务质量管理-->
+	<bean id="khzsAnswerDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.survey.model.KhzsAnswer</value>
+		</property>
+	</bean>
+	
+	<bean id="khzsQuestionDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.survey.model.KhzsQuestion</value>
+		</property>
+	</bean>
+	
+	<bean id="khzsQuestionAllDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.survey.model.KhzsQuestionAll</value>
+		</property>
+	</bean>
+	
+	<bean id="khzsQuestionAllHidelistDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.survey.model.KhzsQuestionAllHidelist</value>
+		</property>
+	</bean>
+	
+	<bean id="khzsQuestionnaireDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.survey.model.KhzsQuestionnaire</value>
+		</property>
+	</bean>
+	
+	<bean id="khzsQuestionnaireStyleDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.survey.model.KhzsQuestionnaireStyle</value>
+		</property>
+	</bean>
+	
+	<bean id="khzsRelationshipDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.survey.model.KhzsRelationship</value>
+		</property>
+	</bean>
+	
+	<bean id="bindDicselectDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.survey.model.BindDicselect</value>
+		</property>
+	</bean>
+	
+	 <bean id="bindDicSelectInfoDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.survey.model.BindDicSelectInfo</value>
+		</property>
+	</bean> 
+	
+	<bean id="bindDicselectSymbolDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.survey.model.BindDicselectSymbol</value>
+		</property>
+		
+	</bean>
+	
+	<bean id="dwProductUserInfoDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.survey.model.DwProductUserInfo</value>
+		</property>
+	</bean>
+	
+	
+	<bean id="khzssurvermanagerDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.survey.model.KhzsSurverManager</value>
+		</property>
+	</bean>
+	
+	<bean id="kzsQuestionAnnounceDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.survey.model.KhzsQuestionAnnounce</value>
+		</property>
+	</bean>
+	
+	
+   
+    
+	<bean id="khzsAnswerService" class="com.ultrapower.lnkhzs.survey.manager.KhzsAnswerMgrImpl" />
+	
+	<bean id="khzsQuestionService" class="com.ultrapower.lnkhzs.survey.manager.KhzsQuestionMgrImpl" />
+	
+	<bean id="khzsQuestionAllService" class="com.ultrapower.lnkhzs.survey.manager.KhzsQuestionAllMgrImpl" />
+	
+	<bean id="khzsQuestionAllHidelistService" class="com.ultrapower.lnkhzs.survey.manager.KhzsQuestionAllHidelistMgrImpl" />
+	
+	<bean id="khzsQuestionnaireService" class="com.ultrapower.lnkhzs.survey.manager.KhzsQuestionnaireMgrImpl" />
+	
+	<bean id="khzsQuestionnaireStyleService" class="com.ultrapower.lnkhzs.survey.manager.KhzsQuestionnaireStyleMgrImpl" />
+	
+	<bean id="khzsRelationshipService" class="com.ultrapower.lnkhzs.survey.manager.KhzsRelationshipMgrImpl" />
+	
+	<bean id="bindDicselectService" class="com.ultrapower.lnkhzs.survey.manager.BindDicselectMgrImpl" />
+	
+ 	<bean id="bindDicSelectInfoService" class="com.ultrapower.lnkhzs.survey.manager.BindDicSelectInfoMgrImpl" /> 
+	
+	<bean id="bindDicselectSymbolService" class="com.ultrapower.lnkhzs.survey.manager.BindDicselectSymbolMgrImpl" />
+	
+	<bean id="dwProductUserInfoService" class="com.ultrapower.lnkhzs.survey.manager.DwProductUserInfoMgrImpl" />
+	
+	<bean id="khzsSurverManagerService" class="com.ultrapower.lnkhzs.survey.manager.KhzsSurverManagerMgrImpl" />
+	
+	<bean id="khzsQuestionAnnounceService" class="com.ultrapower.lnkhzs.survey.manager.KhzsQuestionAnnounceMgrImpl" />
+	
+	<bean id="khzsAnswerAction" class="com.ultrapower.lnkhzs.survey.web.KhzsAnswerAction"/>
+	         
+	<bean id="khzsQuestionAction" class="com.ultrapower.lnkhzs.survey.web.KhzsQuestionAction"/>
+	
+	<bean id="khzsQuestionVueAction" class="com.ultrapower.lnkhzs.survey.web.KhzsVueAction"/>
+	
+	<bean id="khzsQuestionnaireAction" class="com.ultrapower.lnkhzs.survey.web.KhzsQuestionnaireAction"/>	
+			
+	<bean id="khzsRelationshipAction" class="com.ultrapower.lnkhzs.survey.web.KhzsRelationshipAction"/>
+	
+	<bean id="dwProductUserInfoAction" class="com.ultrapower.lnkhzs.survey.web.DwProductUserInfoAction"/>	
+	
+	<bean id="khzsSurverManagerAction" class="com.ultrapower.lnkhzs.survey.web.KhzsSurverManagerAction"/>
+		
+	<bean id="khzsQuestionAnnounceAction" class="com.ultrapower.lnkhzs.survey.web.KhzsQuestionAnnounceAction"/>
+	
+	
+	
+</beans>

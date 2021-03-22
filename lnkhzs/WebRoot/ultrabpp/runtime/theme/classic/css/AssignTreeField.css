@@ -1,0 +1,33 @@
+@CHARSET "UTF-8";
+.bpp_AssignTreeField
+{
+	margin: 4px 0px;
+}
+.bpp_AssignTreeField table td .bpp_AssignTreeBtn_single
+{
+	text-decoration:underline;
+	width:22px;
+	height:22px;
+	position: absolute;
+	right: 8px;
+	top: 6px;
+	cursor: pointer;
+}
+.bpp_AssignTreeField table td .bpp_AssignTreeBtn_multi
+{
+	text-decoration:underline;
+	width:20px;
+	height:20px;
+	margin-right:2px;
+	position: absolute;
+	right: 8px;
+	top: 6px;
+	cursor: pointer;
+}
+.bpp_AssignTreeField table td .bpp_AssignTreeText
+{
+	margin-top:3px;
+	line-height:150%;
+	height:20px;
+	padding: 3px 23px 3px 8px;
+}

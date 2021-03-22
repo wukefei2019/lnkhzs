@@ -1,0 +1,1716 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-group>
+	<doc>
+		<author></author> 
+		<date></date> 
+		<description>服务质量数据分析信息</description>
+	</doc>
+	
+	
+<!-- 	溯源问题统计表-月 -->
+	<sqlquery name="SQL_TRACE_STATISTICS_MONTH.query">
+        <select>
+            <![CDATA[
+				  select nvl(type, '合计') type,
+                         sum(decode(month, '01', num)) 一月问题量,
+                         sum(decode(month, '01', checknum)) 一月验收量,
+                         sum(decode(month, '01', ratio)) 一月占比,
+                         sum(decode(month, '02', num)) 二月问题量,
+                         sum(decode(month, '02', checknum)) 二月验收量,
+                         sum(decode(month, '02', ratio)) 二月占比,
+                         sum(decode(month, '03', num)) 三月问题量,
+                         sum(decode(month, '03', checknum)) 三月验收量,
+                         sum(decode(month, '03', ratio)) 三月占比,
+                         sum(decode(month, '04', num)) 四月问题量,
+                         sum(decode(month, '04', checknum)) 四月验收量,
+                         sum(decode(month, '04', ratio)) 四月占比,
+                         sum(decode(month, '05', num)) 五月问题量,
+                         sum(decode(month, '05', checknum)) 五月验收量,
+                         sum(decode(month, '05', ratio)) 五月占比,
+                         sum(decode(month, '06', num)) 六月问题量,
+                         sum(decode(month, '06', checknum)) 六月验收量,
+                         sum(decode(month, '06', ratio)) 六月占比,
+                         sum(decode(month, '07', num)) 七月问题量,
+                         sum(decode(month, '07', checknum)) 七月验收量,
+                         sum(decode(month, '07', ratio)) 七月占比,
+                         sum(decode(month, '08', num)) 八月问题量,
+                         sum(decode(month, '08', checknum)) 八月验收量,
+                         sum(decode(month, '08', ratio)) 八月占比,
+                         sum(decode(month, '09', num)) 九月问题量,
+                         sum(decode(month, '09', checknum)) 九月验收量,
+                         sum(decode(month, '09', ratio)) 九月占比,
+                         sum(decode(month, '10', num)) 十月问题量,
+                         sum(decode(month, '10', checknum)) 十月验收量,
+                         sum(decode(month, '10', ratio)) 十月占比,
+                         sum(decode(month, '11', num)) 十一月问题量,
+                         sum(decode(month, '11', checknum)) 十一月验收量,
+                         sum(decode(month, '11', ratio)) 十一月占比,
+                         sum(decode(month, '12', num)) 十二月问题量,
+                         sum(decode(month, '12', checknum)) 十二月验收量,
+                         sum(decode(month, '12', ratio)) 十二月占比
+                    from (SELECT aaa.type, aaa.month, aaa.num, bbb.checknum,aaa.total,round(aaa.num / aaa.total * 100, 2) ratio
+                            FROM (select type,
+                                         month,
+                                         sum(count(t.question_subcategory)) over(order by month) total,
+                                         sum(count(t.question_subcategory)) over(partition by type order by month) num
+                                    from (select substr(z.trace_source_time, 5, 2) month,
+                                                 case
+                                                   when trace_source_type = '营销活动' then
+                                                    '市场类'
+                                                   when trace_source_type = '集团督办投诉焦点问题' then
+                                                    '市场类'
+                                                   when trace_source_type = '焦点投诉' then
+                                                    '市场类'
+                                                   when trace_source_type = '服务触点' then
+                                                    '市场类'
+                                                   else
+                                                    trace_source_type
+                                                 end as type,
+                                                 z.*
+                                            from zl_trace_source_list z) t
+                                   where 1 = 1 $customwhere$
+                                   group by month, type
+                                   order by MONTH) aaa,
+                                 
+                                 (SELECT sum(num) over(partition by type order by month) checknum,
+                                         TYPE,
+                                         month
+                                    FROM (SELECT o.month, o.type, nvl(p.num, 0) AS num
+                                            FROM (SELECT *
+                                                    FROM (SELECT to_char(add_months(SYSDATE, ROWNUM),
+                                                                         'mm') month
+                                                            FROM dual
+                                                          CONNECT BY ROWNUM <= 12) a,
+                                                         (SELECT DISTINCT CASE
+                                                                            WHEN trace_source_type = '营销活动' THEN
+                                                                             '市场类'
+                                                                            WHEN trace_source_type = '集团督办投诉焦点问题' THEN
+                                                                             '市场类'
+                                                                            WHEN trace_source_type = '焦点投诉' THEN
+                                                                             '市场类'
+                                                                            WHEN trace_source_type = '服务触点' THEN
+                                                                             '市场类'
+                                                                            ELSE
+                                                                             trace_source_type
+                                                                          END AS TYPE
+                                                            FROM zl_trace_source_list) b) o
+                                            LEFT JOIN (SELECT MONTH, TYPE, count(1) AS num
+                                                        FROM (select CASE
+                                                                       WHEN trace_source_type = '营销活动' THEN
+                                                                        '市场类'
+                                                                       WHEN trace_source_type =
+                                                                            '集团督办投诉焦点问题' THEN
+                                                                        '市场类'
+                                                                       WHEN trace_source_type = '焦点投诉' THEN
+                                                                        '市场类'
+                                                                       WHEN trace_source_type = '服务触点' THEN
+                                                                        '市场类'
+                                                                       ELSE
+                                                                        trace_source_type
+                                                                     END AS TYPE,
+                                                                     substr(acceptance_time, 6, 2) month
+                                                                FROM zl_trace_source_list
+                                                               WHERE length(acceptance_time) = 19
+                                                                 AND acceptance_time IS NOT NULL
+                                                              	$customwhere2$
+                                                              )
+                                                       GROUP BY MONTH, TYPE) p
+                                              ON o.month = p.month
+                                             AND o.TYPE = p.type)) bbb
+                           where aaa.month = bbb.month
+                             AND aaa.TYPE = bbb.TYPE)
+                   group by rollup(type)
+
+              ]]> 
+        </select>
+        <condition  cols="4" labprecent="11" textprecent="12" >
+        	<date displayname="年份" name="year" class='Wdate' dateFmt='yyyy'/>	
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(t.trace_source_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[ substr(t.trace_source_time, 0, 4) = extract(year from sysdate) ]]>
+				</else>
+			</if>
+        </customwhere>
+        <customwhere name="customwhere2" prepend="and" >
+     		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(acceptance_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[ substr(acceptance_time, 0, 4) = extract(year from sysdate) ]]>
+				</else>
+			</if>
+        </customwhere>
+	</sqlquery>
+
+<!-- 	溯源问题统计表-月 饼图-->
+	<sqlquery name="SQL_TRACE_STATISTICS_MONTH2.query">
+        <select>
+            <![CDATA[
+					 SELECT aaa.type, aaa.month, aaa.num, bbb.checknum,aaa.total,round(aaa.num / aaa.total * 100, 2) ratio
+                            FROM (select type,
+                                         month,
+                                         sum(count(t.question_subcategory)) over(order by month) total,
+                                         sum(count(t.question_subcategory)) over(partition by type order by month) num
+                                    from (select substr(z.trace_source_time, 5, 2) month,
+                                                 case
+                                                   when trace_source_type = '营销活动' then
+                                                    '市场类'
+                                                   when trace_source_type = '集团督办投诉焦点问题' then
+                                                    '市场类'
+                                                   when trace_source_type = '焦点投诉' then
+                                                    '市场类'
+                                                   when trace_source_type = '服务触点' then
+                                                    '市场类'
+                                                   else
+                                                    trace_source_type
+                                                 end as type,
+                                                 z.*
+                                            from zl_trace_source_list z) t
+                                   where 1 = 1   $customwhere$
+                                   group by month, type
+                                   order by MONTH) aaa,
+                                 
+                                 (SELECT sum(num) over(partition by type order by month) checknum,
+                                         TYPE,
+                                         month
+                                    FROM (SELECT o.month, o.type, nvl(p.num, 0) AS num
+                                            FROM (SELECT *
+                                                    FROM (SELECT to_char(add_months(SYSDATE,ROWNUM),'mm') month FROM dual CONNECT BY ROWNUM <= 12) a,
+                                                         (SELECT DISTINCT CASE
+                                                                            WHEN trace_source_type =
+                                                                                 '营销活动' THEN
+                                                                             '市场类'
+                                                                            WHEN trace_source_type =
+                                                                                 '集团督办投诉焦点问题' THEN
+                                                                             '市场类'
+                                                                            WHEN trace_source_type =
+                                                                                 '焦点投诉' THEN
+                                                                             '市场类'
+                                                                            WHEN trace_source_type =
+                                                                                 '服务触点' THEN
+                                                                             '市场类'
+                                                                            ELSE
+                                                                             trace_source_type
+                                                                          END AS TYPE
+                                                            FROM zl_trace_source_list) b) o
+                                            LEFT JOIN (SELECT MONTH, TYPE, count(1) AS num
+                                                        FROM (select CASE
+                                                                       WHEN trace_source_type = '营销活动' THEN
+                                                                        '市场类'
+                                                                       WHEN trace_source_type = '集团督办投诉焦点问题' THEN
+                                                                        '市场类'
+                                                                       WHEN trace_source_type = '焦点投诉' THEN
+                                                                        '市场类'
+                                                                       WHEN trace_source_type = '服务触点' THEN
+                                                                        '市场类'
+                                                                       ELSE
+                                                                        trace_source_type
+                                                                     END AS TYPE,
+                                                                     substr(acceptance_time,
+                                                                            6,
+                                                                            2) month
+                                                                FROM zl_trace_source_list
+                                                               WHERE length(acceptance_time) = 19
+                                                                 AND acceptance_time IS NOT NULL $customwhere2$ 
+                                                               ) where 1=1  
+                                                       GROUP BY MONTH, TYPE) p
+                                              ON o.month = p.month
+                                             AND o.TYPE = p.type)) bbb
+                           where aaa.month = bbb.month $customwhere3$
+                             AND aaa.TYPE = bbb.TYPE
+              ]]> 
+        </select>
+        <condition  cols="4" labprecent="11" textprecent="10" >
+        	<date displayname="年份" name="year" class='Wdate' dateFmt='yyyy'/>	
+        	<hidden name="month" />	
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(t.trace_source_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[ substr(t.trace_source_time, 0, 4) = extract(year from sysdate) ]]>
+				</else>
+			</if>
+        </customwhere>
+        <customwhere name="customwhere2" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(acceptance_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[ substr(acceptance_time, 0, 4) = extract(year from sysdate) ]]>
+				</else>
+			</if>
+        </customwhere>
+        <customwhere name="customwhere3" prepend="and" >
+			<if prepend="and" exp="'#month#'>''">
+				<success>
+                    <![CDATA[ aaa.month = #month#]]>
+				</success>
+				<else>
+					<![CDATA[ aaa.month = to_char(sysdate, 'MM' ) ]]>
+				</else>
+			</if>
+        </customwhere>
+	</sqlquery>
+	
+
+	
+	<!-- 	溯源问题统计表-地市 -->
+	<sqlquery name="SQL_TRACE_STATISTICS_CITY.query">
+        <select>
+            <![CDATA[
+				select nvl(city, '合计') city,
+		               sum(decode(month, '01', num)) 一月问题量,
+		               sum(decode(month, '01', checknum)) 一月验收量,
+		               sum(decode(month, '01', ratio)) 一月占比,
+		               sum(decode(month, '02', num)) 二月问题量,
+		               sum(decode(month, '02', checknum)) 二月验收量,
+		               sum(decode(month, '02', ratio)) 二月占比,
+		               sum(decode(month, '03', num)) 三月问题量,
+		               sum(decode(month, '03', checknum)) 三月验收量,
+		               sum(decode(month, '03', ratio)) 三月占比,
+		               sum(decode(month, '04', num)) 四月问题量,
+		               sum(decode(month, '04', checknum)) 四月验收量,
+		               sum(decode(month, '04', ratio)) 四月占比,
+		               sum(decode(month, '05', num)) 五月问题量,
+		               sum(decode(month, '05', checknum)) 五月验收量,
+		               sum(decode(month, '05', ratio)) 五月占比,
+		               sum(decode(month, '06', num)) 六月问题量,
+		               sum(decode(month, '06', checknum)) 六月验收量,
+		               sum(decode(month, '06', ratio)) 六月占比,
+		               sum(decode(month, '07', num)) 七月问题量,
+		               sum(decode(month, '07', checknum)) 七月验收量,
+		               sum(decode(month, '07', ratio)) 七月占比,
+		               sum(decode(month, '08', num)) 八月问题量,
+		               sum(decode(month, '08', checknum)) 八月验收量,
+		               sum(decode(month, '08', ratio)) 八月占比,
+		               sum(decode(month, '09', num)) 九月问题量,
+		               sum(decode(month, '09', checknum)) 九月验收量,
+		               sum(decode(month, '09', ratio)) 九月占比,
+		               sum(decode(month, '10', num)) 十月问题量,
+		               sum(decode(month, '10', checknum)) 十月验收量,
+		               sum(decode(month, '10', ratio)) 十月占比,
+		               sum(decode(month, '11', num)) 十一月问题量,
+		               sum(decode(month, '11', checknum)) 十一月验收量,
+		               sum(decode(month, '11', ratio)) 十一月占比,
+		               sum(decode(month, '12', num)) 十二月问题量,
+		               sum(decode(month, '12', checknum)) 十二月验收量,
+		               sum(decode(month, '12', ratio)) 十二月占比
+		          from (SELECT aaa.city, aaa.month, aaa.num, bbb.checknum,aaa.total,round(aaa.num / aaa.total * 100, 2) ratio
+		                          FROM (select city,
+		                                       month,
+		                                       sum(count(t.question_subcategory)) over(order by month) total,
+		                                       sum(count(t.question_subcategory)) over(partition by city order by month) num
+		                                  from (select substr(z.trace_source_time, 5, 2) month,
+		                                               z.auxiliary_department city,
+		                                               z.*
+		                                          from zl_trace_source_list z) t
+		                                 where 1 = 1 $customwhere$
+		                                 group by month, city
+		                                 order by MONTH) aaa,
+		                               
+		                               (SELECT sum(num) over(partition by city order by month) checknum,
+		                                       city,
+		                                       month
+		                                  FROM (SELECT o.month, o.city, nvl(p.num, 0) AS num
+		                                          FROM (SELECT *
+		                                                  FROM (SELECT to_char(add_months(SYSDATE,ROWNUM),'mm') month FROM dual CONNECT BY ROWNUM <= 12) a,
+		                                                       (SELECT DISTINCT auxiliary_department city
+		                                                          FROM zl_trace_source_list) b) o
+		                                          LEFT JOIN (SELECT MONTH, city, count(1) AS num
+		                                                      FROM (select auxiliary_department city,
+		                                                                   substr(acceptance_time,6,2) month
+		                                                              FROM zl_trace_source_list
+		                                                             WHERE length(acceptance_time) = 19
+		                                                               AND acceptance_time IS NOT NULL
+		                                                              $customwhere2$
+		                                                            )
+		                                                     GROUP BY MONTH, city) p
+		                                            ON o.month = p.month
+		                                           AND o.city = p.city)) bbb
+		                         where aaa.month = bbb.month
+		                           AND aaa.city = bbb.city)
+		         group by rollup(city)
+		         order by instr('沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦岛,全省',CITY) asc
+
+
+              ]]> 
+        </select>
+        <condition  cols="4" labprecent="11" textprecent="10" >
+        	<date displayname="年份" name="year" class='Wdate' dateFmt='yyyy'/>	
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(t.trace_source_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(t.trace_source_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+        </customwhere>
+        <customwhere name="customwhere2" prepend="and" >
+     		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(acceptance_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(acceptance_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+        </customwhere>
+	</sqlquery>
+	
+	<!-- 	溯源问题统计表-地市 柱状图-->
+	<sqlquery name="SQL_TRACE_STATISTICS_CITY2.query">
+        <select>
+            <![CDATA[
+	             	SELECT aaa.city, aaa.month, aaa.num, bbb.checknum,aaa.total,round(aaa.num / aaa.total * 100, 2) ratio
+                          FROM (select city,
+                                       month,
+                                       sum(count(t.question_subcategory)) over(order by month) total,
+                                       sum(count(t.question_subcategory)) over(partition by city order by month) num
+                                  from (select substr(z.trace_source_time, 5, 2) month,
+                                               z.auxiliary_department city,
+                                               z.*
+                                          from zl_trace_source_list z) t
+                                 where 1 = 1 $customwhere$
+                                 group by month, city
+                                 order by MONTH) aaa,
+                               
+                               (SELECT sum(num) over(partition by city order by month) checknum,
+                                       city,
+                                       month
+                                  FROM (SELECT o.month, o.city, nvl(p.num, 0) AS num
+                                          FROM (SELECT *
+                                                  FROM (SELECT to_char(add_months(SYSDATE,ROWNUM),'mm') month FROM dual CONNECT BY ROWNUM <= 12) a,
+                                                       (SELECT DISTINCT auxiliary_department city
+                                                          FROM zl_trace_source_list) b) o
+                                          LEFT JOIN (SELECT MONTH, city, count(1) AS num
+                                                      FROM (select auxiliary_department city,
+                                                                   substr(acceptance_time,6,2) month
+                                                              FROM zl_trace_source_list
+                                                             WHERE length(acceptance_time) = 19
+                                                               AND acceptance_time IS NOT NULL
+                                                              $customwhere2$
+                                                            )
+                                                     GROUP BY MONTH, city) p
+                                            ON o.month = p.month
+                                           AND o.city = p.city)) bbb
+                         where aaa.month = bbb.month $customwhere3$
+                           AND aaa.city = bbb.city
+                    order by /*ORDERBY*/ instr('沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦岛,全省',CITY) asc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="4" labprecent="11" textprecent="10" >
+        	<date displayname="年份" name="year" class='Wdate' dateFmt='yyyy'/>	
+        	<hidden name="month" />	
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(t.trace_source_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(t.trace_source_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+         </customwhere>
+         <customwhere name="customwhere2" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(acceptance_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(acceptance_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+         </customwhere>
+         <customwhere name="customwhere3" prepend="and" >
+			<if prepend="and" exp="'#month#'>''">
+				<success>
+                    <![CDATA[ aaa.month = #month#]]>
+				</success>
+				<else>
+					<![CDATA[ aaa.month = to_char(sysdate, 'MM' )]]>
+				</else>
+			</if>
+         </customwhere>
+	</sqlquery>
+	
+	<!-- 溯源问题解决率统计表-月-->
+	<sqlquery name="SQL_TRACE_SOLVE_MONTH.query">
+        <select>
+            <![CDATA[
+				        select c.*,
+						       0 一月环比,
+						       (二月解决率 - 一月解决率) 二月环比,
+						       (三月解决率 - 二月解决率) 三月环比,
+						       (四月解决率 - 三月解决率) 四月环比,
+						       (五月解决率 - 四月解决率) 五月环比,
+						       (六月解决率 - 五月解决率) 六月环比,
+						       (七月解决率 - 六月解决率) 七月环比,
+						       (八月解决率 - 七月解决率) 八月环比,
+						       (九月解决率 - 八月解决率) 九月环比,
+						       (十月解决率 - 九月解决率) 十月环比,
+						       (十一月解决率 - 十月解决率) 十一月环比,
+						       (十二月解决率 - 十一月解决率) 十二月环比
+						  from (select b.*,
+						               round(一月验收量合计 / 一月问题量 * 100, 2) 一月解决率,
+						               round(二月验收量合计 / 二月问题量 * 100, 2) 二月解决率,
+						               round(三月验收量合计 / 三月问题量 * 100, 2) 三月解决率,
+						               round(四月验收量合计 / 四月问题量 * 100, 2) 四月解决率,
+						               round(五月验收量合计 / 五月问题量 * 100, 2) 五月解决率,
+						               round(六月验收量合计 / 六月问题量 * 100, 2) 六月解决率,
+						               round(七月验收量合计 / 七月问题量 * 100, 2) 七月解决率,
+						               round(八月验收量合计 / 八月问题量 * 100, 2) 八月解决率,
+						               round(九月验收量合计 / 九月问题量 * 100, 2) 九月解决率,
+						               round(十月验收量合计 / 十月问题量 * 100, 2) 十月解决率,
+						               round(十一月验收量合计 / 十一月问题量 * 100, 2) 十一月解决率,
+						               round(十二月验收量合计 / 十二月问题量 * 100, 2) 十二月解决率
+						          from (select nvl(type, '合计') type,
+						                       sum(decode(month, '01', num)) 一月问题量,
+						                       sum(decode(month, '01', checknum)) 一月验收量合计,
+						                       sum(decode(month, '02', num)) 二月问题量,
+						                       sum(decode(month, '02', checknum)) 二月验收量合计,
+						                       sum(decode(month, '03', num)) 三月问题量,
+						                       sum(decode(month, '03', checknum)) 三月验收量合计,
+						                       sum(decode(month, '04', num)) 四月问题量,
+						                       sum(decode(month, '04', checknum)) 四月验收量合计,
+						                       sum(decode(month, '05', num)) 五月问题量,
+						                       sum(decode(month, '05', checknum)) 五月验收量合计,
+						                       sum(decode(month, '06', num)) 六月问题量,
+						                       sum(decode(month, '06', checknum)) 六月验收量合计,
+						                       sum(decode(month, '07', num)) 七月问题量,
+						                       sum(decode(month, '07', checknum)) 七月验收量合计,
+						                       sum(decode(month, '08', num)) 八月问题量,
+						                       sum(decode(month, '08', checknum)) 八月验收量合计,
+						                       sum(decode(month, '09', num)) 九月问题量,
+						                       sum(decode(month, '09', checknum)) 九月验收量合计,
+						                       sum(decode(month, '10', num)) 十月问题量,
+						                       sum(decode(month, '10', checknum)) 十月验收量合计,
+						                       sum(decode(month, '11', num)) 十一月问题量,
+						                       sum(decode(month, '11', checknum)) 十一月验收量合计,
+						                       sum(decode(month, '12', num)) 十二月问题量,
+						                       sum(decode(month, '12', checknum)) 十二月验收量合计
+						                  from (select a.*,
+						                               round(ratio_to_report(checknum / num) over(partition by type, month) * 100,2) as resolutionrate
+						                          from (SELECT aaa.type,
+						                                       aaa.month,
+						                                       aaa.num,
+						                                       bbb.checknum,
+						                                       bbb.PREV_SAL
+						                                  FROM (select type,
+						                                               month,
+						                                               sum(count(t.question_subcategory)) over(partition by type order by month) num
+						                                          from (select substr(z.trace_source_time,5,2) month,
+						                                                       case
+						                                                         when trace_source_type = '营销活动' then
+						                                                          '市场类'
+						                                                         when trace_source_type = '集团督办投诉焦点问题' then
+						                                                          '市场类'
+						                                                         when trace_source_type = '焦点投诉' then
+						                                                          '市场类'
+						                                                         when trace_source_type = '服务触点' then
+						                                                          '市场类'
+						                                                         else
+						                                                          trace_source_type
+						                                                       end as type,
+						                                                       z.*
+						                                                  from zl_trace_source_list z) t
+						                                         where 1 = 1 $customwhere$
+						                                         group by month, type
+						                                         order by MONTH) aaa,
+						                                       
+						                                       (SELECT sum(num) over(partition by type order by month) checknum,
+						                                               lag(num, 1, 0) over(partition by type order by month) as PREV_SAL,
+						                                               TYPE,
+						                                               month
+						                                          FROM (SELECT o.month,
+						                                                       o.type,
+						                                                       nvl(p.num, 0) AS num
+						                                                  FROM (SELECT *
+						                                                          FROM (SELECT to_char(add_months(SYSDATE,ROWNUM),'mm') month FROM dual CONNECT BY ROWNUM <= 12) a,
+						                                                               (SELECT DISTINCT CASE
+						                                                                                  WHEN trace_source_type = '营销活动' THEN
+						                                                                                   '市场类'
+						                                                                                  WHEN trace_source_type = '集团督办投诉焦点问题' THEN
+						                                                                                   '市场类'
+						                                                                                  WHEN trace_source_type = '焦点投诉' THEN
+						                                                                                   '市场类'
+						                                                                                  WHEN trace_source_type = '服务触点' THEN
+						                                                                                   '市场类'
+						                                                                                  ELSE
+						                                                                                   trace_source_type
+						                                                                                END AS TYPE
+						                                                                  FROM zl_trace_source_list) b) o
+						                                                  LEFT JOIN (SELECT MONTH,
+						                                                                   TYPE,
+						                                                                   count(1) AS num
+						                                                              FROM (select CASE
+						                                                                             WHEN trace_source_type = '营销活动' THEN
+						                                                                              '市场类'
+						                                                                             WHEN trace_source_type = '集团督办投诉焦点问题' THEN
+						                                                                              '市场类'
+						                                                                             WHEN trace_source_type = '焦点投诉' THEN
+						                                                                              '市场类'
+						                                                                             WHEN trace_source_type = '服务触点' THEN
+						                                                                              '市场类'
+						                                                                             ELSE
+						                                                                              trace_source_type
+						                                                                           END AS TYPE,
+						                                                                           substr(acceptance_time,6,2) month
+						                                                                      FROM zl_trace_source_list
+						                                                                     WHERE length(acceptance_time) = 19
+						                                                                       AND acceptance_time IS NOT NULL
+						                                                                    	$customwhere2$
+						                                                                    )
+						                                                             GROUP BY MONTH, TYPE) p
+						                                                    ON o.month = p.month
+						                                                   AND o.TYPE = p.type)) bbb
+						                                 where aaa.month = bbb.month
+						                                   AND aaa.TYPE = bbb.TYPE) a)
+						                 group by rollup(type)) b) c
+
+
+              ]]> 
+        </select>
+        <condition  cols="4" labprecent="11" textprecent="10" >
+        	<date displayname="年份" name="year" class='Wdate' dateFmt='yyyy'/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(t.trace_source_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(t.trace_source_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+        </customwhere>
+        <customwhere name="customwhere2" prepend="and" >
+     		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(acceptance_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[ substr(acceptance_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+        </customwhere>
+	</sqlquery>
+	
+	
+	<!-- 溯源问题解决率统计表-地市-->
+	<sqlquery name="SQL_TRACE_SOLVE_CITY.query">
+        <select>
+            <![CDATA[
+		               select  c.*,
+			                   0  一月环比,
+			                   (二月解决率 - 一月解决率) 二月环比,
+			                   (三月解决率 - 二月解决率) 三月环比,
+			                   (四月解决率 - 三月解决率) 四月环比,
+			                   (五月解决率 - 四月解决率) 五月环比,
+			                   (六月解决率 - 五月解决率) 六月环比,
+			                   (七月解决率 - 六月解决率) 七月环比,
+			                   (八月解决率 - 七月解决率) 八月环比,
+			                   (九月解决率 - 八月解决率) 九月环比,
+			                   (十月解决率 - 九月解决率) 十月环比,
+			                   (十一月解决率 - 十月解决率) 十一月环比,
+			                   (十二月解决率 - 十一月解决率) 十二月环比
+			              from (select b.*,
+			                           round(一月验收量合计 / 一月问题量 * 100, 2) 一月解决率,
+			                           --round(一月验收量合计 / 一月问题量 * 100, 2) 一月占比,
+			                           round(二月验收量合计 / 二月问题量 * 100, 2) 二月解决率,
+			                           --round(二月验收量合计 / 二月问题量 * 100, 2) 二月占比,
+			                           round(三月验收量合计 / 三月问题量 * 100, 2) 三月解决率,
+			                           --round(三月验收量合计 / 三月问题量 * 100, 2) 三月占比,
+			                           round(四月验收量合计 / 四月问题量 * 100, 2) 四月解决率,
+			                           --round(四月验收量合计 / 四月问题量 * 100, 2) 四月占比,
+			                           round(五月验收量合计 / 五月问题量 * 100, 2) 五月解决率,
+			                           --round(五月验收量合计 / 五月问题量 * 100, 2) 五月占比,
+			                           round(六月验收量合计 / 六月问题量 * 100, 2) 六月解决率,
+			                           --round(六月验收量合计 / 六月问题量 * 100, 2) 六月占比,
+			                           round(七月验收量合计 / 七月问题量 * 100, 2) 七月解决率,
+			                           --round(七月验收量合计 / 七月问题量 * 100, 2) 七月占比,
+			                           round(八月验收量合计 / 八月问题量 * 100, 2) 八月解决率,
+			                           --round(八月验收量合计 / 八月问题量 * 100, 2) 八月占比,
+			                           round(九月验收量合计 / 九月问题量 * 100, 2) 九月解决率,
+			                          -- round(九月验收量合计 / 九月问题量 * 100, 2) 九月占比,
+			                           round(十月验收量合计 / 十月问题量 * 100, 2) 十月解决率,
+			                           --round(十月验收量合计 / 十月问题量 * 100, 2) 十月占比,
+			                           round(十一月验收量合计 / 十一月问题量 * 100, 2) 十一月解决率,
+			                           --round(十一月验收量合计 / 十一月问题量 * 100, 2) 十一月占比,
+			                           round(十二月验收量合计 / 十二月问题量 * 100, 2) 十二月解决率
+			                           --round(十二月验收量合计 / 十二月问题量 * 100, 2) 十二月占比
+			                      from (select nvl(city, '合计') city,
+			                                   sum(decode(month, '01', num)) 一月问题量,
+			                                   sum(decode(month, '01', checknum)) 一月验收量合计,
+			                                   sum(decode(month, '01', ratio)) 一月占比,
+			                                   sum(decode(month, '02', num)) 二月问题量,
+			                                   sum(decode(month, '02', checknum)) 二月验收量合计,
+			                                   sum(decode(month, '02', ratio)) 二月占比,
+			                                   sum(decode(month, '03', num)) 三月问题量,
+			                                   sum(decode(month, '03', checknum)) 三月验收量合计,
+			                                   sum(decode(month, '03', ratio)) 三月占比,
+			                                   sum(decode(month, '04', num)) 四月问题量,
+			                                   sum(decode(month, '04', checknum)) 四月验收量合计,
+			                                   sum(decode(month, '04', ratio)) 四月占比,
+			                                   sum(decode(month, '05', num)) 五月问题量,
+			                                   sum(decode(month, '05', checknum)) 五月验收量合计,
+			                                   sum(decode(month, '05', ratio)) 五月占比,
+			                                   sum(decode(month, '06', num)) 六月问题量,
+			                                   sum(decode(month, '06', checknum)) 六月验收量合计,
+			                                   sum(decode(month, '06', ratio)) 六月占比,
+			                                   sum(decode(month, '07', num)) 七月问题量,
+			                                   sum(decode(month, '07', checknum)) 七月验收量合计,
+			                                   sum(decode(month, '07', ratio)) 七月占比,
+			                                   sum(decode(month, '08', num)) 八月问题量,
+			                                   sum(decode(month, '08', checknum)) 八月验收量合计,
+			                                   sum(decode(month, '08', ratio)) 八月占比,
+			                                   sum(decode(month, '09', num)) 九月问题量,
+			                                   sum(decode(month, '09', checknum)) 九月验收量合计,
+			                                   sum(decode(month, '09', ratio)) 九月占比,
+			                                   sum(decode(month, '10', num)) 十月问题量,
+			                                   sum(decode(month, '10', checknum)) 十月验收量合计,
+			                                   sum(decode(month, '10', ratio)) 十月占比,
+			                                   sum(decode(month, '11', num)) 十一月问题量,
+			                                   sum(decode(month, '11', checknum)) 十一月验收量合计,
+			                                   sum(decode(month, '11', ratio)) 十一月占比,
+			                                   sum(decode(month, '12', num)) 十二月问题量,
+			                                   sum(decode(month, '12', checknum)) 十二月验收量合计,
+			                                   sum(decode(month, '12', ratio)) 十二月占比
+			                              from (select a.*,
+			                                           round(ratio_to_report(checknum / num) over(partition by city, month) * 100,2) as resolutionrate
+			                                      from (SELECT aaa.city, aaa.month, aaa.num, bbb.checknum,aaa.total,round(aaa.num / aaa.total * 100, 2) ratio
+			                          FROM (select city,
+			                                       month,
+			                                       sum(count(t.question_subcategory)) over(order by month) total,
+			                                       sum(count(t.question_subcategory)) over(partition by city order by month) num
+			                                  from (select substr(z.trace_source_time, 5, 2) month,
+			                                               z.auxiliary_department city,
+			                                               z.*
+			                                          from zl_trace_source_list z) t
+			                                 where 1 = 1 $customwhere$
+			                                 group by month, city
+			                                 order by MONTH) aaa,
+			                               
+			                               (SELECT sum(num) over(partition by city order by month) checknum,
+			                                       city,
+			                                       month
+			                                  FROM (SELECT o.month, o.city, nvl(p.num, 0) AS num
+			                                          FROM (SELECT *
+			                                                  FROM (SELECT to_char(add_months(SYSDATE,ROWNUM),'mm') month FROM dual CONNECT BY ROWNUM <= 12) a,
+			                                                       (SELECT DISTINCT auxiliary_department city
+			                                                          FROM zl_trace_source_list) b) o
+			                                          LEFT JOIN (SELECT MONTH, city, count(1) AS num
+			                                                      FROM (select auxiliary_department city,
+			                                                                   substr(acceptance_time,6,2) month
+			                                                              FROM zl_trace_source_list
+			                                                             WHERE length(acceptance_time) = 19
+			                                                               AND acceptance_time IS NOT NULL
+			                                                              $customwhere2$
+			                                                            )
+			                                                     GROUP BY MONTH, city) p
+			                                            ON o.month = p.month
+			                                           AND o.city = p.city)) bbb
+			                         where aaa.month = bbb.month --$customwhere3$
+			                           AND aaa.city = bbb.city) a)
+			                             group by rollup(city)) b) c
+			             order by instr('沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦岛,全省',CITY) asc
+ 
+              ]]> 
+        </select>
+        <condition  cols="4" labprecent="11" textprecent="10" >
+        	<date displayname="年份" name="year" class='Wdate' dateFmt='yyyy'/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+     		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(t.trace_source_time, 0, 4) = #year# ]]>
+				</success>
+				<else>
+					<![CDATA[ substr(t.trace_source_time, 0, 4) = extract(year from sysdate) ]]>
+				</else>
+			</if>
+        </customwhere>
+        <customwhere name="customwhere2" prepend="and" >
+     		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(acceptance_time, 0, 4) = #year# ]]>
+				</success>
+				<else>
+					<![CDATA[ substr(acceptance_time, 0, 4) = extract(year from sysdate) ]]>
+				</else>
+			</if>
+        </customwhere>
+	</sqlquery>
+	
+	<!-- 溯源问题解决率统计表-地市 折线图-->
+	<sqlquery name="SQL_TRACE_SOLVE_CITY2.query">
+        <select>
+            <![CDATA[
+		                select a.*,
+						       round(checknum / num * 100,2) as resolutionrate,
+						       PREV_SAL - checknum as linkrelativeratio
+						  from (SELECT aaa.city, aaa.month, aaa.num, bbb.checknum,bbb.PREV_SAL,aaa.total,round(aaa.num / aaa.total * 100, 2) ratio
+						                          FROM (select city,
+						                                       month,
+						                                       sum(count(t.question_subcategory)) over(order by month) total,
+						                                       sum(count(t.question_subcategory)) over(partition by city order by month) num
+						                                  from (select substr(z.trace_source_time, 5, 2) month,
+						                                               z.auxiliary_department city,
+						                                               z.*
+						                                          from zl_trace_source_list z) t
+						                                 where 1 = 1 $customwhere$
+						                                 group by month, city
+						                                 order by MONTH) aaa,
+						                               
+						                               (SELECT sum(num) over(partition by city order by month) checknum,
+						                                       lag(num, 1, 0) over(partition by city order by month) as PREV_SAL,
+						                                       city,
+						                                       month
+						                                  FROM (SELECT o.month, o.city, nvl(p.num, 0) AS num
+						                                          FROM (SELECT *
+						                                                  FROM (SELECT to_char(add_months(SYSDATE,ROWNUM),'mm') month FROM dual CONNECT BY ROWNUM <= 12) a,
+						                                                       (SELECT DISTINCT auxiliary_department city
+						                                                          FROM zl_trace_source_list) b) o
+						                                          LEFT JOIN (SELECT MONTH, city, count(1) AS num
+						                                                      FROM (select auxiliary_department city,
+						                                                                   substr(acceptance_time,6,2) month
+						                                                              FROM zl_trace_source_list
+						                                                             WHERE length(acceptance_time) = 19
+						                                                               AND acceptance_time IS NOT NULL
+						                                                              $customwhere2$
+						                                                            )
+						                                                     GROUP BY MONTH, city) p
+						                                            ON o.month = p.month
+						                                           AND o.city = p.city)) bbb
+						                         where aaa.month = bbb.month $customwhere3$
+						                           AND aaa.city = bbb.city) a
+						 order by /*ORDERBY*/ instr('沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦岛,全省',CITY) asc /*ORDERBY*/
+
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="11" textprecent="22" >
+        	<hidden name="year" />	
+        	<hidden name="month" />	
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(t.trace_source_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(t.trace_source_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+		</customwhere>
+		        <customwhere name="customwhere2" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(acceptance_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(acceptance_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+		</customwhere>
+		<customwhere name="customwhere3" prepend="and" >
+			<if prepend="and" exp="'#month#'>''">
+				<success>
+                    <![CDATA[ aaa.month = #month#]]>
+				</success>
+				<else>
+					<![CDATA[ aaa.month = to_char(sysdate, 'MM' )]]>
+				</else>
+			</if>
+		</customwhere>
+	</sqlquery>
+	
+	<!-- X月溯源问题情况表-->
+	<sqlquery name="SQL_TRACE_SITUATION_CITY.query">
+        <select>
+            <![CDATA[
+		               select t.*,
+			                   (t.移动未解决 + t.移动新发起) 移动待解决合计,
+			                   decode(移动总量,0,0,round(移动已解决 /移动总量 * 100 ,2))  移动解决率,
+			                   --decode(移动总量,0,0,round(移动验收总量 /移动总量 * 100 ,2))  移动占比,
+			                   decode(移动上月总量,0,0,round(移动总量 /移动上月总量 * 100 ,2)-100)  移动环比,
+			                   (t.家宽未解决 + t.家宽新发起) 家宽待解决合计,
+			                   decode(家宽总量,0,0,round(家宽已解决 /家宽总量 * 100 ,2))  家宽解决率,
+			                   --decode(家宽总量,0,0,round(家宽验收总量 /家宽总量 * 100 ,2))  家宽占比,
+			                   decode(家宽上月总量,0,0,round(家宽总量 /家宽上月总量 * 100 ,2)-100)  家宽环比,
+			                   (t.市场类未解决 + t.市场类新发起) 市场类待解决合计,
+			                   decode(市场类总量,0,0,round(市场类已解决 /市场类总量 * 100 ,2))  市场类解决率,
+			                   --decode(市场类总量,0,0,round(市场类验收总量 /市场类总量 * 100 ,2))  市场类占比,
+			                   decode(市场类上月总量,0,0,round(市场类总量 /市场类上月总量 * 100 ,2)-100)  市场类环比
+			              from (select nvl(city, '合计') city,
+			                           sum(decode(type, '移动网络质量', num)) 移动总量,
+			                           sum(decode(type, '移动网络质量', done)) 移动已解决,
+			                           sum(decode(type, '移动网络质量', doing)) 移动未解决,
+			                           sum(decode(type, '移动网络质量', news)) 移动新发起,
+			                           sum(decode(type, '移动网络质量', PREV_SAL)) 移动上月总量,
+			                           sum(decode(type, '移动网络质量', checknum)) 移动验收总量,
+			                           sum(decode(type, '移动网络质量', ratio))  移动占比,
+			                           sum(decode(type, '家宽网络质量', num)) 家宽总量,
+			                           sum(decode(type, '家宽网络质量', done)) 家宽已解决,
+			                           sum(decode(type, '家宽网络质量', doing)) 家宽未解决,
+			                           sum(decode(type, '家宽网络质量', news)) 家宽新发起,
+			                           sum(decode(type, '家宽网络质量', PREV_SAL)) 家宽上月总量,
+			                           sum(decode(type, '家宽网络质量', checknum)) 家宽验收总量,
+			                           sum(decode(type, '家宽网络质量', ratio))  家宽占比,
+			                           sum(decode(type, '市场类', num)) 市场类总量,
+			                           sum(decode(type, '市场类', done)) 市场类已解决,
+			                           sum(decode(type, '市场类', doing)) 市场类未解决,
+			                           sum(decode(type, '市场类', news)) 市场类新发起,
+			                           sum(decode(type, '市场类', PREV_SAL)) 市场类上月总量,
+			                           sum(decode(type, '市场类', ratio))  市场类占比,
+			                           sum(decode(type, '市场类', checknum)) 市场类验收总量
+			                      from (SELECT aaa.city,aaa.type, aaa.month, aaa.num, bbb.checknum,PREV_SAL,done,doing,news,aaa.total,round(aaa.num / aaa.total * 100, 2) ratio
+                                  FROM (select city,
+                                               type,
+                                               month,
+                                               sum(num) over(partition by type order by month) total,
+                                               sum(num) over(partition by city,type order by month) num,
+                                               sum(PREV_SAL) over(partition by city, type order by month) as PREV_SAL,
+                                               sum(done) over(partition by city,type order by month) done,
+                                               sum(doing) over(partition by city,type order by month) doing,
+                                               sum(news) over(partition by city,type order by month) news
+                                               from 
+                                                    (select  city,
+                                                             type,
+                                                             month,
+                                                             count(question_subcategory)  num,
+                                                             lag(count(question_subcategory), 1, 0) over(partition by city, type order by month) as PREV_SAL,
+                                                             sum(case when reportstatus = '已完成' then 1 else 0 end) as done,
+                                                             sum(case when reportstatus = '处理中' then 1 else 0 end) as doing,
+                                                             sum(case when reportstatus = '新发起' then 1 else 0 end) as news
+                                                        from (SELECT o.month,
+                                                                     o.city,
+                                                                     o.type,
+                                                                     f.reportstatus,
+                                                                     f.trace_source_time,
+                                                                     f.question_subcategory
+                                                                FROM (select *
+                                                                        from (SELECT to_char(add_months(SYSDATE, ROWNUM), 'mm') month
+                                                                                FROM dual
+                                                                              CONNECT BY ROWNUM <= 12) a,
+                                                                             (SELECT DISTINCT CASE
+                                                                                                WHEN trace_source_type = '营销活动' THEN
+                                                                                                 '市场类'
+                                                                                                WHEN trace_source_type = '集团督办投诉焦点问题' THEN
+                                                                                                 '市场类'
+                                                                                                WHEN trace_source_type = '焦点投诉' THEN
+                                                                                                 '市场类'
+                                                                                                WHEN trace_source_type = '服务触点' THEN
+                                                                                                 '市场类'
+                                                                                                ELSE
+                                                                                                 trace_source_type
+                                                                                              END AS TYPE
+                                                                                FROM zl_trace_source_list) b,
+                                                                             (SELECT DISTINCT auxiliary_department city
+                                                                                FROM zl_trace_source_list) c) o
+                                                                left join (select substr(z.trace_source_time, 5, 2) month,
+                                                                                  case
+                                                                                    when trace_source_type = '营销活动' then
+                                                                                     '市场类'
+                                                                                    when trace_source_type = '集团督办投诉焦点问题' then
+                                                                                     '市场类'
+                                                                                    when trace_source_type = '焦点投诉' then
+                                                                                     '市场类'
+                                                                                    when trace_source_type = '服务触点' then
+                                                                                     '市场类'
+                                                                                    else
+                                                                                     trace_source_type
+                                                                                  end as type,
+                                                                                  case
+                                                                                    when status is null then
+                                                                                     '新发起'
+                                                                                    when status = '处理中' then
+                                                                                     '处理中'
+                                                                                    when status = '整改中' then
+                                                                                     '处理中'
+                                                                                    when status = '待验证' then
+                                                                                     '处理中'
+                                                                                    else
+                                                                                     '已完成'
+                                                                                  end as reportstatus,
+                                                                                  z.auxiliary_department city,
+                                                                                  z.*
+                                                                             from zl_trace_source_list z where 1 = 1 $customwhere$) f
+                                                                  on o.city = f.city
+                                                                 and o.month = f.month
+                                                                 and o.type = f.type) t
+                                                       group by city,type,month 
+                                                       order by MONTH)) aaa,
+                                       
+                                       (SELECT city,
+                                               TYPE,
+                                               month,
+                                               num,
+                                               sum(num) over(partition by city,type order by month) checknum
+                                          FROM (SELECT o.city,o.month, o.type, nvl(p.num, 0) AS num
+                                                  FROM (SELECT *
+                                                          FROM (SELECT to_char(add_months(SYSDATE,ROWNUM),'mm') month FROM dual CONNECT BY ROWNUM <= 12) a,
+                                                               (SELECT DISTINCT CASE
+                                                                                  WHEN trace_source_type =
+                                                                                       '营销活动' THEN
+                                                                                   '市场类'
+                                                                                  WHEN trace_source_type =
+                                                                                       '集团督办投诉焦点问题' THEN
+                                                                                   '市场类'
+                                                                                  WHEN trace_source_type =
+                                                                                       '焦点投诉' THEN
+                                                                                   '市场类'
+                                                                                  WHEN trace_source_type =
+                                                                                       '服务触点' THEN
+                                                                                   '市场类'
+                                                                                  ELSE
+                                                                                   trace_source_type
+                                                                                END AS TYPE
+                                                                  FROM zl_trace_source_list) b,
+                                                                  (SELECT DISTINCT auxiliary_department city FROM zl_trace_source_list) c) o
+                                                  LEFT JOIN (SELECT city, TYPE,MONTH,count(1) AS num
+                                                              FROM (select CASE
+                                                                             WHEN trace_source_type = '营销活动' THEN
+                                                                              '市场类'
+                                                                             WHEN trace_source_type = '集团督办投诉焦点问题' THEN
+                                                                              '市场类'
+                                                                             WHEN trace_source_type = '焦点投诉' THEN
+                                                                              '市场类'
+                                                                             WHEN trace_source_type = '服务触点' THEN
+                                                                              '市场类'
+                                                                             ELSE
+                                                                              trace_source_type
+                                                                           END AS TYPE,
+                                                                           substr(acceptance_time,6,2) month,
+                                                                           auxiliary_department city
+                                                                      FROM zl_trace_source_list
+                                                                     WHERE length(acceptance_time) = 19
+                                                                       AND acceptance_time IS NOT NULL $customwhere2$)   
+                                                             GROUP BY city,type,MONTH) p
+                                                    ON o.month = p.month
+                                                   AND o.TYPE = p.type and o.city = p.city )) bbb
+                                 where aaa.month = bbb.month AND aaa.TYPE = bbb.TYPE and aaa.city = bbb.city $customwhere3$)
+			                     group by rollup(city)) t
+			            order by /*ORDERBY*/ instr('沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦岛,全省',CITY) asc /*ORDERBY*/
+
+              ]]> 
+        </select>
+        <condition  cols="2" labprecent="11" textprecent="10" >
+        	<date displayname="年份" name="year" class='Wdate' dateFmt='yyyy'/>
+        	<select displayname='截至月份' name='month' customStr="01,1月;02,2月;03,3月;04,4月;05,5月;06,6月;07,7月;08,8月;09,9月;10,10月;11,11月;12,12月;" defaultvalue="#month#" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(z.trace_source_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(z.trace_source_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+		</customwhere>
+		        <customwhere name="customwhere2" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(acceptance_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(acceptance_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+		</customwhere>
+		<customwhere name="customwhere3" prepend="and" >
+			<if prepend="and" exp="'#month#'>''">
+				<success>
+                    <![CDATA[ aaa.month = #month#]]>
+				</success>
+				<else>
+					<![CDATA[ aaa.month = to_char(sysdate, 'MM' )]]>
+				</else>
+			</if>
+		</customwhere>
+	</sqlquery>
+	
+	<!-- X月营销活动溯源问题统计表-->
+	<sqlquery name="SQL_TRACE_MARKETING_CITY.query">
+        <select>
+            <![CDATA[
+		               select  t.*,
+						       (t.营销活动未解决 + t.营销活动新发起) 营销活动待解决合计,
+						       decode(营销活动总量,0,0,round(营销活动已解决 / 营销活动总量 * 100, 2)) 营销活动解决率,
+						       --decode(营销活动总量,0,0,round(营销活动验收总量 / 营销活动总量 * 100, 2)) 营销活动占比,
+						       decode(营销活动上月总量,0,0,round(营销活动总量 / 营销活动上月总量 * 100, 2) - 100) 营销活动环比,
+						       
+						       (t.焦点问题未解决 + t.焦点问题新发起) 焦点问题待解决合计,
+						       decode(焦点问题总量,0,0,round(焦点问题已解决 / 焦点问题总量 * 100, 2)) 焦点问题解决率,
+						       --decode(焦点问题总量,0,0,round(焦点问题验收总量 / 焦点问题总量 * 100, 2)) 焦点问题占比,
+						       decode(焦点问题上月总量,0,0,round(焦点问题总量 / 焦点问题上月总量 * 100, 2) - 100) 焦点问题环比,
+						       
+						       (t.集团派发未解决 + t.集团派发新发起) 集团派发待解决合计,
+						       decode(集团派发总量,0,0,round(集团派发已解决 / 集团派发总量 * 100, 2)) 集团派发解决率,
+						       --decode(集团派发总量,0,0,round(集团派发验收总量 / 集团派发总量 * 100, 2)) 集团派发占比,
+						       decode(集团派发上月总量,0,0,round(集团派发总量 / 集团派发上月总量 * 100, 2) - 100) 集团派发环比,
+						       
+						       (t.基础服务未解决 + t.基础服务新发起) 基础服务待解决合计,
+						       decode(基础服务总量,0,0,round(基础服务已解决 / 基础服务总量 * 100, 2)) 基础服务解决率,
+						       --decode(基础服务总量,0,0,round(基础服务验收总量 / 基础服务总量 * 100, 2)) 基础服务占比,
+						       decode(基础服务上月总量,0,0,round(基础服务总量 / 基础服务上月总量 * 100, 2) - 100) 基础服务环比,
+						       
+						       (t.服务触点未解决 + t.服务触点新发起) 服务触点待解决合计,
+						       decode(服务触点总量,0,0,round(服务触点已解决 / 服务触点总量 * 100, 2)) 服务触点解决率,
+						       --decode(服务触点总量,0,0,round(服务触点验收总量 / 服务触点总量 * 100, 2)) 服务触点占比,
+						       decode(服务触点上月总量,0,0,round(服务触点总量 / 服务触点上月总量 * 100, 2) - 100) 服务触点环比
+						
+						  from (select nvl(city, '合计') city,
+						               sum(decode(type, '营销活动', num)) 营销活动总量,
+						               sum(decode(type, '营销活动', done)) 营销活动已解决,
+						               sum(decode(type, '营销活动', doing)) 营销活动未解决,
+						               sum(decode(type, '营销活动', news)) 营销活动新发起,
+						               sum(decode(type, '营销活动', PREV_SAL)) 营销活动上月总量,
+						               sum(decode(type, '营销活动', checknum)) 营销活动验收总量,
+						               sum(decode(type, '营销活动', ratio)) 营销活动占比,
+						               
+						               sum(decode(type, '焦点问题', num)) 焦点问题总量,
+						               sum(decode(type, '焦点问题', done)) 焦点问题已解决,
+						               sum(decode(type, '焦点问题', doing)) 焦点问题未解决,
+						               sum(decode(type, '焦点问题', news)) 焦点问题新发起,
+						               sum(decode(type, '焦点问题', PREV_SAL)) 焦点问题上月总量,
+						               sum(decode(type, '焦点问题', checknum)) 焦点问题验收总量,
+						               sum(decode(type, '焦点问题', ratio)) 焦点问题占比,
+						               
+						               sum(decode(type, '集团派发问题', num)) 集团派发总量,
+						               sum(decode(type, '集团派发问题', done)) 集团派发已解决,
+						               sum(decode(type, '集团派发问题', doing)) 集团派发未解决,
+						               sum(decode(type, '集团派发问题', news)) 集团派发新发起,
+						               sum(decode(type, '集团派发问题', PREV_SAL)) 集团派发上月总量,
+						               sum(decode(type, '集团派发问题', checknum)) 集团派发验收总量,
+						               sum(decode(type, '集团派发问题', ratio)) 集团派发占比,
+						               
+						               
+						               sum(decode(type, '基础服务', num)) 基础服务总量,
+						               sum(decode(type, '基础服务', done)) 基础服务已解决,
+						               sum(decode(type, '基础服务', doing)) 基础服务未解决,
+						               sum(decode(type, '基础服务', news)) 基础服务新发起,
+						               sum(decode(type, '基础服务', PREV_SAL)) 基础服务上月总量,
+						               sum(decode(type, '基础服务', checknum)) 基础服务验收总量,
+						               sum(decode(type, '基础服务', ratio)) 基础服务占比,
+						               
+						               sum(decode(type, '服务触点', num)) 服务触点总量,
+						               sum(decode(type, '服务触点', done)) 服务触点已解决,
+						               sum(decode(type, '服务触点', doing)) 服务触点未解决,
+						               sum(decode(type, '服务触点', news)) 服务触点新发起,
+						               sum(decode(type, '服务触点', PREV_SAL)) 服务触点上月总量,
+						               sum(decode(type, '服务触点', checknum)) 服务触点验收总量,
+						               sum(decode(type, '服务触点', ratio)) 服务触点占比
+						          from (SELECT aaa.city,
+						                       aaa.type,
+						                       aaa.month,
+						                       aaa.num,
+						                       bbb.checknum,
+						                       PREV_SAL,
+						                       done,
+						                       doing,
+						                       news,
+						                       aaa.total,
+						                       decode(aaa.total,0,0,round(aaa.num / aaa.total * 100, 2)) ratio
+						                  FROM (select city,
+						                               type,
+						                               month,
+						                               sum(num) over(partition by type order by month) total,
+						                               sum(num) over(partition by city, type order by month) num,
+						                               sum(PREV_SAL) over(partition by city, type order by month) as PREV_SAL,
+						                               sum(done) over(partition by city, type order by month) done,
+						                               sum(doing) over(partition by city, type order by month) doing,
+						                               sum(news) over(partition by city, type order by month) news
+						                          from (select city,
+						                                       type,
+						                                       month,
+						                                       count(question_subcategory) num,
+						                                       lag(count(question_subcategory), 1, 0) over(partition by city, type order by month) as PREV_SAL,
+						                                       sum(case
+						                                             when reportstatus = '已完成' then
+						                                              1
+						                                             else
+						                                              0
+						                                           end) as done,
+						                                       sum(case
+						                                             when reportstatus = '处理中' then
+						                                              1
+						                                             else
+						                                              0
+						                                           end) as doing,
+						                                       sum(case
+						                                             when reportstatus = '新发起' then
+						                                              1
+						                                             else
+						                                              0
+						                                           end) as news
+						                                  from (SELECT o.month,
+						                                               o.city,
+						                                               o.type,
+						                                               f.reportstatus,
+						                                               f.trace_source_time,
+						                                               f.question_subcategory
+						                                          FROM (select *
+						                                                  from (SELECT to_char(add_months(SYSDATE,ROWNUM),'mm') month FROM dual CONNECT BY ROWNUM <= 12) a,
+						                                                       (SELECT DISTINCT case
+						                                                                          when question_subcategory = '营销活动' then
+						                                                                           '营销活动'
+						                                                                          when question_subcategory = '基础套餐' then
+						                                                                           '营销活动'
+						                                                                          when question_subcategory = '业务产品' then
+						                                                                           '营销活动'
+						                                                                          when question_subcategory = '客户之声问题' then
+						                                                                           '焦点问题'
+						                                                                          when question_subcategory = '24小时预警问题' then
+						                                                                           '焦点问题'
+						                                                                          when question_subcategory = '集团派发热点投诉营销活动问题' then
+						                                                                           '集团派发问题'
+						                                                                          when question_subcategory = '基础服务' then
+						                                                                           '基础服务'
+						                                                                          when question_subcategory = '服务触点' then
+						                                                                           '服务触点'
+						                                                                          else
+						                                                                           question_subcategory
+						                                                                        end as type
+						                                                          FROM zl_trace_source_list) b,
+						                                                       (SELECT DISTINCT auxiliary_department city FROM zl_trace_source_list) c) o
+						                                          left join (select substr(z.trace_source_time,5,2) month,
+						                                                           case
+						                                                             when question_subcategory = '营销活动' then
+						                                                              '营销活动'
+						                                                             when question_subcategory = '基础套餐' then
+						                                                              '营销活动'
+						                                                             when question_subcategory = '业务产品' then
+						                                                              '营销活动'
+						                                                             when question_subcategory = '客户之声问题' then
+						                                                              '焦点问题'
+						                                                             when question_subcategory = '24小时预警问题' then
+						                                                              '焦点问题'
+						                                                             when question_subcategory = '集团派发热点投诉营销活动问题' then
+						                                                              '集团派发问题'
+						                                                             when question_subcategory = '基础服务' then
+						                                                              '基础服务'
+						                                                             when question_subcategory = '服务触点' then
+						                                                              '服务触点'
+						                                                             else
+						                                                              question_subcategory
+						                                                           end as type,
+						                                                           case
+						                                                             when status is null then
+						                                                              '新发起'
+						                                                             when status = '处理中' then
+						                                                              '处理中'
+						                                                             when status = '整改中' then
+						                                                              '处理中'
+						                                                             when status = '待验证' then
+						                                                              '处理中'
+						                                                             else
+						                                                              '已完成'
+						                                                           end as reportstatus,
+						                                                           z.auxiliary_department city,
+						                                                           z.*
+						                                                      from zl_trace_source_list z
+						                                                     where 1 = 1
+						                                                      $customwhere$
+						                                                    ) f
+						                                            on o.city = f.city
+						                                           and o.month = f.month
+						                                           and o.type = f.type) t
+						                                 group by city, type, month
+						                                 order by MONTH)) aaa,
+						                       
+						                       (SELECT city,
+						                               TYPE,
+						                               month,
+						                               num,
+						                               sum(num) over(partition by city, type order by month) checknum
+						                          FROM (SELECT o.city,
+						                                       o.month,
+						                                       o.type,
+						                                       nvl(p.num, 0) AS num
+						                                  FROM (SELECT *
+						                                          FROM (SELECT to_char(add_months(SYSDATE,ROWNUM),'mm') month FROM dual CONNECT BY ROWNUM <= 12) a,
+						                                               (SELECT DISTINCT case
+						                                                                  when question_subcategory = '营销活动' then
+						                                                                   '营销活动'
+						                                                                  when question_subcategory = '基础套餐' then
+						                                                                   '营销活动'
+						                                                                  when question_subcategory = '业务产品' then
+						                                                                   '营销活动'
+						                                                                  when question_subcategory = '客户之声问题' then
+						                                                                   '焦点问题'
+						                                                                  when question_subcategory = '24小时预警问题' then
+						                                                                   '焦点问题'
+						                                                                  when question_subcategory = '集团派发热点投诉营销活动问题' then
+						                                                                   '集团派发问题'
+						                                                                  when question_subcategory = '基础服务' then
+						                                                                   '基础服务'
+						                                                                  when question_subcategory = '服务触点' then
+						                                                                   '服务触点'
+						                                                                  else
+						                                                                   question_subcategory
+						                                                                end as type
+						                                                  FROM zl_trace_source_list) b,
+						                                               (SELECT DISTINCT auxiliary_department city
+						                                                  FROM zl_trace_source_list) c) o
+						                                  LEFT JOIN (SELECT city,
+						                                                   TYPE,
+						                                                   MONTH,
+						                                                   count(1) AS num
+						                                              FROM (select case
+						                                                             when question_subcategory = '营销活动' then
+						                                                              '营销活动'
+						                                                             when question_subcategory = '基础套餐' then
+						                                                              '营销活动'
+						                                                             when question_subcategory = '业务产品' then
+						                                                              '营销活动'
+						                                                             when question_subcategory = '客户之声问题' then
+						                                                              '焦点问题'
+						                                                             when question_subcategory = '24小时预警问题' then
+						                                                              '焦点问题'
+						                                                             when question_subcategory = '集团派发热点投诉营销活动问题' then
+						                                                              '集团派发问题'
+						                                                             when question_subcategory = '基础服务' then
+						                                                              '基础服务'
+						                                                             when question_subcategory = '服务触点' then
+						                                                              '服务触点'
+						                                                             else
+						                                                              question_subcategory
+						                                                           end as type,
+						                                                           substr(acceptance_time,6,2) month,
+						                                                           auxiliary_department city
+						                                                      FROM zl_trace_source_list
+						                                                     WHERE length(acceptance_time) = 19
+						                                                       AND acceptance_time IS NOT NULL
+						                                                       $customwhere2$
+						                                                    )
+						                                             where 1 = 1
+						                                             GROUP BY city, type, MONTH) p
+						                                    ON o.month = p.month
+						                                   AND o.TYPE = p.type
+						                                   and o.city = p.city)) bbb
+						                 where aaa.month = bbb.month
+						                   AND aaa.TYPE = bbb.TYPE
+						                   and aaa.city = bbb.city
+						                   $customwhere3$
+						                )
+						         group by rollup(city)) t
+						 order by /*ORDERBY*/ instr('沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦岛,全省',CITY) asc /*ORDERBY*/
+
+
+
+              ]]> 
+        </select>
+        <condition  cols="2" labprecent="11" textprecent="10" >
+        	<date displayname="年份" name="year" class='Wdate' dateFmt='yyyy'/>	
+        	<select displayname='截至月份' name='month' customStr="01,1月;02,2月;03,3月;04,4月;05,5月;06,6月;07,7月;08,8月;09,9月;10,10月;11,11月;12,12月;" defaultvalue="#month#" placeholder="#month#"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(z.trace_source_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(z.trace_source_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+		</customwhere>
+		        <customwhere name="customwhere2" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(acceptance_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(acceptance_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+		</customwhere>
+		<customwhere name="customwhere3" prepend="and" >
+			<if prepend="and" exp="'#month#'>''">
+				<success>
+                    <![CDATA[ aaa.month = #month#]]>
+				</success>
+				<else>
+					<![CDATA[ aaa.month = to_char(sysdate, 'MM' )]]>
+				</else>
+			</if>
+		</customwhere>
+	</sqlquery>
+	
+	<!-- X月移动网络质量溯源问题统计表-->
+	<sqlquery name="SQL_TRACE_MOBILE_STATISTICS_CITY.query">
+        <select>
+            <![CDATA[
+		              select t.*,
+						       (t.城区物业点未解决 + t.城区物业点未解决) 城区物业点待解决合计,
+						       (t.农村物业点未解决 + t.农村物业点新发起) 农村物业点待解决合计,
+						       (t.重复投诉未解决 + t.重复投诉新发起) 重复投诉待解决合计
+						  from (select nvl(city, '合计') city,
+						               sum(decode(type, '城区物业点', num)) 城区物业点总量,
+						               sum(decode(type, '城区物业点', done)) 城区物业点已解决,
+						               sum(decode(type, '城区物业点', doing)) 城区物业点未解决,
+						               sum(decode(type, '城区物业点', news)) 城区物业点新发起,
+						               sum(decode(type, '农村物业点', num)) 农村物业点总量,
+						               sum(decode(type, '农村物业点', done)) 农村物业点已解决,
+						               sum(decode(type, '农村物业点', doing)) 农村物业点未解决,
+						               sum(decode(type, '农村物业点', news)) 农村物业点新发起,
+			                           sum(decode(type, '移动网络重复投诉', num,'重复投诉', num)) 重复投诉总量,
+			                           sum(decode(type, '移动网络重复投诉', done,'重复投诉', done)) 重复投诉已解决,
+			                           sum(decode(type, '移动网络重复投诉', doing,'重复投诉', doing)) 重复投诉未解决,
+			                           sum(decode(type, '移动网络重复投诉', news,'重复投诉', news)) 重复投诉新发起
+						          from (SELECT aaa.city,
+										       aaa.type,
+										       aaa.month,
+										       aaa.num,
+										       bbb.checknum,
+										       PREV_SAL,
+										       done,
+										       doing,
+										       news
+										  FROM (select city,
+										               type,
+										               month,
+										               sum(num) over(partition by city, type order by month) num,
+										               sum(PREV_SAL) over(partition by city, type order by month) as PREV_SAL,
+										               sum(done) over(partition by city, type order by month) done,
+										               sum(doing) over(partition by city, type order by month) doing,
+										               sum(news) over(partition by city, type order by month) news
+										          from (select city,
+										                       type,
+										                       month,
+										                       count(question_subcategory) num,
+										                       lag(count(question_subcategory), 1, 0) over(partition by city, type order by month) as PREV_SAL,
+										                       sum(case
+										                             when reportstatus = '已完成' then
+										                              1
+										                             else
+										                              0
+										                           end) as done,
+										                       sum(case
+										                             when reportstatus = '处理中' then
+										                              1
+										                             else
+										                              0
+										                           end) as doing,
+										                       sum(case
+										                             when reportstatus = '新发起' then
+										                              1
+										                             else
+										                              0
+										                           end) as news
+										                  from (SELECT o.month,
+										                               o.city,
+										                               o.type,
+										                               f.reportstatus,
+										                               f.trace_source_time,
+										                               f.question_subcategory
+										                          FROM (select *
+										                                  from (SELECT to_char(add_months(SYSDATE, ROWNUM), 'mm') month
+										                                          FROM dual
+										                                        CONNECT BY ROWNUM <= 12) a,
+										                                       (select DISTINCT column_value as type
+										                                          from (select question_subcategory
+										                                                  from ZL_TRACE_SOURCE_LIST
+										                                                 where trace_source_type = '移动网络质量'),
+										                                               table(split(question_subcategory, '、'))) b,
+										                                       (SELECT DISTINCT auxiliary_department city
+										                                          FROM zl_trace_source_list) c) o
+										                          left join (select column_value as type, z.*
+										                                       from (select substr(trace_source_time, 5, 2) month,
+										                                                    case
+										                                                      when status is null then
+										                                                       '新发起'
+										                                                      when status = '处理中' then
+										                                                       '处理中'
+										                                                      when status = '整改中' then
+										                                                       '处理中'
+										                                                      when status = '待验证' then
+										                                                       '处理中'
+										                                                      else
+										                                                       '已完成'
+										                                                    end as reportstatus,
+										                                                    auxiliary_department city,
+										                                                    l.*
+										                                               from ZL_TRACE_SOURCE_LIST l
+										                                              where trace_source_type = '移动网络质量' $customwhere$)) z,
+										                                            table(split(z.question_subcategory, '、'))) f
+										                            on o.city = f.city
+										                           and o.month = f.month
+										                           and o.type = f.type) t
+										                 group by city, type, month
+										                 order by MONTH)) aaa,
+										                                   
+										       (SELECT city,
+										               TYPE,
+										               month,
+										               num,
+										               sum(num) over(partition by city, type order by month) checknum
+										          FROM (SELECT o.city,
+										                       o.month,
+										                       o.type,
+										                       nvl(p.num, 0) AS num
+										                  FROM (SELECT *
+										                          FROM (SELECT to_char(add_months(SYSDATE,ROWNUM),'mm') month FROM dual CONNECT BY ROWNUM <= 12) a,
+										                               (select DISTINCT column_value as type from (select question_subcategory from ZL_TRACE_SOURCE_LIST 
+										                               where trace_source_type = '移动网络质量'), table(split(question_subcategory, '、'))) b,
+										                               (SELECT DISTINCT auxiliary_department city FROM zl_trace_source_list) c) o
+										                  LEFT JOIN (SELECT city, TYPE, MONTH, count(1) AS num
+										                              FROM (select column_value as type, month, city
+										                                      from (select substr(acceptance_time, 6, 2) month,
+										                                                   auxiliary_department city,
+										                                                   question_subcategory
+										                                              from ZL_TRACE_SOURCE_LIST
+										                                             where trace_source_type = '移动网络质量'
+										                                               and length(acceptance_time) = 19
+										                                               AND acceptance_time IS NOT NULL $customwhere2$),
+										                                           table(split(question_subcategory, '、')))
+										                             where 1 = 1
+										                             GROUP BY city, type, MONTH ) p
+										                    ON o.month = p.month
+										                   AND o.TYPE = p.type
+										                   and o.city = p.city)) bbb
+										 where aaa.month = bbb.month
+										   AND aaa.TYPE = bbb.TYPE
+										   and aaa.city = bbb.city
+										   $customwhere3$)
+						         group by rollup(city)) t
+						 order by /*ORDERBY*/ instr('沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦岛,全省', CITY) asc /*ORDERBY*/
+
+
+              ]]> 
+        </select>
+        <condition  cols="2" labprecent="11" textprecent="10" >
+        	<date displayname="年份" name="year" class='Wdate' dateFmt='yyyy'/>
+        	<select displayname='截至月份' name='month' customStr="01,1月;02,2月;03,3月;04,4月;05,5月;06,6月;07,7月;08,8月;09,9月;10,10月;11,11月;12,12月;" defaultvalue="#month#" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(trace_source_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(trace_source_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+		</customwhere>
+		        <customwhere name="customwhere2" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(acceptance_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(acceptance_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+		</customwhere>
+		<customwhere name="customwhere3" prepend="and" >
+			<if prepend="and" exp="'#month#'>''">
+				<success>
+                    <![CDATA[ aaa.month = #month#]]>
+				</success>
+				<else>
+					<![CDATA[ aaa.month = to_char(sysdate, 'MM' )]]>
+				</else>
+			</if>
+		</customwhere>
+	</sqlquery>
+	
+	
+	<!-- X月家宽网络质量溯源问题统计表-->
+	<sqlquery name="SQL_TRACE_HOME_STATISTICS_CITY.query">
+        <select>
+            <![CDATA[
+		              select t.*,
+                   (t.城区网络问题新发起 + t.农村网络问题新发起) 网络侧问题新发起合计,
+                   (t.农村客户原因新发起 + t.城区客户原因新发起) 客户侧问题新发起合计,
+                   (t.城网及客问题新发起+t.农网及客问题新发起) 网及客问题新发起合计,
+                   (t.重复投诉未解决 + t.重复投诉新发起) 重复投诉待解决合计
+              from (select nvl(city, '合计') city,
+                           sum(decode(type, '城区网络问题', news)) 城区网络问题新发起,
+                           sum(decode(type, '城区网络问题', done)) 城区网络问题已解决,
+                           sum(decode(type, '城区网络问题', doing)) 城区网络问题未解决,
+                           sum(decode(type, '农村网络问题', news)) 农村网络问题新发起,
+                           sum(decode(type, '农村网络问题', done)) 农村网络问题已解决,
+                           sum(decode(type, '农村网络问题', doing)) 农村网络问题未解决,
+                           sum(decode(type, '城区客户原因', news)) 城区客户原因新发起,
+                           sum(decode(type, '城区客户原因', done)) 城区客户原因已解决,
+                           sum(decode(type, '城区客户原因', doing)) 城区客户原因未解决,
+                           sum(decode(type, '农村客户原因', news)) 农村客户原因新发起,
+                           sum(decode(type, '农村客户原因', done)) 农村客户原因已解决,
+                           sum(decode(type, '农村客户原因', doing)) 农村客户原因未解决,
+                           sum(decode(type, '家宽网络重复投诉', news)) 重复投诉新发起,
+                           sum(decode(type, '家宽网络重复投诉', done)) 重复投诉已解决,
+                           sum(decode(type, '家宽网络重复投诉', doing)) 重复投诉未解决,
+                           sum(decode(type, '城区网络、客户问题', news)) 城网及客问题新发起,
+                           sum(decode(type, '城区网络、客户问题', done)) 城网及客问题已解决,
+                           sum(decode(type, '城区网络、客户问题', doing)) 城网及客问题未解决,
+                           sum(decode(type, '农村网络、客户问题', news)) 农网及客问题新发起,
+                           sum(decode(type, '农村网络、客户问题', done)) 农网及客问题已解决,
+                           sum(decode(type, '农村网络、客户问题', doing)) 农网及客问题未解决
+                           --sum(decode(type, '城区网络', news)) 城区网络新发起
+                      from (SELECT aaa.city,
+                                   aaa.type,
+                                   aaa.month,
+                                   aaa.num,
+                                   bbb.checknum,
+                                   PREV_SAL,
+                                   done,
+                                   doing,
+                                   news
+                              FROM (select city,
+                                           type,
+                                           month,
+                                           sum(num) over(partition by city, type order by month) num,
+                                           sum(PREV_SAL) over(partition by city, type order by month) as PREV_SAL,
+                                           sum(done) over(partition by city, type order by month) done,
+                                           sum(doing) over(partition by city, type order by month) doing,
+                                           sum(news) over(partition by city, type order by month) news
+                                      from (select city,
+                                                   type,
+                                                   month,
+                                                   count(question_subcategory) num,
+                                                   lag(count(question_subcategory), 1, 0) over(partition by city, type order by month) as PREV_SAL,
+                                                   sum(case
+                                                         when reportstatus = '已完成' then
+                                                          1
+                                                         else
+                                                          0
+                                                       end) as done,
+                                                   sum(case
+                                                         when reportstatus = '处理中' then
+                                                          1
+                                                         else
+                                                          0
+                                                       end) as doing,
+                                                   sum(case
+                                                         when reportstatus = '新发起' then
+                                                          1
+                                                         else
+                                                          0
+                                                       end) as news
+                                              from (SELECT o.month,
+                                                           o.city,
+                                                           o.type,
+                                                           f.reportstatus,
+                                                           f.trace_source_time,
+                                                           f.question_subcategory
+                                                      FROM (select *
+                                                              from (SELECT to_char(add_months(SYSDATE, ROWNUM), 'mm') month
+                                                                      FROM dual
+                                                                    CONNECT BY ROWNUM <= 12) a,
+                                                                   (select DISTINCT question_subcategory as type
+                                                                      from (select question_subcategory
+                                                                              from ZL_TRACE_SOURCE_LIST
+                                                                             where trace_source_type = '家宽网络质量')) b,
+                                                                   (SELECT DISTINCT auxiliary_department city
+                                                                      FROM zl_trace_source_list) c) o
+                                                      left join (select question_subcategory as type, z.*
+                                                                   from (select substr(trace_source_time, 5, 2) month,
+                                                                                case
+                                                                                  when status is null then
+                                                                                   '新发起'
+                                                                                  when status = '处理中' then
+                                                                                   '处理中'
+                                                                                  when status = '整改中' then
+                                                                                   '处理中'
+                                                                                  when status = '待验证' then
+                                                                                   '处理中'
+                                                                                  else
+                                                                                   '已完成'
+                                                                                end as reportstatus,
+                                                                                auxiliary_department city,
+                                                                                l.*
+                                                                           from ZL_TRACE_SOURCE_LIST l
+                                                                          where trace_source_type = '家宽网络质量' $customwhere$) z) f
+                                                        on o.city = f.city
+                                                       and o.month = f.month
+                                                       and o.type = f.type) t
+                                             group by city, type, month
+                                             order by MONTH)) aaa,
+                                                               
+                                   (SELECT city,
+                                           TYPE,
+                                           month,
+                                           num,
+                                           sum(num) over(partition by city, type order by month) checknum
+                                      FROM (SELECT o.city,
+                                                   o.month,
+                                                   o.type,
+                                                   nvl(p.num, 0) AS num
+                                              FROM (SELECT *
+                                                      FROM (SELECT to_char(add_months(SYSDATE,ROWNUM),'mm') month FROM dual CONNECT BY ROWNUM <= 12) a,
+                                                           (select DISTINCT question_subcategory as type from (select question_subcategory from ZL_TRACE_SOURCE_LIST 
+                                                           where trace_source_type = '家宽网络质量')) b,
+                                                           (SELECT DISTINCT auxiliary_department city FROM zl_trace_source_list) c) o
+                                              LEFT JOIN (SELECT city, TYPE, MONTH, count(1) AS num
+                                                          FROM (select question_subcategory as type, month, city
+                                                                  from (select substr(acceptance_time, 6, 2) month,
+                                                                               auxiliary_department city,
+                                                                               question_subcategory
+                                                                          from ZL_TRACE_SOURCE_LIST
+                                                                         where trace_source_type = '家宽网络质量'
+                                                                           and length(acceptance_time) = 19
+                                                                           AND acceptance_time IS NOT NULL $customwhere2$))
+                                                         where 1 = 1
+                                                         GROUP BY city, type, MONTH ) p
+                                                ON o.month = p.month
+                                               AND o.TYPE = p.type
+                                               and o.city = p.city)) bbb
+                             where aaa.month = bbb.month
+                               AND aaa.TYPE = bbb.TYPE
+                               and aaa.city = bbb.city
+                               $customwhere3$
+                               )
+                     group by rollup(city)) t
+             order by /*ORDERBY*/ instr('沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦岛,全省',CITY) asc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="2" labprecent="11" textprecent="10" >
+        	<date displayname="年份" name="year" class='Wdate' dateFmt='yyyy'/>	
+        	<select displayname='截至月份' name='month' customStr="01,1月;02,2月;03,3月;04,4月;05,5月;06,6月;07,7月;08,8月;09,9月;10,10月;11,11月;12,12月;" defaultvalue="#month#" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(trace_source_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(trace_source_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+		</customwhere>
+		        <customwhere name="customwhere2" prepend="and" >
+      		<if prepend="and" exp="'#year#'>''">
+				<success>
+                    <![CDATA[ substr(acceptance_time, 0, 4) = #year#]]>
+				</success>
+				<else>
+					<![CDATA[substr(acceptance_time, 0, 4) = extract(year from sysdate)]]>
+				</else>
+			</if>
+		</customwhere>
+		<customwhere name="customwhere3" prepend="and" >
+			<if prepend="and" exp="'#month#'>''">
+				<success>
+                    <![CDATA[ aaa.month = #month#]]>
+				</success>
+				<else>
+					<![CDATA[ aaa.month = to_char(sysdate, 'MM' )]]>
+				</else>
+			</if>
+		</customwhere>
+	</sqlquery>
+</sql-group>

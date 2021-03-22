@@ -1,0 +1,48 @@
+@CHARSET "UTF-8";
+.bpp_RollbackListField
+{
+	//background:url(../images/field-border.png) right bottom;
+}
+.bpp_RollbackListField .bpp_RollbackListField_Table
+{
+	padding:1px;
+	margin:0px;
+}
+.bpp_RollbackListField .bpp_RollbackListField_Table table
+{
+	width:858px;
+	background-color:#fdfdfd;
+	border:#dddddd 1px solid;
+	margin:0px;
+	border-spacing:0;
+}
+.bpp_RollbackListField .bpp_RollbackListField_Table table tr
+{
+	background-color:#fdfdfd;
+}
+.bpp_RollbackListField .bpp_RollbackListField_Table table .cross
+{
+	background-color:#fafafa;
+}
+.bpp_RollbackListField .bpp_RollbackListField_Table table tr:hover td
+{
+	background-color:#f3f3f3;
+}
+.bpp_RollbackListField .bpp_RollbackListField_Table table th
+{
+	background-color:#eeeeee;
+	height:30px;
+	color:#666666;
+	width:auto;
+}
+.bpp_RollbackListField .bpp_RollbackListField_Table table td
+{
+	height:28px;
+	color:#666666;
+	width:auto;
+	padding-left:5px;
+	padding-right:5px;
+	cursor:pointer;
+}
+
+

@@ -1,0 +1,88 @@
+/* 报账单 单据样式 */
+/* 报账单稽核样式   begin*/
+.nav{
+    height: 38px;
+    background: #fff;    
+}
+.Ct .audit .navbar-default {
+  background-color: #fff;
+  border-color: #e7e7e7;
+}
+.Ct .audit .navbar {
+  border: 0px solid transparent;
+}
+.Ct .audit .nav-tabs {
+    background-color: white;
+    border: 0px;
+    z-index: 11 !important;
+}
+
+
+.Ct .audit .nav-tabs>li>a {
+    border-color:#e4f3fa;
+    border-top:solid 1px #fff;
+    border-left:solid 1px #fff;
+    border-right:solid 1px #fff;
+    border-bottom:solid 1px #ddd;
+    color: #666;
+    position: relative;
+    display: block;
+    padding: 8px 30px 8px 30px;
+    border-radius: 0px;  
+    margin: 0px;
+}
+.Ct .audit .nav-tabs>li>a:HOVER {
+    color: #0080cb;
+}
+
+.Ct .audit .nav-tabs>li.active>a,
+.Ct .audit .nav-tabs>li.active>a:HOVER  {
+    margin-top: 0px;
+    border-color: #ddd;
+    border-width:1px 1px 0px 1px;
+    color: #0080cb;
+    background-color: inherit;
+    padding: 8px 30px 8px 30px;
+}
+
+.Ct .audit .nav-tabs>li:FIRST-CHILD.active>a {
+    border-left:solid 1px #ddd;
+}
+.Ct .audit .tab-content{
+    padding: 5px 0px;
+    display: block;
+    border: solid 1px #ddd;
+    margin-top: -1px;
+    z-index: 10 !important;
+    height: 78px;
+}
+.Ct .audit .tab-pane {
+    width:100%;
+    
+}
+.audit .col-lg-4.control-label {
+  position: relative;
+  min-height: 1px;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+.audit .tab-content label {
+  height: 24px;
+  text-align:right;
+  line-height: 24px;
+}
+.audit .col-lg-8 {
+  padding-right: 5px;
+  padding-left: 5px;
+}
+.navbar .container-fluid .btn-link {
+    height: 38px;
+    line-height: 38px;
+    color: #0080cb;
+    
+}
+/* .inputText1.noborder { */
+/*     border: 0px solid #ddd; */
+/* } */
+
+/* 报账单稽核样式   end*/

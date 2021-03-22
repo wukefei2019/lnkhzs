@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+<beans default-lazy-init="false">
+
+	<bean id="resetIndex"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="khzsTFlowAction"></property>
+		<property name="targetMethod" value="reSetIndex"></property>
+		<property name="concurrent" value="false"></property>
+	</bean>
+
+	<bean id="resetIndexJob" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref local="resetIndex" />
+		</property>
+		
+		<property name="cronExpression" value="0 0 0 * * ?" />
+	</bean>
+	
+	
+	<bean id="resetIndex2"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="traceSourceFlowAction"></property>
+		<property name="targetMethod" value="reSetIndex"></property>
+		<property name="concurrent" value="false"></property>
+	</bean>
+
+	<bean id="resetIndexJob2" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref local="resetIndex2" />
+		</property>
+		
+		<property name="cronExpression" value="0 0 0 1 * ?" />
+	</bean>
+
+<!-- 短信发送线程 start -->
+	<!-- 
+	-->
+	<!-- <bean id="smSend"
+		class="com.ultrapower.eoms.common.core.component.sms.manager.Send" >
+	</bean> -->
+<!-- 	<bean id="messageNoticeAction"
+		class="com.ultrapower.zljk.notice.web.MessageNoticeAction" >
+	</bean> 
+	<bean id="messageSendAction"
+		class="com.ultrapower.zljk.notice.web.MessageSendAction" >
+	</bean> --> 
+	<!-- 告警任务触发器 -->
+	<!-- <bean id="messagenotice"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="messageNoticeAction"></property>
+		<property name="targetMethod" value="messageNoticeSend"></property>
+		<property name="concurrent" value="false"></property>
+	</bean>
+	
+	触发器：定义触发规则
+	<bean id="messageSendJoba" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref local="messagenotice" />
+		</property>
+		
+		每天00:00运行一次  
+		<property name="cronExpression" value="0 0 0 * * ?" />
+	</bean>
+	
+	短信任务任务触发器
+	<bean id="messagesend"
+		class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+		<property name="targetObject" ref="messageSendAction"></property>
+		<property name="targetMethod" value="messageSend"></property>
+		<property name="concurrent" value="false"></property>
+	</bean>
+	
+	触发器：定义触发规则
+	<bean id="messageSendJobb" class="org.springframework.scheduling.quartz.CronTriggerBean">
+		<property name="jobDetail">
+			<ref local="messagesend" />
+		</property>
+		
+		每小时运行一次  
+		<property name="cronExpression" value="0 0 * * * ?" />
+	</bean> -->
+	
+	<!-- 容器：将触发器注册进来 -->
+	<bean id="scheduler" class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+		<property name="triggers">
+			<!-- 注册触发器(Trigger) -->
+			<list>				
+<!-- 				<ref bean="resetIndexJob"/>
+				<ref bean="resetIndexJob2"/> -->
+			</list>
+		</property>
+		<property name="quartzProperties">
+			<props>
+				<!-- 随机存储，非持久化 -->
+				<prop key="org.quartz.jobStore.class">
+					org.quartz.simpl.RAMJobStore
+				</prop>
+				<!-- 线程池 -->
+				<prop key="org.quartz.threadPool.class">
+					org.quartz.simpl.SimpleThreadPool
+				</prop>
+				<prop key="org.quartz.threadPool.threadCount">10</prop>
+			</props>
+		</property>
+	</bean>
+</beans>

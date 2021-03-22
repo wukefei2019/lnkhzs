@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-group>
+	<doc>
+		<author>凌广</author> 
+		<date>2014-04-09</date> 
+		<description>URL日志配置拦截</description> 		
+	</doc>
+	<sqlquery name="SQL_SM_listInterceptConfig.query" >
+		<select>
+			<![CDATA[ 
+				select /*COUNT*/ F.PID,F.FUNCTIONNAME ,F.URLPATH,F.PARAM1,F.PARAM2,F.PARAM3  /*COUNT*/
+				  from BS_T_SM_INTERCEPTCONFIG F
+				 where 1=1
+				  $customwhere$
+				 /*ORDERBY*/ ORDER BY /*ORDERBY*/ FUNCTIONNAME DESC
+			]]> 
+		</select>
+		<condition  cols="2" labprecent="15" textprecent="35" >
+			<text displayname="功能名称" name="functionname" />
+		</condition>
+		<customwhere name="customwhere" prepend="and" >
+			<field prepend="and" operator="like"  colname="functionname"  value="#functionname#" />
+		</customwhere>
+	</sqlquery>
+	
+	
+	<sqlquery name="SQL_SM_listInterceptConfigLog.query" >
+		<select>
+			<![CDATA[ 
+				select /*COUNT*/ F.PID,F.FUNCTIONNAME ,f.loginname,f.ip,f.operatetime,F.URLPATH,F.PARAM1,F.PARAM2,F.PARAM3  /*COUNT*/
+		          from BS_T_SM_INTERCEPTCONFIG_LOG F
+		         where 1=1
+				  $customwhere$
+				 /*ORDERBY*/ ORDER BY /*ORDERBY*/ FUNCTIONNAME DESC
+			]]> 
+		</select>
+		<condition  cols="2" labprecent="15" textprecent="35" >
+			<select displayname="com_lb_address" name="functionname">
+				<sql>select g.functionname id,g.functionname functionname from BS_T_SM_INTERCEPTCONFIG g  </sql>
+			</select>
+			<text displayname="访问用户" name="loginname" />
+			<text displayname="访问IP" name="ip" />
+		</condition>
+		<customwhere name="customwhere" prepend="and" >
+			<field prepend="and" operator="="  colname="functionname"  value="#functionname#" />
+			<field prepend="and" operator="like"  colname="loginname"  value="#loginname#" />
+			<field prepend="and" operator="like"  colname="ip"  value="#ip#" />
+		</customwhere>
+	</sqlquery>
+</sql-group>

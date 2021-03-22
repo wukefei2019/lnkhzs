@@ -1,0 +1,525 @@
+ul,li
+{
+	margin:0px;
+	padding:0px;
+	list-style:none;
+}
+body
+{
+	margin:0px;
+	background-color:#f8f8f8;
+	font-family:宋体;
+	font-size:12px;
+	padding-bottom:10px;
+}
+.clear
+{
+	clear:both;
+}
+#bpp_WorksheetForm
+{
+	margin:0px;
+	padding:0px;
+}
+#bpp_FormContainer
+{
+	width:960px;
+	margin:0 auto;
+}
+.bpp_White_Block
+{
+	height:3px;
+	background-color:#ffffff;
+	background:#ffffff url(../images/panel-border.png) repeat-y;
+	clear:both;
+}
+
+/* Header START */
+#bpp_Header
+{
+	background:#fcfcfc;
+}
+#bpp_Title
+{
+	height:45px;
+	background:url(../images/headerbg.png) no-repeat; padding:0 10px;
+}
+#bpp_Title #bpp_BaseStatus
+{
+	float:left;
+	/*background-color:#ff9933;*/
+	background:url(../images/status-bg.png) repeat-x;
+	font-family:"微软雅黑", "宋体", "黑体";
+	font-size:16px; line-height:36px;
+	height:36px;
+	color:#003366;
+	/*border-left:solid #68afc2 1px;*/
+	/*border-right:solid #68afc2 1px;*/
+}
+#bpp_BaseStatus .le{ float:left; background:url(../images/statusLeft.png) no-repeat; width:34px; height:36px;}
+#bpp_BaseStatus .mid{ float:left; margin-left:-10px; color:#666;}
+#bpp_BaseStatus .rig{ float:left; background:url(../images/statusRight.png) no-repeat; width:13px; height:36px;}
+#bpp_Title #bpp_BaseName
+{
+	font-size:20px;
+	font-weight:bold;
+	color:#ffffff;
+	font-family:"微软雅黑", "宋体", "黑体";
+    line-height:40px;
+	padding-left:10px;
+	float:left;
+}
+#bpp_Title #bpp_BaseSN
+{
+	font-size:20px;
+	color:#ffffff;
+	 line-height:40px;
+	margin-left:5px;
+	float:left;
+	font-family:"微软雅黑", "宋体", "黑体";
+}
+#bpp_Title #bpp_ExtendLinks
+{ float:right;
+}
+#bpp_Title #bpp_ExtendLinks span
+{
+	text-decoration:underline;
+	line-height:40px;
+	margin:0 8px;
+	font-size:12px;
+	text-shadow:#000000 0px 1px 2px;
+}
+#bpp_Title #bpp_ExtendLinks span a
+{
+	color:#ffffff;
+	text-decoration:underline;
+	margin-left:10px;
+	font-size:14px;
+}
+
+#bpp_BasicInfor
+{
+	margin:0px 20px;
+}
+#bpp_TaskInfor
+{
+	margin:0px 20px;
+	background:#fcfcfc;
+	background:url(../images/960_06.png) repeat-x left top;
+}
+#bpp_BasicInfor li,#bpp_TaskInfor li
+{
+	float:left;
+	width:230px;
+	line-height:30px;
+	}
+#bpp_BasicInfor label,#bpp_TaskInfor label
+{
+	float:left;
+	width:85px;
+	text-align:right;
+	color:#666;
+}
+#bpp_BasicInfor span,#bpp_TaskInfor span
+{
+	float:left;
+	width:140px;
+	color:#68b063;
+}
+#bpp_TaskInfor li.more
+{
+	width:100%;
+}
+#bpp_TaskInfor li.more label
+{
+	float:left; display:inline-block;
+}
+#bpp_TaskInfor li.more span
+{
+	float:left;
+	width:820px;
+	display:inline-block;
+	word-break:break-all;
+}
+
+/* Header END */
+
+/* Body START */
+#bpp_Body
+{
+	clear:both;
+	margin-bottom:5px;
+	margin-top:10px;
+	background:#fcfcfc;
+}
+/* Body END */
+
+/* Button panel START */
+#bpp_BtnPanel
+{
+	clear:both;
+	margin-top:20px;
+	margin-bottom:20px;
+}
+#bpp_BtnPanel .bpp_BtnTip
+{
+	height:20px;
+	line-height:150%;
+	float:left;
+	padding:3px 5px 0px 5px;
+	border-bottom:solid #666666 1px;
+	color:#666666;
+}
+#bpp_BtnPanel #bpp_FixBtn,#bpp_BtnPanel #bpp_FreeBtn
+{
+	margin:0px;
+	padding:0px;
+	clear:left;
+	width:960px;
+	text-align:center;
+}
+#bpp_BtnPanel #bpp_FixBtn div,#bpp_BtnPanel #bpp_FreeBtn div
+{
+	margin-left:auto;
+	margin-right:auto;
+	display:inline-block;
+	padding:0px 5px 0px 5px;
+}
+#bpp_BtnPanel #bpp_FixBtn div input,#bpp_FreeBtn div input
+{
+	height:35px;
+	border:solid #23dbae 1px;
+	background-color:#23dbae;
+	font-size:14px;
+	border-radius:3px;
+	color:#fff;
+}
+#bpp_BtnPanel #bpp_FixBtn div input:hover,#bpp_FreeBtn div input:hover
+{
+	height:32px;
+	border:solid #0fc69d 1px;
+	background-color:#0fc69d;
+	font-size:14px;
+	color:#fff;
+}
+/* Button panel END */
+
+/* Button panel START */
+#bpp_ActPanel
+{
+	display:none;
+	clear:both;
+	margin-top:10px;
+	margin-bottom:5px;
+	border:solid #eeeeee 1px;
+	background-color:#fcfcfc;
+}
+#bpp_ActPanel #bpp_ActComment
+{
+	color:#ffffff;
+	line-height:40px;
+	padding-left:10px;
+	background:#23dbae;
+	font-weight:bold;
+	font-size:14px;
+}
+#bpp_ActPanel #bpp_ActBody
+{
+	padding-top:5px;
+}
+#bpp_ActPanel #bpp_ActBody #bpp_ActFields
+{
+	
+}
+
+#bpp_ActPanel #bpp_ActPanel_BtnPanel1
+{
+	height:36px;
+	clear:both;
+	padding-left:3px;
+	margin-left:1px;
+	margin-right:1px;
+}
+
+#bpp_ActPanel #bpp_ActPanel_BtnPanel
+{
+	height:36px;
+	margin:0px;
+	margin-top:10px;
+	margin-bottom:10px;
+	padding:0px;
+	clear:left;
+	width:960px;
+	text-align:center;
+}
+#bpp_ActPanel #bpp_ActPanel_BtnPanel div
+{
+	margin-left:auto;
+	margin-right:auto;
+	display:inline-block;
+	padding:0px 5px 0px 5px;
+}
+#bpp_ActPanel #bpp_ActPanel_BtnPanel div input
+{
+	height:35px;
+	border:solid #23dbae 1px;
+	background-color:#23dbae;
+	font-size:14px;
+	border-radius:3px;
+	color:#fff;
+}
+/* Button panel END */
+
+/* Hidden panel START */
+#bpp_HiddenPanel
+{
+	display:none;
+}
+/* Hidden panel END */
+
+/* 控件 */
+.bpp_Field
+{
+	float:left;
+}
+.bpp_Field table
+{
+	margin-left:1px;
+	background-color:#fcfcfc;
+	margin-bottom:1px;
+	height:100%;
+}
+.bpp_Field .bpp_Field_Label
+{
+	width:95px;
+	//background:url(../images/field-label.png) no-repeat right bottom;
+	overflow:hidden;
+}
+
+.bpp_Field .bpp_Field_Label div
+{
+	overflow:hidden;
+	margin-left:3px;
+}
+.bpp_Field .bpp_Field_Label div div
+{
+	margin:0px 1px 0px 0px;
+	text-align:right;
+}
+.bpp_Field .bpp_Field_Label div span
+{
+	color:#333333;
+}
+.bpp_Field .bpp_Field_Label div .bpp_Require
+{
+	font-weight:bold;
+	color:#993300;
+}
+.bpp_Field .bpp_Field_Label div .bpp_Require font
+{
+	color:ff0000;
+	font-size:10px;
+}
+
+.bpp_Field .bpp_Field_Label_Large
+{
+	width:95px;
+	//background:url(../images/field-label.png) no-repeat right bottom;
+	overflow:hidden;
+}
+.bpp_Field .bpp_Field_Label_Large div
+{
+	overflow:hidden;
+	margin-left:5px;
+}
+.bpp_Field .bpp_Field_Label_Large div div
+{
+	margin:0px 1px 0px 0px;
+	text-align:right;
+}
+.bpp_Field .bpp_Field_Label_Large div span
+{
+	color:#333333;
+	line-height:110%;
+}
+.bpp_Field .bpp_Field_Label_Large div .bpp_Require
+{
+	font-weight:bold;
+	color:#993300;
+	line-height:110%;
+}
+.bpp_Field .bpp_Field_Label_Large div .bpp_Require font
+{
+	color:ff0000;
+	font-size:10px;
+	line-height:110%;
+}
+
+.bpp_Field_RO table td input
+{
+	border:solid #f0f0f0 1px !important;
+	border-right:0px !important;
+	background-color:#fcfcfc;
+}
+.bpp_Field_RO table td textarea
+{
+	border:solid #f0f0f0 1px !important;
+	overflow:hidden;
+	background-color:#fcfcfc;
+}
+.bpp_Field_Extend
+{
+	float:left;
+	height:22px;
+	width:23px;
+	border:solid #dddddd 1px;
+	border-left:0px;
+	cursor:pointer;
+	margin-top:3px;
+	background:url(../images/field_extend_more.png) #ffffff no-repeat center center;
+}
+.bpp_Field_RO .bpp_Field_Extend
+{
+	float:left;
+	height:22px;
+	width:23px;
+	border:solid #f0f0f0 1px;
+	border-left:0px;
+	cursor:pointer;
+	margin-top:3px;
+	background:url(../images/field_extend_more_ro.png) #fcfcfc no-repeat center center;
+}
+.bpp_Field_Multi_Extend
+{
+	float:left;
+	height:22px;
+	width:23px;
+	border-left:0px;
+	cursor:pointer;
+	margin-top:3px;
+	background:url(../images/field_extend_more.png) #fcfcfc no-repeat center center;
+}
+.bpp_Field_RO .bpp_Field_Multi_Extend
+{
+	float:left;
+	height:22px;
+	width:23px;
+	border-left:0px;
+	cursor:pointer;
+	margin-top:3px;
+	background:url(../images/field_extend_more_ro.png) #fcfcfc no-repeat center center;
+}
+.bpp_Field_SelectExtend
+{
+	float:left;
+	height:22px;
+	width:22px;
+	background:url(../images/field_menu.png) #ffffff center no-repeat;
+	border:solid #dddddd 1px;
+	border-left:0px;
+	cursor:pointer;
+	margin:0px;
+	margin-top:3px;
+}
+.bpp_TimeField_Extend
+{
+	float:left;
+	height:22px;
+	width:1px;
+	cursor:pointer;
+	position:relative;
+	margin-left:0px;
+	margin-top:4px;
+}
+.bpp_Field_RO .bpp_Field_SelectExtend
+{
+	height:22px;
+	width:22px;
+	background:center;
+	border:solid #f0f0f0 1px !important;
+	border-left:0px !important;
+	cursor:default;
+	margin:0px !important;
+	margin-top:3px !important;
+}
+.bpp_Field_RO .bpp_TimeField_Extend
+{
+	float:left;
+	height:24px;
+	width:1px;
+	cursor:pointer;
+	position:relative;
+	margin-left:0px;
+	margin-top:3px;
+	border-left:solid #f0f0f0 1px !important;
+	background:#fcfcfc;
+}
+
+.bpp_MessageTip_Require
+{
+	position:absolute;
+	height:23px;
+	width:35px;
+	background:url(../images/msg-req.png) right bottom;
+}
+.bpp_MessageTip_OverLength
+{
+	position:absolute;
+	height:23px;
+	width:35px;
+	background:url(../images/msg-max.png) right bottom;
+}
+
+#bpp_MessageExtendBox
+{
+	position:absolute;
+	top:300px;
+	left:700px;
+	width:400px;
+	border:solid #3399cc 2px;
+	background-color:#ffffff;
+}
+#bpp_MessageExtendBox #bpp_MessageExtendBox_Title
+{
+	height:25px;
+	line-height:200%;
+	font-size:12px;
+	font-weight:bold;
+	background-color:#3399cc;
+	color:white;
+	padding-left:5px;
+}
+#bpp_MessageExtendBox #bpp_MessageExtendBox_Content
+{
+	height:200px;
+	width:398px;
+	font-family:宋体;
+	font-size:13px;
+	border:0px;
+}
+#bpp_MessageExtendBox #bpp_MessageExtendBox_Button
+{
+	height:30px;
+	background-color:#eeeeee;
+	text-align:center;
+}
+#bpp_MessageExtendBox #bpp_MessageExtendBox_Button input
+{
+	border:solid #cccccc 1px;
+	height:22px;
+	margin-top:4px;
+	background-color:#cccccc;
+}
+#bpp_MaskLayer
+{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:100%;
+	height:100%;
+	background-color:#eeeeee;
+	z-index:999;
+	opacity:0.40;
+	filter:alpha(opacity=40);
+	-moz-opacity:0.4;
+}

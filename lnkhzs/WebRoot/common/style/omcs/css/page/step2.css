@@ -1,0 +1,166 @@
+.step2{
+	width: 916px;
+	margin: 0 auto;
+}
+.information1{
+	margin-top: 10px;
+}
+.base_header{
+	background-color: #f3f6f8;
+	border-radius: 4px;
+	height: 34px;
+	line-height: 34px;
+}
+.base_information{
+	font-size: 14px;	
+}
+.base_container,.base_container1{	
+	width: 96%;
+	margin: 10px auto;
+}
+.base_container tr{
+	height: 40px;
+	line-height: 40px;
+}
+.lineHeight40{
+	height: 40px;
+	line-height: 40px;
+}
+.lineHeight24{
+	line-height: 24px;
+}
+.width80{
+	width: 80px;
+}
+.shangchuan{
+	position: relative;
+}
+.input_text,.input_text1,.input_text2,.input_text3,.input_text4{
+	border: 1px solid #e3e4e8;
+	height: 30px;
+	line-height: 30px;
+	border-radius: 4px;	
+	width: 99%;
+	
+}
+.color18{
+	color: #0f81e2;
+}
+.input_text{
+	background-color: #f9f9f9;
+}
+.input_text2{
+	border-top-right-radius: 0px;
+	border-bottom-right-radius: 0px;
+	display: block;
+}
+.input_text3{
+	border-top-left-radius: 0px;
+	border-bottom-left-radius: 0px;
+	background-color: #e3e4e8;
+	color: #a4aeb9;
+	position: absolute;
+	top: 0px;
+	top:1px\9;
+	top:0px\0;
+	right: 0px;
+	display: block;
+	height: 32px;
+	line-height: 32px;
+	cursor: pointer;
+}
+.input_text4{
+	height: 80px;
+	line-height: 16px;
+}
+.input_radio{
+	margin-left: 20px;
+}
+.marginTop10{
+	margin-top: 10px;
+}
+.marginRight14{
+	margin-right: 14px;
+}
+.paddingLeft8{
+	padding-left: 8px;
+}
+.input_checkbox_content{
+	background-color: #f7fafb;
+	border: 1px solid #d7e2e7;
+	border-radius: 4px;
+}
+/*.lineHeight14{
+	line-height: 14px;
+}*/
+.padding10{
+	padding: 10px;
+}
+.borderBottom{
+	border-bottom: 1px solid #d7e2e7;
+}
+.paddingBottom10{
+	padding-bottom: 10px;
+}
+.paddingTop10{
+	padding-top: 10px;
+}
+.next2,.next3,.next4,.next5,.next6,.next7{
+	width: 148px;
+	height: 40px;
+	line-height: 40px;
+	
+	text-align: center;
+	display: block;
+	font-size: 14px;
+	color: #FFFFFF;
+}
+.next2{
+	background: url(../../image/btn5.png) no-repeat;
+	position: absolute;
+	right: 0px;
+	top:20px;
+}
+.next4{
+	background: url(../../image/btn4.png) no-repeat;
+	position: absolute;
+	right: 10px;
+	top:30px;
+}
+	/*
+	 当申请条件的3个选项都选择完成以后，  .next3的button 变为  btn5，即绿色。
+	 */
+.next3{
+	background: url(../../image/btn4.png) no-repeat;
+	position: absolute;
+	right: 154px;
+	top:20px;
+}
+.next5{
+	background: url(../../image/btn4.png) no-repeat;
+	
+	margin-top: 10px;
+	margin-left: 540px;
+	
+}
+.next6{
+	background: url(../../image/btn4.png) no-repeat;
+	
+	margin-top: 10px;
+	float: right;
+	margin-right: 40px;
+}
+.next7{
+	background: url(../../image/btn5.png) no-repeat;
+	margin-right: 10px;
+	margin-top: 10px;
+	float: right;
+	
+}
+.dialogNext1{
+	position: relative;
+	padding-top: 20px;
+}
+.container_information{
+	padding-bottom: 60px;
+}

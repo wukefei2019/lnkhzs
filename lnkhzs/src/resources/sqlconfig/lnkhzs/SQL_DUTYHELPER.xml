@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-group>
+	<doc>
+		<author></author> 
+		<date></date> 
+		<description>指标信息</description>
+	</doc>
+
+	<sqlquery name="SQL_DUTYUSER.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ id,USERNAME,CONTENT,PLANBEGINTIME,PLANENDTIME,
+				LOCATION,STATUS,DUTYTITLE /*COUNT*/ FROM M_T_APP_DUTYUSER 
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ PLANBEGINTIME desc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="11" textprecent="22" >
+            <hidden name="createDate"/>
+            <hidden name="userid"/>
+            <hidden name="dutyid"/>
+            <hidden name="depid"/>
+            <hidden name="status"/>
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+        	<field prepend="and" operator="="  colname="status"  value="#status#" />
+        	<field prepend="and" operator="="  colname="userid"  value="#userid#" />
+            <field prepend="and" operator="="  colname="depid"  value="#depid#" />
+            <field prepend="and" operator="="  colname="dutyid"  value="#dutyid#" />
+            <field prepend="and" operator="=" colname="createDate" value="#createTime#"/>
+        </customwhere>
+
+	</sqlquery>
+	
+</sql-group>

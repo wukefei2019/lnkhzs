@@ -1,0 +1,431 @@
+@charset "utf-8";
+/*浮动样式*/
+.floatLeft{
+	float: left;
+}
+.floatRight{
+	float: right;
+}
+.overflow{
+	overflow: hidden;
+}
+/*定位*/
+.reposition{
+	position: relative;
+}
+/*字体大小*/
+.fontsize12{
+	font-size: 12px;
+}
+.fontsize14{
+	font-size: 14px;
+}
+.fontsize16{
+	font-size: 16px;
+}
+
+/*字体颜色*/
+.color_3{
+	color:#333333;
+}
+.color_6{
+	color:#666666;
+}
+.color_9{
+	color:#999999;
+}
+.color_c{
+	color: #cccccc;
+}
+.color_F{
+	color: #FFFFFF;
+}
+.color_blue{
+	color: #1185c2;
+}
+.color_blue1{
+	color: #109ee8;
+}
+.color_red{
+	color: #ff3600;
+}
+/*字体粗细*/
+.fontNomal{
+	font-weight: normal;
+}
+/*描边*/
+.border1{
+	border:1px solid #eeeeee;
+} 
+.borderRight{
+	border-right: 1px solid #e6e6e6;
+}
+.borderTop1{
+	border-top: 1px solid #ffffff;
+}
+.borderBottom1{
+	border-bottom: 1px solid #e6e6e6;
+}
+/*鼠标*/
+.curPointer{
+	cursor: pointer;
+}
+/*文本对齐*/
+.textalignLeft{
+	text-align: left;
+}
+.textalignRight{
+	font-weight:bold;
+	text-align: right;
+}
+.textalignCenter{
+	text-align: center;
+}
+/*缩进*/
+.textindent{
+	text-indent: 1em;
+}
+/*垂直对齐*/
+.vticalalignTop{
+	vertical-align: top;
+}
+/*宽*/
+
+.width110{
+	width: 110px;
+}
+.width120{
+	width: 110px;
+}
+.width160{
+	width: 157px;
+}
+.width180{
+	width: 177px;
+}
+.width350{
+	width: 350px;
+}
+.width590{
+	width: 590px;
+}
+.width726{
+	width: 726px;
+}
+.width830{
+	width: 830px;
+}
+
+/*行高*/
+.lineheight34{
+	line-height: 34px;
+}
+.lineheight36{
+	line-height: 36px;
+}
+.lineheight38{
+	line-height: 38px;
+}
+
+/*背景颜色*/
+.bg_gray{
+	background-color: #f6f6f6;
+}
+.bg_gray1{
+	background-color: #fdfdfd;
+}
+.bg_gray2{
+	background-color: #f8f8f8;
+}
+.bg_gray3{
+	background-color: #fbfbfb;
+}
+.bg_gray4{
+	background-color: #EEEEEE;
+}
+.bg_pink{
+	background-color: #fffef6;
+}
+.bg_blue{
+	background-color: #00c6ff;
+}
+.bg_orange{
+	background-color: #ff5400;
+}
+.bg_f{
+	background-color: #ffffff;
+}
+/*边距*/
+
+.marginLR18{
+	margin: 0px 18px;
+}
+.marginLeft1{
+	margin-left: 1px;
+}
+.marginLeft4{
+	margin-left: 4px;
+}
+.marginLeft10{
+	margin-left: 10px;
+}
+.marginLeft14{
+	margin-left: 14px;
+}
+.marginLeft20{
+	margin-left: 20px;
+}
+.marginLeft24{
+	margin-left: 24px;
+}
+.marginLeft1fu{
+	margin-left: -1px;
+}
+.marginRight8{
+	margin-right: 8px;
+}
+.marginRight10{
+	margin-right: 10px;
+}
+.marginRight1{
+	margin-right: 1px;
+}
+.marginRight12{
+	margin-right: 12px;
+}
+.marginTop10{
+	margin-top: 10px;
+}
+
+.marginTop15{
+	margin-top: 15px;
+}
+
+.marginTop20{
+	margin-top: 20px;
+}
+
+.paddingTop20{
+	padding-top: 20px;
+}
+
+.padding20{
+	padding: 20px;
+}
+.paddingLeft10{
+	padding-left: 10px;
+}
+.paddingRight10{
+	padding-right: 10px;
+}
+
+/*头部*/
+.banner{
+	width:1000px;
+	margin:0 auto;
+	height:59px;
+	line-height: 59px;
+	overflow: hidden;
+}
+.logo{
+	height:59px;
+	font-weight: normal;
+	font-size: 22px;
+	color: #555555;
+	float: left;
+}
+.home{
+	font-size: 14px;
+	color: #5eb7ed;
+	float: right;
+}
+
+/*导航切换*/
+.content{
+	width: 1000px;
+	margin: 0 auto;
+	padding-bottom: 20px;
+}
+.nav1Box{
+	width: 100%;
+	height: 34px;
+	line-height: 34px;
+	border: 1px solid #eeeeee;
+	background-color: #ecfbff;
+	margin-top: 10px;
+	overflow: hidden;
+	font-size: 12px;
+}
+.tabChange1{
+	float: left;
+	height: 36px;
+	line-height: 36px;
+	margin-right: 20px;
+}
+.content_head_btn2{
+	display: inline-block;
+	zoom: 1;
+	*display: inline;
+	width: auto;
+	text-align: center;
+	border: none;
+	height: 32px;
+	line-height: 32px;
+	background-color:transparent;
+	cursor: pointer;
+	outline: none;
+	color: #666666;
+	font-size: 14px;
+	
+}
+
+.content_head_btn3{
+	color: #389ddd;
+}
+.dataBox{
+	min-width: 126px;
+	height: 36px;
+	line-height: 36px;
+	border: 1px solid #e6e6e6;
+	margin-left: -1px;
+	margin-top: -1px;
+	background-color: #f8f8f8;
+	padding-left: 10px;
+	padding-right: 20px;
+	float: left;
+	color: #666666;
+	cursor: pointer;
+	position: relative;
+}
+.dataBox:hover{
+	background-color: #FFFFFF;
+	color: #389ddd;
+}
+.delete{
+	width: 8px;
+	height: 8px;
+	background: url(../../images/close.png) no-repeat;
+	position: absolute;
+	right: 8px;
+	top:14px;
+}
+
+/*详情页公有样式*/
+
+
+/*大导航*/
+.navBg{
+	background:#f6f6f6;
+	height:40px;
+	border-bottom: 1px solid #e6e6e6;
+	line-height: 40px;
+}
+
+.nav{
+	width:1000px;
+	margin:0 auto;
+	padding:0;
+	/*overflow: hidden;*/
+}
+.tabChange,.tabChange1{
+	float: left;
+	height: 40px;
+	line-height: 40px;
+	margin-right: 20px;
+}
+
+.paixu{
+	width: 20px;
+	height: 20px;
+	background: url(../../images/paixu.png) no-repeat center 11px;
+	cursor: pointer;
+	display: inline-block;
+	zoom: 1;
+	*display: inline;
+}
+.content_head_btn{
+	display: inline-block;
+	zoom: 1;
+	*display: inline;
+	width: auto;
+	text-align: center;
+	border: none;
+	height: 38px;
+	line-height: 38px;
+	background-color:transparent;
+	cursor: pointer;
+	outline: none;
+	color: #666666;
+	font-size: 14px;
+	border-bottom: 2px solid #f6f6f6;
+}
+
+.content_head_btn1{
+	font-weight: bolder;
+	border-bottom: 2px solid #3388ff;
+}
+.search{
+	height:26px;
+	float: right;
+	line-height: 26px; 
+	margin-top: 7px; 
+	position: relative;
+}
+.txtiup{
+	background:#fff;
+	border:1px solid #e6e6e6; 
+	border-radius:3px;
+	height:24px;
+	width:196px;
+	color: #999999;
+	line-height: 24px;
+	padding-left: 24px;
+}
+.searchImg{
+	width: 14px;
+	height: 14px;
+	background: url(../../images/search.png) no-repeat;
+	position: absolute;
+	left: 6px;
+	top:5px
+}
+.btn{
+	position: absolute;
+	right: 0px;
+	top: 0px;
+	width: 24px;
+	height: 26px;
+	
+	border:1px solid #e6e6e6; 
+	border-radius:3px;
+	cursor:pointer;
+	outline: none;
+}
+.btn_xiala{
+	background: url(../../images/xiala.png) no-repeat center center;
+}
+.btn_shouqi{
+	background: url(../../images/shouqi.png) no-repeat center center;
+}
+.btn2{
+	width: 18px;
+	height: 36px;
+	line-height: 36px;
+	border: 1px solid #e6e6e6;
+	float: left;
+	margin-top: -1px;
+	cursor: pointer;
+	
+}
+.arrowLeft{
+	background: #f8f8f8 url(../../images/leftArrow.png) no-repeat center center;
+}
+.arrowRight{
+	background: #ffffff url(../../images/rightArrow.png) no-repeat center center;
+}
+
+.menu{
+	position: absolute;
+	right: -1px;
+	top: 0px;
+}

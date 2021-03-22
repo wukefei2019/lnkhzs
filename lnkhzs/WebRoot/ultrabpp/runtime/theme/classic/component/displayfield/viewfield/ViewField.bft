@@ -1,0 +1,8 @@
+<table border="0" cellpadding="0" cellspacing="0" style="width:@!{W-2}px; height:@!{H-1}px;">
+<tr>
+    @!{LABEL}
+    <td valign="top">
+	<iframe id="@!{ID}" src="@!{VAL}" height="@!{H-10}px" width="@!{VW-4}px" MARGINWIDTH="0" MARGINHEIGHT="0" HSPACE="0" VSPACE="0" FRAMEBORDER="0" Border="0" noresize scrolling="auto" ></iframe>
+    </td>
+</tr>
+</table>

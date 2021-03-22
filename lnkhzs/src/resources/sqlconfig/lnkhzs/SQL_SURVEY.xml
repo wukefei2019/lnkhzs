@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-group>
+	<doc>
+		<author></author>
+		<date></date>
+		<description>智慧调研</description>
+	</doc>
+
+
+<!-- 	<sqlquery name="SQL_KHZS_YGJYK.query">
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM (
+			            select m.pid,
+			                   m.IDX,
+			                   m.createtime,
+			                   m.theme,
+			                   m.questiontype,
+			                   m.description,
+			                   m.dutydept deptname,
+			                   f.remark2,
+			                   f.fullname,
+			                   f.createtime   feedtime,
+			                   f.laststatus,
+			                   y.remark2      feedappraise,
+			                   m.remark
+			              from zl_khzs_t_main m,
+			                   (select * from ZL_KHZS_T_FLOW where status = '审核员复核') f,
+			                   (select VOCPID, remark2 from ZL_KHZS_T_FLOW where status = '关闭') y
+			             where f.vocpid(+) = m.pid
+			               and m.pid = y.vocpid(+)
+			               and m.flowstatus = '关闭'
+			               and m.type='一线员工建议'
+			               and m.example <> '不公开' and m.example is not null
+				)
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ FEEDTIME desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<date displayname="提交开始时间" name="begintime" class='Wdate'
+				dateFmt='yyyy-MM-dd HH:mm:ss' defaultvalue="#begintime#" />
+			<date displayname="提交结束时间" name="endtime" class='Wdate'
+				dateFmt='yyyy-MM-dd HH:mm:ss' defaultvalue="#endtime#" />
+			<text displayname='投诉类型' name='questiontype' />
+			<text displayname='责任部门' name='deptname' />
+			<text displayname='主题' name='theme' />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend='and' operator='&gt;=' colname='createtime'
+				value='#begintime#' />
+			<field prepend='and' operator='&lt;=' colname='createtime'
+				value='#endtime#' />
+			<field prepend="and" operator="like" colname="questiontype"
+				value="#questiontype#" />
+			<field prepend="and" operator="like" colname="deptname" value="#deptname#" />
+			<field prepend="and" operator="like" colname="theme" value="#theme#" />
+			<if prepend="and" exp="'#userid#'>''">
+				<success>
+                    <![CDATA[ DEPTID = ((SELECT pid FROM BS_T_SM_DEP WHERE DEPDNS = (SELECT substr(depdns,0,7) FROM BS_T_SM_DEP WHERE PID = (SELECT DEPID FROM BS_T_SM_USER WHERE LOGINNAME =#userid#))))]]>
+				</success>
+			</if>
+
+		</customwhere>
+	</sqlquery> -->
+
+	<sqlquery name="SQL_WJWH.query">
+
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_KHZS_RELATIONSHIP
+                    where 1=1 $customwhere$ 
+                    order by /*ORDERBY*/ ORDERS desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+		
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="QUESTIONNAIREID"
+				value="#QUESTIONNAIREID#" />
+		</customwhere>
+	</sqlquery>
+	
+	<sqlquery name="SQL_KHZS_QYESTIONs.query">
+
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_KHZS_RELATIONSHIP
+                    where 1=1 $customwhere$ 
+                    order by /*ORDERBY*/ ORDERS desc /*ORDERBY*/
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+		
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="QUESTIONNAIREID"
+				value="#QUESTIONNAIREID#" />
+		</customwhere>
+	</sqlquery>
+	
+	
+	
+	<!-- SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_KHZS_ANSWER
+                    where 1=1 $customwhere$  -->
+	<sqlquery name="SQL_KHZS_seleJD.query">
+
+		<select>
+            <![CDATA[
+            	SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_KHZS_ANSWER 
+                    where RELATIONID = 
+                    (SELECT ID FROM ZL_KHZS_RELATIONSHIP
+                    where 1=1 $customwhere$ ) 
+				
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+		
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<!-- <field prepend="and" operator="=" colname="RELATIONID"
+				value="#RELATIONID#" /> -->
+			<field prepend="and" operator="=" colname="QUESTIONID"
+				value="#RELATIONID#" />
+		</customwhere>
+	</sqlquery>
+	
+	<!-- 问卷相关答题量 统计 圆柱图 -->
+	<sqlquery name="SQL_IND_YZ.query">
+		<!-- 明细 -->
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ acpt_time AS mon,count(DISTINCT(USERID)) AS value /*COUNT*/
+				FROM 
+					(select  to_char(to_date(ANSWERTIME,'yyyy-MM-dd hh24:mi:ss'),'yyyy-mm-dd') AS acpt_time,USERID    
+				from ZL_KHZS_ANSWER where 1 = 1 $customwhere$ )
+                  GROUP BY acpt_time  order by /*ORDERBY*/acpt_time,  value Desc /*ORDERBY*/ 
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<hidden name="area_name" />
+			<hidden name="month" />
+			<hidden name="year" />
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="QUESTIONNAIREID"
+				value="#questionnaireid#" />
+		</customwhere>
+		</sqlquery>
+	
+	<sqlquery name="SQL_KHZS_MANAGER.query">
+
+		<colname_name>
+			<name>NAME</name>
+			<namestr>投诉名称</namestr>
+			<name>VALUE</name>
+			<namestr>投诉数量</namestr>
+			<name>AREA_NAME</name>
+			<namestr>地市</namestr>
+			<name>ACPT_TIME</name>
+			<namestr>投诉时间</namestr>
+		</colname_name>
+		<select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_KHZS_SURVEY_MANAGER
+                    where 1=1 $customwhere$  
+                    order by /*ORDERBY*/ ID DESC /*ORDERBY*/             
+              ]]>
+		</select>
+		<condition cols="3" labprecent="11" textprecent="22">
+			<lotselect displayname="内容" name="complainName" value="" colspan="2" rowspan="1"/>
+		</condition>
+		<customwhere name="customwhere" prepend="and">
+			<field prepend="and" operator="=" colname="ADMINISTRATORID"
+				value="#ADMINISTRATORID#" />
+				<lotsel prepend='and' operator='like' colname='ADMINISTRATORNAME-CITYNAME' value='#complainName#' splitcol="-" splitval="," />
+		</customwhere>
+	</sqlquery>
+
+
+</sql-group>

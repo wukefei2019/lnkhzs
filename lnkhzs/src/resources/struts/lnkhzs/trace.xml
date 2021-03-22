@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN" "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+
+	<package name="traceSourceListAction" namespace="/trace/traceSource" extends="lnkhzs">
+		<action name="*" method="{1}" class="traceSourceListAction">
+			<result name="success">/lnkhzs/trace/{1}.jsp</result>
+		</action>
+	</package>
+	
+	<package name="traceSourceManageAction" namespace="/trace/traceManager" extends="lnkhzs">
+		<action name="*" method="{1}" class="traceSourceManageAction">
+			<result name="success">/lnkhzs/trace/{1}.jsp</result>
+		</action>
+	</package>
+	
+	<package name="traceSourceFlowAction" namespace="/trace/flow" extends="lnkhzs">
+		<action name="*" method="{1}" class="traceSourceFlowAction">
+			<result name="success">/lnkhzs/trace/{1}.jsp</result>
+		</action>
+	</package>
+
+
+	<package name="traceReportAction" namespace="/trace/traceReport" extends="lnkhzs">
+		<action name="*" method="{1}" class="traceReportAction">
+			<result name="success">/lnkhzs/traceReport/{1}.jsp</result>
+		</action>
+	</package>
+	
+</struts>

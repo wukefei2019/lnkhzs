@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" 
+	   default-autowire="byName" default-lazy-init="true">
+
+    <bean id="IDaoAOP" class="com.ultrapower.omcs.common.core.dao.IDaoAOP" />
+
+	<bean id="trackService" class="com.ultrapower.lnkhzs.track.manager.TrackMgrImpl" />
+	
+	<bean id="trackAction" class="com.ultrapower.lnkhzs.track.web.TrackAction"/>  
+	
+   	<bean id="ngcsWfCmplntsDealJobdataDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.track.model.NgcsWfCmplntsDealJobdata</value>
+		</property>
+	</bean>
+	
+	<bean id="ngcsWfCmplntsDealPlandataDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.track.model.NgcsWfCmplntsDealPlandata</value>
+		</property>
+	</bean>
+	 <bean id="ngcsWfCmplntsResendDealDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.track.model.NgcsWfCmplntsResendDeal</value>
+		</property>
+	</bean>
+	
+</beans>

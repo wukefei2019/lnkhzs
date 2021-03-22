@@ -1,0 +1,83 @@
+@charset "utf-8";
+.nav{
+	height: 40px;
+	background: #2B84B6;	
+}
+.mainbav{
+	width: 1200px;
+	margin: 0 75px;
+	position: relative;
+}
+/* .activeLi{
+	background-color: #2975A0!important;
+	color: #ffffff!important;
+} */
+.hover-li{
+	background-color: #2975A0!important;
+/* 	color: $f!important; */
+	color: #ffffff!important;
+	height: 42px;
+	z-index: 410;
+}
+.mouseoverLi{
+	background-color: #fcfcfc!important;
+	color: #0086d0!important;
+	
+}
+.yiji li{position:relative; width: auto; min-width: 140px; height:40px;text-align:center;line-height:40px;float:left;background:transparent;color:#ffffff;font-size:14px;cursor:pointer;}
+
+/* .yiji li:hover{display:block;background-color:#fcfcfc;color:#0086d0;} */
+.xiala_menu-backdrop {
+    position:fixed;
+    top:100px;
+    left: 0px;
+    z-index: 200;
+    width: 100%;
+    height: 100%;
+    background-color: transparent;
+/*     background-color: #fdd; */
+    display: none;
+}
+.xiala_ul{
+    z-index: 400;
+	width: 1198px;
+	margin: 0 auto;
+	padding-bottom:1.5em;
+	position: absolute;
+	top:40px;
+	left: 0px;
+	background-color: #f3f9fc;
+	border: 1px solid #d5e8f3;
+	border-top: 0px;
+	box-shadow: 0 0 4px rgba(0,0,93,0.3);
+}
+.erji{
+	width: 120px;
+	float: left;
+	font-weight: bolder;
+	color: #333;
+	padding: 10px 0px 8px 16px;
+}
+.erji a{
+	color: #333;
+}
+.sanji{
+	float: left;
+	width: 1010px;
+	padding: 8px 0px;
+}
+.sanji a{
+	margin-right: 20px;
+	color: #666;;
+	line-height: 24px;
+}
+.sanji a:hover{
+	color: #0086d0;
+}
+.border_blue{
+	border-bottom: 1px dashed #cde1ec;
+}
+.xiala_ul li{
+	overflow: hidden;
+}
+

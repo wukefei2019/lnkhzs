@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" 
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd" 
+	   default-autowire="byName" default-lazy-init="true">
+
+    <bean id="IDaoAOP" class="com.ultrapower.omcs.common.core.dao.IDaoAOP" />
+
+	<bean id="traceSourceListService" class="com.ultrapower.lnkhzs.trace.manager.TraceSourceListMgrImpl" />
+	
+	<bean id="traceSourceManagerService" class="com.ultrapower.lnkhzs.trace.manager.TraceSourceManagerMgrImpl" />
+	
+	<bean id="traceSourceListAction" class="com.ultrapower.lnkhzs.trace.web.TraceSourceListAction"/>
+	
+	<bean id="traceSourceManageAction" class="com.ultrapower.lnkhzs.trace.web.TraceSourceManagerAction"/>
+	
+	<bean id="traceSourceFlowService" class="com.ultrapower.lnkhzs.trace.manager.TraceSourceFlowMgrImpl" />
+	
+	<bean id="traceSourceFlowAction" class="com.ultrapower.lnkhzs.trace.web.TraceSourceFlowAction"/>  
+	
+	<bean id="traceReportAction" class="com.ultrapower.lnkhzs.traceReport.web.traceReportAction"/>  
+	
+   	<bean id="traceSourceListDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.trace.model.TraceSourceList</value>
+		</property>
+	</bean>
+	
+	<bean id="traceManagertDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+	 	<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.trace.model.TraceManager</value>
+		</property>
+	</bean>
+	
+	
+	<bean id="traceSourceBatchDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.trace.model.TraceSourceBatch</value>
+		</property>
+	</bean>
+	 <bean id="traceSourceFlowDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.trace.model.TraceSourceFlow</value>
+		</property>
+	</bean>
+	<bean id="traceSourceSendFlowDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.trace.model.TraceSourceSendFlow</value>
+		</property>
+	</bean>
+	 <bean id="traceSourceDepadminDao" class="com.ultrapower.eoms.common.core.dao.HibernateDaoImpl">
+		<property name="entityClass">
+			<value>com.ultrapower.lnkhzs.trace.model.TraceSourceDepadmin</value>
+		</property>
+	</bean>
+</beans>

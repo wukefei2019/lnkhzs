@@ -1,0 +1,221 @@
+.iceuploader{
+    margin: 0;
+    padding: 2px 2px 2px 2px;
+    position: relative;
+}
+
+.iceuploader>.iceuploader-btn{
+	display:inline-block;
+    height:22px;
+    line-height: 22px;
+    color: #fff;
+    border-radius: 5px;
+    padding:0px 5px;
+    font-size:12px;
+    cursor: pointer;
+    background: #1185c2;
+    margin-right:3px;
+}
+.iceuploader>.iceupbatch-btn{
+	display:inline-block;
+    height:22px;
+    line-height: 22px;
+    color: #fff;
+    border-radius: 5px;
+    padding:0px 5px;
+    font-size:12px;
+    cursor: pointer;
+    background: #1185c2;
+    margin-right:3px;
+}
+.iceuploader>.iceuploader-progress{
+    margin:1px 0 0 0;
+    height: 0px;
+    overflow: visible;
+    border-radius: 1px;
+    background: none;
+    overflow: visible;
+    border:1px;
+}
+.iceuploader>.iceuploader-progress.show{
+	height: 2px;
+    background: #fff;
+    border-top: 1px solid #1185c2;
+    border-left: 1px solid #1185c2;
+    border-right: 1px solid #1185c2;
+    border-bottom: 1px solid #1185c2;
+}
+.iceuploader-progress .progress-bar{
+    border-radius: 2px;
+    position: relative;
+    height:2px;
+    animation: animate-positive 2s;
+    background-color: #1185c2;
+}
+.iceuploader-progress.show .progress-bar{
+    animation: animate-display 1s;
+}
+
+.iceuploader-progress.active{
+    animation: reverse progress-bar-stripes 0.40s linear infinite, animate-positive 2s;
+}
+@-webkit-keyframes animate-positive{
+    0% { width: 0; }
+}
+@keyframes animate-positive{
+    0% { width: 0; }
+}
+@-webkit-keyframes animate-display{
+    0% {display: none;}
+}
+@keyframes animate-display{
+    0% {display: none;}
+}
+@-webkit-keyframes animate-show{
+    from {display: none;}
+    to {display: block;}
+}
+@keyframes animate-show{
+    from {display: none;}
+    to {display: block;}
+}
+@-webkit-keyframes progress-bar-stripes {
+  from {
+    background-position: 40px 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+@-o-keyframes progress-bar-stripes {
+  from {
+    background-position: 40px 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+@keyframes progress-bar-stripes {
+  from {
+    background-position: 40px 0;
+  }
+  to {
+    background-position: 0 0;
+  }
+}
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity:0
+    }
+    to {
+        opacity:1
+    }
+}
+@keyframes fadeIn {
+    0% {
+        opacity:0
+    }
+    to {
+        opacity:1
+    }
+}
+.fadeIn {
+    -webkit-animation-name:fadeIn;
+    animation-name:fadeIn
+}
+@-webkit-keyframes fadeOut {
+    0% {
+        opacity:1
+    }
+    to {
+        opacity:0
+    }
+}
+@keyframes fadeOut {
+    0% {
+        opacity:1
+    }
+    to {
+        opacity:0
+    }
+}
+.fadeOut {
+    -webkit-animation-name:fadeOut;
+    animation-name:fadeOut
+}
+.iceuploader>ul.iceuploader-attaths{
+    margin: 0;
+    padding: 0;
+}
+.iceuploader>ul.iceuploader-attaths>li{
+	border-radius:3px;
+    list-style: none;
+    padding-right:15px;
+    width: 100%;
+    box-sizing:border-box;
+    white-space: nowrap;
+    position: relative;
+    height:20px;
+    line-height: 20px;
+    margin-top:1px;
+    animation: fadeIn 1s;
+    border-top: 1px dotted #ccc;
+}
+.iceuploader>ul.iceuploader-attaths>li.empty{
+	text-align: center;
+	border:none;
+}
+.iceuploader>ul.iceuploader-attaths>li:hover{
+    background-color: #1185c2;
+    color:#fff;
+}
+.iceuploader>ul.iceuploader-attaths>li.empty:hover{
+    background-color: transparent;
+    color:#000;
+}
+.iceuploader>ul.iceuploader-attaths>li>div.iceuploader-file>a:hover{
+    color:#fff;
+}
+.iceuploader>ul.iceuploader-attaths>li:hover>div.iceuploader-file>a.iceuploader-filename{
+    color:#fff;
+}
+.iceuploader>ul.iceuploader-attaths>li.iceuploader-delete:hover>.iceuploader-deletecontainer>.iceuploader-deletebtn:before{
+	color:#fff;
+}
+.iceuploader>ul.iceuploader-attaths>li>div.iceuploader-file{
+    position:absolute;
+    overflow: hidden;
+    left:0;
+    right:20px;
+    padding-left:5px;
+}
+.iceuploader>ul.iceuploader-attaths>li>div.iceuploader-file>a{
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-transform: scale(0.8);
+    font-size: 12px;
+    position: relative;
+    z-index: 1;
+}
+.iceuploader>ul.iceuploader-attaths>li.iceuploader-delete>.iceuploader-deletecontainer{
+	position: absolute;
+    font-size:12px;
+    top:0px;
+    bottom:0px;
+    right:0px;
+    z-index: 10;
+    color:#1185c2;
+}
+.iceuploader>ul.iceuploader-attaths>li.iceuploader-delete>.iceuploader-deletecontainer>.iceuploader-deletebtn:before{
+    display: inline-block;
+    font-family: "iconfont" !important;
+    font-style: normal;
+    content: "\e67e";
+    font-size:14px;
+    z-index: 10;
+    cursor: pointer;
+    color:#1185c2;
+}
+.iceuploader .ineditable{
+	display:none;
+}

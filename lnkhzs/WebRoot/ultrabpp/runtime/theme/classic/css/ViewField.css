@@ -1,0 +1,9 @@
+@CHARSET "UTF-8";
+.bpp_View
+{
+	overflow:hidden;
+}
+.bpp_View iframe
+{
+	margin:5px 0px 1px 0px;
+}

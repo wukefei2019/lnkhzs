@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>选择隐藏题</title>
+    <meta http-equiv=X-UA-Compatible content="IE=edge">
+    <meta name=viewport content="width=device-width,initial-scale=1">
+    <link rel=icon href=/lnfwzl/lnkhzs/survey/dist/favicon.ico>
+    <link href=/lnfwzl/lnkhzs/survey/dist/bootstrap/css/bootstrap.css rel=stylesheet>
+    <link href=/lnfwzl/lnkhzs/survey/dist/bootstrapselect/css/bootstrap-select.css rel=stylesheet>
+    <script src=/lnfwzl/lnkhzs/survey/dist/jquery.min.js></script>
+    <script src=/lnfwzl/lnkhzs/survey/dist/bootstrap/js/bootstrap.js></script>
+    <script src=/lnfwzl/lnkhzs/survey/dist/bootstrapselect/js/bootstrap-select.js></script>
+
+    <script>
+
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (pair[0] == variable) {
+                    return pair[1];
+                }
+            }
+            return "";
+        }
+
+        $(document).ready(function(){
+            var myparam=decodeURI(getQueryVariable("param"));
+            var item = JSON.parse(myparam);
+            console.log(item);
+            for(var i=0,j=1;i<item.length;i++,j++){
+                //console.log(item[i].optText);
+                var html='<div class="row"><div class="col-xs-2"><div class="checkbox"><label><input type="checkbox" num="'+j+'"> 第'+j+'选项:</label></div></div>'
+                    +'<div class="col-xs-9"><div class="checkbox" style="float: left">'+item[i].optText+'</div></div></div>';
+                $("#showchoose").append(html);
+            }
+        });
+
+        function sendChoose(){
+            var chooselength=$("input[type='checkbox']:checked").length;
+            if(chooselength==0){
+                alert("请选择要添加隐藏想的选项");
+            }else{
+                var result="";
+                for(var i=0;i<chooselength;i++){
+                    result+=$("input[type='checkbox']:checked").eq(i).attr("num")+".";
+                }
+                var paramid=decodeURI(getQueryVariable("id"));
+                var paramnum=decodeURI(getQueryVariable("num"));
+                window.opener.getresult(result,paramid,paramnum);
+                window.close();
+            }
+        }
+
+    </script>
+</head>
+<body>
+
+    <h3 style="text-align: center;padding-top: 20px;">请选选择项</h3>
+    <h4 style="text-align: center;padding-top: 10px;"><button type="button" class="btn btn-info" onclick="sendChoose()" >提交</button></h4>
+    <div class="container" id="showchoose" style="margin-top: 40px">
+    <!--<div class="row">
+        <div class="col-xs-2">
+            <div class="checkbox">
+                <label>
+                    <input type="checkbox"> 第几选项:
+                </label>
+            </div>
+        </div>
+        <div class="col-xs-6"><div class="checkbox" style="float: left">选项内容</div></div>
+    </div>-->
+</div>
+</body>
+</html>

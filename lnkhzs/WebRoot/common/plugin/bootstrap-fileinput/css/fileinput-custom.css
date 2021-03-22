@@ -1,0 +1,32 @@
+.file-input .form-control{
+	padding: 5px 5px;
+}
+.file-input .form-control .file-caption-name{
+	padding-left: 5px;
+}
+
+.file-error-message .close{
+	color:#a94442;
+}
+.file-input .input-group-btn .btn{
+	color:#fff;
+    background-color: #1eb2fc;
+    line-height: 28px;
+    height: 28px;
+    padding:0px 5px 3px ;
+    text-shadow: none;
+    border: none;
+    margin:0 0 0 1px;
+}
+.file-input .input-group-btn .btn span{
+	color:#fff;
+}
+.file-input .input-group {
+    height: 28px;
+}
+.file-input .form-control{
+	height: 28px;
+}
+.file-input .input-group .btn:hover{
+    background-color: #1185c2;
+}

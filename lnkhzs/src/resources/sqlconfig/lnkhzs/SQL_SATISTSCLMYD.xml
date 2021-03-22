@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sql-group>
+	<doc>
+		<author></author>
+		<date></date>
+		<description>投诉处理满意度统计表</description>
+	</doc>
+	
+	<!-- 10086投诉处理满意度统计表 -->
+	<sqlquery name="SQL_TS_TSCLMYD.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_TS_TSCLMYD
+                    where 1=1  $customwhere$ 
+                     order by /*ORDERBY*/ instr('全省,沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦',substr(RESP_DEPT,0,2))
+      ,month asc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="10" textprecent="18" >
+            <date displayname="时间" name="time" class='Wdate' dateFmt='yyyy-MM' defaultvalue="#time#"  />
+           <!--  <text displayname='地市/单位' name='company' /> -->
+           <!-- <select displayname="地市" name="company" dictype="cityName"></select> -->
+           <select displayname='地市' name='company' customStr="全省,全省;沈阳,沈阳;大连,大连;鞍山,鞍山;抚顺,抚顺;本溪,本溪;丹东,丹东;锦州,锦州;营口,营口;阜新,阜新;辽阳,辽阳;铁岭,铁岭;朝阳,朝阳;盘锦,盘锦;葫芦岛,葫芦岛;" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend='and' operator='like' colname='MONTH'  value='#time#' />
+           	<field prepend='and' operator='like' colname='RESP_DEPT'  value='#company#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	<!-- 政企客户满意度调研结果统计表 -->
+	<sqlquery name="SQL_TS_ZQKHMYD.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_TS_ZQKHTSMYD
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ instr('全省,沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦',substr(RESP_DEPT,0,2))
+       asc /*ORDERBY*/
+     
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="10" textprecent="18" >
+            <!-- <text displayname='调研期数' name='dynum' /> -->
+            <date displayname="调研期数" name="time" class='Wdate' dateFmt='yyyy-MM' defaultvalue="#time#"  />
+            <!-- <text displayname='集团归属地市' name='company' /> -->
+           <!--  <select displayname="集团归属地市" name="company" dictype="cityName"></select> -->
+            <select displayname='集团归属地市' name='company' customStr="全省,全省;沈阳,沈阳;大连,大连;鞍山,鞍山;抚顺,抚顺;本溪,本溪;丹东,丹东;锦州,锦州;营口,营口;阜新,阜新;辽阳,辽阳;铁岭,铁岭;朝阳,朝阳;盘锦,盘锦;葫芦岛,葫芦岛;" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend='and' operator='like' colname='DYNUM'  value='#time#' />
+           	<field prepend='and' operator='like' colname='RESP_DEPT'  value='#company#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	<!-- 集团专线开通满意度调研结果统计表（集团/省内） -->
+	<sqlquery name="SQL_TS_JTZXKTMYD.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_TS_JTZXKTMYD
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ month DESC,
+	instr(
+		'全省,沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦',
+	substr( RESP_DEPT, 0, 2 ))
+	 ASC /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="10" textprecent="18" >
+            <date displayname="时间" name="time" class='Wdate' dateFmt='yyyy-MM' defaultvalue="#time#"  />
+           <!--  <text displayname='地市' name='company' /> -->
+            <!-- <select displayname="地市" name="company" dictype="cityName"></select> -->
+        	<select displayname='地市' name='company' customStr="全省,全省;沈阳,沈阳;大连,大连;鞍山,鞍山;抚顺,抚顺;本溪,本溪;丹东,丹东;锦州,锦州;营口,营口;阜新,阜新;辽阳,辽阳;铁岭,铁岭;朝阳,朝阳;盘锦,盘锦;葫芦岛,葫芦岛;" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend='and' operator='like' colname='MONTH'  value='#time#' />
+           	<field prepend='and' operator='like' colname='RESP_DEPT'  value='#company#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	<!-- 集团联系人满意度调研结果统计表 -->
+	<sqlquery name="SQL_TS_JTLXRMYD.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_TS_JTLXRMYD
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ instr('全省,沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦',substr(RESP_DEPT,0,2))
+       asc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="10" textprecent="18" >
+            <!-- <text displayname='调研期数' name='dynum' /> -->
+            <date displayname="调研期数" name="time" class='Wdate' dateFmt='yyyy-MM' defaultvalue="#time#"  />
+            <!-- <text displayname='地市' name='company' /> -->
+            <!-- <select displayname="地市" name="company" dictype="cityName"></select> -->
+        	<select displayname='地市' name='company' customStr="全省,全省;沈阳,沈阳;大连,大连;鞍山,鞍山;抚顺,抚顺;本溪,本溪;丹东,丹东;锦州,锦州;营口,营口;阜新,阜新;辽阳,辽阳;铁岭,铁岭;朝阳,朝阳;盘锦,盘锦;葫芦岛,葫芦岛;" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend='and' operator='like' colname='DYNUM'  value='#time#' />
+           	<field prepend='and' operator='like' colname='RESP_DEPT'  value='#company#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	<!-- 集团联系人满意度调研结果统计表 -->
+	<sqlquery name="SQL_TS_JTGJRMYD_TJ.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_TS_JTGJRMYD
+                    where 1=1  $customwhere$ 
+                   order by /*ORDERBY*/ DYNUM DESC , instr('全省,沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦',substr(RESP_DEPT,0,2))
+       asc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="10" textprecent="18" >
+           <!-- <date displayname="调研期数" name="time" class='Wdate' dateFmt='yyyy-MM' defaultvalue="#time#"  />  -->
+           <select displayname="调研期数" name="time" value="">
+				<sql><![CDATA[SELECT DISTINCT DYNUM AS v,DYNUM AS t FROM ZL_TS_JTGJRMYD ORDER BY DYNUM DESC ]]></sql>
+			  </select> 
+           <!--  <text displayname='地市' name='company' /> -->
+            <!-- <select displayname="地市" name="company" dictype="cityName"></select> -->
+        	<select displayname='地市' name='company' customStr="全省,全省;沈阳,沈阳;大连,大连;鞍山,鞍山;抚顺,抚顺;本溪,本溪;丹东,丹东;锦州,锦州;营口,营口;阜新,阜新;辽阳,辽阳;铁岭,铁岭;朝阳,朝阳;盘锦,盘锦;葫芦岛,葫芦岛;" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend='and' operator='like' colname='DYNUM'  value='#time#' />
+           	<field prepend='and' operator='like' colname='RESP_DEPT'  value='#company#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	<!-- 家宽客户满意度调研结果统计表 -->
+	<sqlquery name="SQL_TS_JKKHMYD_TJ.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_TS_JKKHMYD
+                    where 1=1  $customwhere$ 
+                    order by  /*ORDERBY*/  dynum DESC, instr('全省,沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦',substr(RESP_DEPT,0,2))
+       asc , instr('领先值,移动表现值,联通表现值,电信表现值',substr(INDEXTYPE,0,2)) ASC /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="10" textprecent="18" >
+        
+           <!-- <date displayname="调研期数" name="time" class='Wdate' dateFmt='yyyy-MM' defaultvalue="#time#"  />  -->
+           <select displayname="调研期数" name="time" value="">
+				<sql><![CDATA[SELECT DISTINCT DYNUM AS v,DYNUM AS t FROM ZL_TS_JKKHMYD ORDER BY DYNUM DESC ]]></sql>
+			  </select> 
+            <!-- <text displayname='地市' name='company' /> -->
+           <!--  <select displayname="地市" name="company" dictype="cityName"></select> -->
+             <select displayname='地市' name='company' customStr="全省,全省;沈阳,沈阳;大连,大连;鞍山,鞍山;抚顺,抚顺;本溪,本溪;丹东,丹东;锦州,锦州;营口,营口;阜新,阜新;辽阳,辽阳;铁岭,铁岭;朝阳,朝阳;盘锦,盘锦;葫芦岛,葫芦岛;" />
+        <select displayname='指标类型' name='type'
+				customStr="领先值,领先值;移动表现值,移动表现值;联通表现值,联通表现值;电信表现值,电信表现值;" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+       		  <field prepend='and' operator='like' colname='DYNUM'  value='#time#' /> 
+           <!--  <field prepend='and' operator='like' colname='DYNUM'  value='#dynum#' /> -->
+           	<field prepend='and' operator='like' colname='RESP_DEPT'  value='#company#' /> 
+           		<field prepend='and' operator='like' colname='INDEXTYPE'  value='#type#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	<!-- 集团联系人满意度调研结果统计表 -->
+	<sqlquery name="SQL_TS_STKHMYD_TJ.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_TS_STKHMYD
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ instr('全省,沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦',substr(RESP_DEPT,0,2))
+       asc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="10" textprecent="18" >
+            <!-- <text displayname='调研期数' name='dynum' /> -->
+            <date displayname="调研期数" name="time" class='Wdate' dateFmt='yyyy-MM' defaultvalue="#time#"  />
+            <!-- <text displayname='地市' name='company' /> -->
+            <!-- <select displayname="地市" name="company" dictype="cityName"></select> -->
+        	<select displayname='地市' name='company' customStr="全省,全省;沈阳,沈阳;大连,大连;鞍山,鞍山;抚顺,抚顺;本溪,本溪;丹东,丹东;锦州,锦州;营口,营口;阜新,阜新;辽阳,辽阳;铁岭,铁岭;朝阳,朝阳;盘锦,盘锦;葫芦岛,葫芦岛;" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend='and' operator='like' colname='DYNUM'  value='#time#' />
+           	<field prepend='and' operator='like' colname='RESP_DEPT'  value='#company#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	
+	
+	<!-- 企业宽带开通满意度调研结果统计表（集团/省内） -->
+	<sqlquery name="SQL_TS_QYKDKTMYD.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_TS_QYKDKTMYD
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ month DESC,
+	instr(
+		'全省,沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦',
+	substr( RESP_DEPT, 0, 2 ))
+	 ASC /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="10" textprecent="18" >
+            <date displayname="时间" name="time" class='Wdate' dateFmt='yyyy-MM' defaultvalue="#time#"  />
+            <!-- <text displayname='地市' name='company' /> -->
+           <!--  <select displayname="地市" name="company" dictype="cityName"></select> -->
+        	<select displayname='地市' name='company' customStr="全省,全省;沈阳,沈阳;大连,大连;鞍山,鞍山;抚顺,抚顺;本溪,本溪;丹东,丹东;锦州,锦州;营口,营口;阜新,阜新;辽阳,辽阳;铁岭,铁岭;朝阳,朝阳;盘锦,盘锦;葫芦岛,葫芦岛;" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend='and' operator='like' colname='MONTH'  value='#time#' />
+           	<field prepend='and' operator='like' colname='RESP_DEPT'  value='#company#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	<!-- 宽带电视满意度调研结果统计表（集团/省内） -->
+	<sqlquery name="SQL_TS_KDDSMYD.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_TS_KDDSMYD
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/ DYNUM DESC,
+	instr(
+		'全省,沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦',
+	substr( RESP_DEPT, 0, 2 ))
+	 ASC /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="10" textprecent="18" >
+             <date displayname="调研期数" name="time" class='Wdate' dateFmt='yyyy-MM' defaultvalue="#time#"  />
+            <!-- <text displayname='地市' name='company' /> -->
+           <!--  <select displayname="地市" name="company" dictype="cityName"></select> -->
+        	<select displayname='地市' name='company' customStr="全省,全省;沈阳,沈阳;大连,大连;鞍山,鞍山;抚顺,抚顺;本溪,本溪;丹东,丹东;锦州,锦州;营口,营口;阜新,阜新;辽阳,辽阳;铁岭,铁岭;朝阳,朝阳;盘锦,盘锦;葫芦岛,葫芦岛;" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+             <field prepend='and' operator='like' colname='DYNUM'  value='#time#' /> 
+           	<field prepend='and' operator='like' colname='RESP_DEPT'  value='#company#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	<!-- 手机客户满意度调研结果统计表 -->
+	<sqlquery name="SQL_TS_SJKHMYD.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_TS_SJKHMYD
+                    where 1=1  $customwhere$ 
+                    order by /*ORDERBY*/  dynum DESC, instr('全省,沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦',substr(RESP_DEPT,0,2))
+       asc , instr('领先值,移动表现值,联通表现值,电信表现值',substr(INDEXTYPE,0,2)) ASC /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="10" textprecent="18" >
+              <!-- <date displayname="调研期数" name="time" class='Wdate' dateFmt='yyyy-MM' defaultvalue="#time#"  /> -->
+              <select displayname="调研期数" name="time" value="">
+				<sql><![CDATA[SELECT DISTINCT DYNUM AS v,DYNUM AS t FROM ZL_TS_SJKHMYD ORDER BY DYNUM DESC ]]></sql>
+			  </select> 
+            <!-- <text displayname='地市' name='company' /> -->
+            <!-- <select displayname="地市" name="company" dictype="cityName"></select> -->
+            <select displayname='地市' name='company' customStr="全省,全省;沈阳,沈阳;大连,大连;鞍山,鞍山;抚顺,抚顺;本溪,本溪;丹东,丹东;锦州,锦州;营口,营口;阜新,阜新;辽阳,辽阳;铁岭,铁岭;朝阳,朝阳;盘锦,盘锦;葫芦岛,葫芦岛;" />
+        	<select displayname='指标类型' name='type'
+				customStr="领先值,领先值;移动表现值,移动表现值;联通表现值,联通表现值;电信表现值,电信表现值;" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend='and' operator='like' colname='DYNUM'  value='#time#' /> 
+           	<field prepend='and' operator='like' colname='RESP_DEPT'  value='#company#' /> 
+           	<field prepend='and' operator='like' colname='INDEXTYPE'  value='#type#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	
+	<!-- 10086投诉处理满意度调研明细表 -->
+	<sqlquery name="SQL_TS_TSCLMYD_DETALL.query">
+
+        <select>
+            <![CDATA[
+				SELECT /*COUNT*/ * /*COUNT*/ FROM ZL_TS_TSCLMYD_DETALL
+                    where 1=1  $customwhere$ 
+                     order by /*ORDERBY*/ instr('全省,沈阳,大连,鞍山,抚顺,本溪,丹东,锦州,营口,阜新,辽阳,铁岭,朝阳,盘锦,葫芦',substr(RESP_DEPT,0,2))
+      ,month asc /*ORDERBY*/
+              ]]> 
+        </select>
+        <condition  cols="3" labprecent="10" textprecent="18" >
+            <date displayname="时间" name="time" class='Wdate' dateFmt='yyyy-MM' defaultvalue="#time#"  />
+           <!--  <text displayname='地市' name='company' /> -->
+            <!-- <select displayname="地市" name="company" dictype="cityName"></select> -->
+        	<select displayname='地市' name='company' customStr="全省,全省;沈阳,沈阳;大连,大连;鞍山,鞍山;抚顺,抚顺;本溪,本溪;丹东,丹东;锦州,锦州;营口,营口;阜新,阜新;辽阳,辽阳;铁岭,铁岭;朝阳,朝阳;盘锦,盘锦;葫芦岛,葫芦岛;" />
+        </condition>
+        <customwhere name="customwhere" prepend="and" >
+            <field prepend='and' operator='like' colname='MONTH'  value='#time#' />
+           	<field prepend='and' operator='like' colname='RESP_DEPT'  value='#company#' /> 
+        </customwhere>
+	</sqlquery>
+	
+	
+	</sql-group>
